@@ -162,11 +162,10 @@ export default function NavigationBar() {
                <div>
                   <Button component={Link} to="/" className={classes.mobileHeading}>HOME</Button> 
                   <Button component={Link} to="/billruncandidate" className={classes.mobileHeading}>DATA</Button> 
+                  <Divider style={{ marginBottom: '11px'}}/>
                   <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
                   <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
-                  {/* <Button component={Link} to="/location" className={classes.mobileHeading}>ADD LOCATION</Button> 
-                  <Button component={Link} to="/client" className={classes.mobileHeading}>ADD CLIENT</Button>  */}
-                  <Divider style={{ marginBottom: '11px'}}/>
+
                   <Typography className={classes.mobileHeading} variant="h6">{user?.result.firstname}</Typography>
                   <Button variant="contained" style={{ display: 'flex', fontFamily: 'Segoe UI'}} color="secondary" onClick={logout}>Logout</Button>
               </div>
@@ -189,10 +188,16 @@ export default function NavigationBar() {
             <Button component={Link} to="/" className={classes.heading}>HOME</Button> 
             {(user?.result)  && (        
               <>   
-                <Button component={Link} to="/billruncandidate" className={classes.heading}>DATA</Button> 
-                <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
-                <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
-                <Button component={Link} to="/billrun" className={classes.mobileHeading}>WORKSPACE</Button> 
+                <div style={{ display: 'flex', marginLeft: '99px', justifyContent: 'flex-start' }}>
+                  <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
+                  <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button component={Link} to="/billruncandidate" className={classes.heading}>DATA</Button> 
+                  <Button component={Link} to="/billrun" className={classes.mobileHeading}>WORKSPACE</Button> 
+                </div>
+              
               </>
             )}
            </Box>

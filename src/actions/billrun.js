@@ -4,8 +4,8 @@ import * as api from '../api/index';
 export const createBillrun = req => async dispatch => {
     try {
 
-        console.log('pasa-reqqqqq', JSON.stringify(req));
-
+   
+        console.log('pasa-reqqqqq', req);
         const { data } = await api.createBillrun(req);
         dispatch({ type: CREATE_BILLRUN, payload: data});
         

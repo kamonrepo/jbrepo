@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten, makeStyles, Table, 
         TableBody, TableCell, TableContainer, 
         TableHead, TablePagination, TableRow, 
@@ -13,7 +12,7 @@ import { lighten, makeStyles, Table,
 import { useDispatch, useSelector } from 'react-redux';
 import { getBillrunCandidate, updateBRC } from '../../actions/billruncandidate';
 import { getBillrun } from '../../actions/billrun';
-import { getGroups } from '../../actions/group';
+
 
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
@@ -21,7 +20,6 @@ const headCells = [
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'Monthly Fee' },
   { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
 ];
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -127,7 +125,8 @@ const useToolbarStyles = makeStyles((theme) => ({
   // TODODODODODO:::START
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
-  const { numSelected, setHandBRC, selectedIDs, setSelected } = props;
+  const { numSelected, setHandBRC, selectedIDs, setSelected, toggle, 
+          setToggle, setSelectedBr,selectedGroupname, setSelectedGroupname } = props;
 
   const [total, setTotal] = useState(0);  
   const [paid, setPaid] = useState(0);
@@ -142,28 +141,50 @@ const EnhancedTableToolbar = props => {
 
        dispatch(getBillrunCandidate());
 
-       let selectedGroup = brc.filter(x => x.host == brid);
+       let selectBRCs = brc.filter(k => k.host == brid);
 
        let sum = 0;
        let paidSum = 0;
        let unpaindSum = 0;
 
       //get total
-       Object.keys(selectedGroup).forEach(key => {
-          sum = sum + parseFloat(selectedGroup[key].monthlyFee);
+       Object.keys(selectBRCs).forEach(key => {
+          sum = sum + parseFloat(selectBRCs[key].monthlyFee);
 
-          if(selectedGroup[key].status === 'PAID') {
-             paidSum = paidSum + parseFloat(selectedGroup[key].monthlyFee);
+          if(selectBRCs[key].status === 'PAID') {
+             paidSum = paidSum + parseFloat(selectBRCs[key].monthlyFee);
           } else {
-            unpaindSum  = unpaindSum + parseFloat(selectedGroup[key].monthlyFee);
+             unpaindSum  = unpaindSum + parseFloat(selectBRCs[key].monthlyFee);
           }
 
        })
 
+
+       //get merged group name
+       let grps = [];
+       Object.keys(billruns).forEach(brKey => {
+        if(billruns[brKey]._id == brid) {
+          Object.keys(billruns[brKey].mergedGroup).forEach(arrKey => {
+            grps.push(billruns[brKey].mergedGroup[arrKey].name)
+          })}
+       })
+
+      setSelectedGroupname(grps);
+      setTotal(sum);
       setPaid(paidSum);
       setUnpaid(unpaindSum);
-      setTotal(sum);
-      setHandBRC(selectedGroup);
+      setHandBRC(selectBRCs);
+      setSelectedBr(brid);
+
+       //reset array
+       grps = [];
+
+      if(toggle == false) {
+        setToggle(true);
+      } else {
+        setToggle(false);     
+      }
+
   }
 
   const doneClick = () => {
@@ -171,6 +192,7 @@ const EnhancedTableToolbar = props => {
       dispatch(updateBRC(selectedIDs));
   }
 
+  
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -180,7 +202,6 @@ const EnhancedTableToolbar = props => {
       {numSelected > 0 ? (      
         <>
           <Grid style={{ display: 'flex'}} container spacing={9}>
-
             <Grid style={ {paddingBottom: '99px', paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
               <Typography  style={{paddingBottom: '9px'}} color="inherit" variant="subtitle1" component="div">
                 {numSelected} SELECTED
@@ -202,18 +223,22 @@ const EnhancedTableToolbar = props => {
 
         <>
           <Grid container spacing={9}>
-            <Grid style={ {paddingBottom: '99px', paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
-
-                <Typography style={{paddingBottom: '9px'}} variant="h6" id="tableTitle" component="div">
-                 <b>TOTAL: {total.toLocaleString()}</b> 
+            <Grid style={ { paddingBottom: '99px', paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
+          
+                <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontWeight: 'bolder', fontFamily: 'Segoe UI'}} variant="h6" id="tableTitle" component="div">
+                  GROUP: {selectedGroupname? `${selectedGroupname}` : null}
                 </Typography>
 
-                <Typography style={{paddingBottom: '9px', color:'green'}} variant="h6" id="tableTitle" component="div">
-                <b>PAID: {paid.toLocaleString()}</b>
+                <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontFamily: 'Segoe UI', color:'#88562e'}} variant="h6" id="tableTitle" component="div">
+                 <b>TOTAL: {`₱ ${total.toLocaleString()}`}</b> 
                 </Typography>
 
-                <Typography style={{paddingBottom: '9px', color:'red' }} variant="h6" id="tableTitle" component="div">
-                  <b>UNPAID: {unpaid.toLocaleString()}</b>
+                <Typography style={{paddingBottom: '3px', marginLeft:'30px', color:'green',  fontFamily: 'Segoe UI'}} variant="h6" id="tableTitle" component="div">
+                <b>PAID: {`₱ ${paid.toLocaleString()}`}</b>
+                </Typography>
+
+                <Typography style={{paddingBottom: '3px', color:'red',  fontFamily: 'Segoe UI' }} variant="h6" id="tableTitle" component="div">
+                  <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
                 </Typography>
 
                 <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." />
@@ -235,12 +260,12 @@ const EnhancedTableToolbar = props => {
             <DeleteIcon />
           </IconButton>
         </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+      ) : (<div></div>
+        // <Tooltip title="Filter list">
+        //   <IconButton aria-label="filter list">
+        //     <FilterListIcon />
+        //   </IconButton>
+        // </Tooltip>
       )}
     </Toolbar>
   );
@@ -281,19 +306,24 @@ export default function BillRunCandidate() {
 
   const dispatch = useDispatch();
   const [handBRC, setHandBRC] = useState([{}]);
+  const [selectedBr, setSelectedBr] = useState('');
+  const [selectedGroupname, setSelectedGroupname] = useState([]);
 
   useEffect(() => {
         dispatch(getBillrun());
-        dispatch(getGroups());
         console.log('BRC component mount');
   }, [handBRC])
 
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
-
   const [selected, setSelected] = useState([]);
   const [selectedIDs, setSelectedIDs] = useState([]);
+  const [toggle, setToggle] = useState(false);
+
+  // useEffect(() => {
+  //     console.log('please refresh the table??? ', toggle);
+  // }, [toggle])
 
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
@@ -370,68 +400,82 @@ export default function BillRunCandidate() {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} handBRC={handBRC} selectedIDs={selectedIDs} setHandBRC={setHandBRC} setSelected={setSelected} />
+        <EnhancedTableToolbar 
+        toggle={toggle} 
+         setToggle={setToggle}
+         numSelected={selected.length} 
+         handBRC={handBRC} 
+         selectedIDs={selectedIDs} 
+         setHandBRC={setHandBRC} 
+         setSelected={setSelected} 
+         selectedBr={selectedBr}
+         setSelectedBr={setSelectedBr}
+         selectedGroupname={selectedGroupname}
+         setSelectedGroupname={setSelectedGroupname}
+         />
+
         <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={handBRC.length}
-            />
-            <TableBody>
-              { stableSort(handBRC, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              size={dense ? 'small' : 'medium'}
+              aria-label="enhanced table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={handBRC.length}
+              />
+              <TableBody>
+                { stableSort(handBRC, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.name);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(e) => handleClick(e, row.name, row._id)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              inputProps={{ 'aria-labelledby': labelId }}
-                            />
-                          </TableCell>
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(e) => handleClick(e, row.name, row._id)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.name}
+                        selected={isItemSelected}
+                      >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isItemSelected}
+                                inputProps={{ 'aria-labelledby': labelId }}
+                              />
+                            </TableCell>
 
-                          <TableCell align="left" id={labelId} scope="row" padding="none">
-                            {row.name}
-                          </TableCell>
+                            <TableCell align="left" id={labelId} scope="row" padding="none">
+                              {row.name}
+                            </TableCell>
 
-                          <TableCell align="center">{row.package}</TableCell>
-                          <TableCell align="center">{row.monthlyFee}</TableCell>
-                          <TableCell align="center">{row.status}</TableCell>
+                            <TableCell align="center">{row.package}</TableCell>
+                            <TableCell align="center">{row.monthlyFee}</TableCell>
+                            <TableCell align="center">{row.status}</TableCell>
 
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
 
-            
-          </Table>
+              
+            </Table>
         </TableContainer>
+        
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
