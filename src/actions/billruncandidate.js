@@ -5,6 +5,7 @@ export const getBillrunCandidate = () => async dispatch => {
     try {
 
       const { data } = await api.fetchBillrunCan();
+      console.log('fetch-billrun-candid-RESPONSE::: ', data);
 
       dispatch({ type: FETCH_BILLRUN_CAN, payload: data});
 

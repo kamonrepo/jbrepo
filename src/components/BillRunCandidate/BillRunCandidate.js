@@ -10,7 +10,7 @@ import { lighten, makeStyles, Table,
         Tooltip, FormControlLabel, Switch , Select, MenuItem, TextField, Grid, Button
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBillrunCandidate, updateBRC } from '../../actions/billruncandidate';
+import { updateBRC, getBRCById } from '../../actions/billruncandidate';
 import { getBillrun } from '../../actions/billrun';
 
 
@@ -125,8 +125,10 @@ const useToolbarStyles = makeStyles((theme) => ({
   // TODODODODODO:::START
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
-  const { numSelected, setHandBRC, selectedIDs, setSelected, toggle, 
-          setToggle, setSelectedBr,selectedGroupname, setSelectedGroupname } = props;
+
+  const {numSelected, setHandBRC, selectedIDs,
+        setSelected, toggle, setToggle, 
+        setSelectedBr,selectedGroupname, setSelectedGroupname } = props;
 
   const [total, setTotal] = useState(0);  
   const [paid, setPaid] = useState(0);
@@ -139,51 +141,54 @@ const EnhancedTableToolbar = props => {
 
   const handleGroupOnChange = brid => {
 
-       dispatch(getBillrunCandidate());
+    dispatch(getBRCById(brid));
 
-       let selectBRCs = brc.filter(k => k.host == brid);
+    //change the logic here haist
 
-       let sum = 0;
-       let paidSum = 0;
-       let unpaindSum = 0;
+    let sum = 0;
+    let paidSum = 0;
+    let unpaindSum = 0;
 
-      //get total
-       Object.keys(selectBRCs).forEach(key => {
-          sum = sum + parseFloat(selectBRCs[key].monthlyFee);
+    console.log('brcbrcbrc::: ', typeof(brc));
+    console.log('brcbrcbrc::: ', brc);
 
-          if(selectBRCs[key].status === 'PAID') {
-             paidSum = paidSum + parseFloat(selectBRCs[key].monthlyFee);
-          } else {
-             unpaindSum  = unpaindSum + parseFloat(selectBRCs[key].monthlyFee);
-          }
+  //get total
+    Object.keys(brc).forEach(key => {
+      sum = sum + parseFloat(brc[key].monthlyFee);
 
-       })
-
-
-       //get merged group name
-       let grps = [];
-       Object.keys(billruns).forEach(brKey => {
-        if(billruns[brKey]._id == brid) {
-          Object.keys(billruns[brKey].mergedGroup).forEach(arrKey => {
-            grps.push(billruns[brKey].mergedGroup[arrKey].name)
-          })}
-       })
-
-      setSelectedGroupname(grps);
-      setTotal(sum);
-      setPaid(paidSum);
-      setUnpaid(unpaindSum);
-      setHandBRC(selectBRCs);
-      setSelectedBr(brid);
-
-       //reset array
-       grps = [];
-
-      if(toggle == false) {
-        setToggle(true);
+      if(brc[key].status === 'PAID') {
+          paidSum = paidSum + parseFloat(brc[key].monthlyFee);
       } else {
-        setToggle(false);     
+          unpaindSum  = unpaindSum + parseFloat(brc[key].monthlyFee);
       }
+
+    })
+
+
+    //get merged group name
+    let grps = [];
+    Object.keys(billruns).forEach(brKey => {
+    if(billruns[brKey]._id == brid) {
+      Object.keys(billruns[brKey].mergedGroup).forEach(arrKey => {
+        grps.push(billruns[brKey].mergedGroup[arrKey].name)
+      })}
+    })
+
+  setSelectedGroupname(grps);
+  setTotal(sum);
+  setPaid(paidSum);
+  setUnpaid(unpaindSum);
+  setHandBRC(brc);
+  setSelectedBr(brid);
+
+  //reset array
+  grps = [];
+
+  if(toggle == false) {
+    setToggle(true);
+  } else {
+    setToggle(false);     
+  }
 
   }
 
