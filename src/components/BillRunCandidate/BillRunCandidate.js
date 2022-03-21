@@ -125,34 +125,30 @@ const useToolbarStyles = makeStyles((theme) => ({
   // TODODODODODO:::START
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
+  const dispatch = useDispatch();
 
   const {numSelected, setHandBRC, selectedIDs,
-        setSelected, toggle, setToggle, 
-        setSelectedBr,selectedGroupname, setSelectedGroupname } = props;
-
+        setSelected,setSelectedBr,selectedGroupname, setSelectedGroupname } = props;
   const [total, setTotal] = useState(0);  
   const [paid, setPaid] = useState(0);
   const [unpaid, setUnpaid] = useState(0);
 
-  const billruns = useSelector(state => state.billruns);
   const brc = useSelector(state => state.billruncandidates);
+  const billruns = useSelector(state => state.billruns);
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log('setHandBRC::: ', brc);
+    setHandBRC(brc);
+    zCompute(brc);
+  },[brc]);
 
-  const handleGroupOnChange = brid => {
 
-    dispatch(getBRCById(brid));
-
-    //change the logic here haist
-
+  let zCompute = (brc) => {
     let sum = 0;
     let paidSum = 0;
     let unpaindSum = 0;
 
-    console.log('brcbrcbrc::: ', typeof(brc));
-    console.log('brcbrcbrc::: ', brc);
-
-  //get total
+    //get total
     Object.keys(brc).forEach(key => {
       sum = sum + parseFloat(brc[key].monthlyFee);
 
@@ -161,9 +157,15 @@ const EnhancedTableToolbar = props => {
       } else {
           unpaindSum  = unpaindSum + parseFloat(brc[key].monthlyFee);
       }
-
     })
 
+    setTotal(sum);
+    setPaid(paidSum);
+    setUnpaid(unpaindSum);
+  }
+
+  const handleGroupOnChange = brid => {
+  dispatch(getBRCById(brid));
 
     //get merged group name
     let grps = [];
@@ -174,22 +176,11 @@ const EnhancedTableToolbar = props => {
       })}
     })
 
-  setSelectedGroupname(grps);
-  setTotal(sum);
-  setPaid(paidSum);
-  setUnpaid(unpaindSum);
-  setHandBRC(brc);
-  setSelectedBr(brid);
+    setSelectedGroupname(grps);
+    setSelectedBr(brid);
 
-  //reset array
-  grps = [];
-
-  if(toggle == false) {
-    setToggle(true);
-  } else {
-    setToggle(false);     
-  }
-
+    //reset array
+    grps = [];
   }
 
   const doneClick = () => {
@@ -316,7 +307,7 @@ export default function BillRunCandidate() {
 
   useEffect(() => {
         dispatch(getBillrun());
-        console.log('BRC component mount');
+        console.log('brb-component-mount:::getBillrun:::dispatched');
   }, [handBRC])
 
   const classes = useStyles();
@@ -324,12 +315,6 @@ export default function BillRunCandidate() {
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
   const [selectedIDs, setSelectedIDs] = useState([]);
-  const [toggle, setToggle] = useState(false);
-
-  // useEffect(() => {
-  //     console.log('please refresh the table??? ', toggle);
-  // }, [toggle])
-
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -396,18 +381,14 @@ export default function BillRunCandidate() {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
-
   
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar 
-        toggle={toggle} 
-         setToggle={setToggle}
          numSelected={selected.length} 
          handBRC={handBRC} 
          selectedIDs={selectedIDs} 
