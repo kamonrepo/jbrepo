@@ -29,7 +29,7 @@ export const getBRCById = id => async dispatch => {
 
 export const updateBRC = (req) => async (dispatch) => {
   try {
-    console.log('updateBRCupdateBRCupdateBRC:::: ', req);
+    console.log('API-updateBRC-REQ:::: ', req);
     const { data } = await api.updateBRC(req);
     // //console.log('action/action/updatePost payload data: ', data);
     dispatch({ type: UPDATE_BILLRUN_CAN, payload: data});

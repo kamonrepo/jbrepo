@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import DeleteIcon from '@material-ui/icons/Delete';
+
 import { lighten, makeStyles, Table, 
         TableBody, TableCell, TableContainer, 
         TableHead, TablePagination, TableRow, 
         TableSortLabel, Toolbar, Typography, 
         Paper, Checkbox, IconButton, 
-        Tooltip, FormControlLabel, Switch , Select, MenuItem, TextField, Grid, Button
+        Tooltip, Select, MenuItem, TextField, Grid, Button
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBRC, getBRCById } from '../../actions/billruncandidate';
@@ -126,8 +127,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
-
-  const {numSelected, setHandBRC, selectedIDs,
+  const {numSelected, setHandBRC, selectedIDs, selectedBr,setSelectedIDs,
         setSelected,setSelectedBr,selectedGroupname, setSelectedGroupname } = props;
   const [total, setTotal] = useState(0);  
   const [paid, setPaid] = useState(0);
@@ -137,11 +137,9 @@ const EnhancedTableToolbar = props => {
   const billruns = useSelector(state => state.billruns);
 
   useEffect(() => {
-    console.log('setHandBRC::: ', brc);
     setHandBRC(brc);
     zCompute(brc);
   },[brc]);
-
 
   let zCompute = (brc) => {
     let sum = 0;
@@ -155,7 +153,7 @@ const EnhancedTableToolbar = props => {
       if(brc[key].status === 'PAID') {
           paidSum = paidSum + parseFloat(brc[key].monthlyFee);
       } else {
-          unpaindSum  = unpaindSum + parseFloat(brc[key].monthlyFee);
+          unpaindSum = unpaindSum + parseFloat(brc[key].monthlyFee);
       }
     })
 
@@ -182,13 +180,18 @@ const EnhancedTableToolbar = props => {
     //reset array
     grps = [];
   }
+  
 
   const doneClick = () => {
       //update brc status to paid
       dispatch(updateBRC(selectedIDs));
+      dispatch(getBRCById(selectedBr));
+
+      setSelected([]);
+      setSelectedIDs([])
+      // setSelectedBr([]);
   }
 
-  
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -197,26 +200,33 @@ const EnhancedTableToolbar = props => {
     >
       {numSelected > 0 ? (      
         <>
-          <Grid style={{ display: 'flex'}} container spacing={9}>
-            <Grid style={ {paddingBottom: '99px', paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
-              <Typography  style={{paddingBottom: '9px'}} color="inherit" variant="subtitle1" component="div">
+          <Grid container spacing={9}>
+            <Grid style={ {paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
+              <Typography style={{ display: 'flex', justifyContent: 'center', paddingBottom: '20px'}} color="inherit" variant="subtitle1" component="div">
                 {numSelected} SELECTED
               </Typography>
+              <Button onClick={() => setSelected([])}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
+               <b>BACK</b>  
+              </Button>
             </Grid>
 
-            <Grid style={ {paddingBottom: '99px', paddingTop: '50px', alignItems: 'center' }} item lg={6} sm={6} xs={6}>
+            <Grid style={{paddingBottom: '99px', paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
+              <div style={{ display:'flex', justifyContent: 'center' }}>
+                <Tooltip style={{ display:'flex', justifyContent: 'center' }} title="Delete">
+                  <IconButton aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+
               <Button onClick={doneClick}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
-                DONE 
-              </Button>
-              <Button onClick={() => setSelected([])}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
-                BACK 
-              </Button>
+              <b>PAID</b>  
+              </Button>             
             </Grid>
 
           </Grid>
         </>
        ):(
-
         <>
           <Grid container spacing={9}>
             <Grid style={ { paddingBottom: '99px', paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
@@ -240,28 +250,13 @@ const EnhancedTableToolbar = props => {
                 <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." />
 
                 <Select fullWidth onChange={e => handleGroupOnChange(e.target.value)}>
-                    {billruns.map((data) => (
-                      <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
-                    ))}
-                </Select>
-             
+                  {billruns.map((data) => (
+                    <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
+                  ))}
+                </Select>             
             </Grid>
           </Grid>
         </>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (<div></div>
-        // <Tooltip title="Filter list">
-        //   <IconButton aria-label="filter list">
-        //     <FilterListIcon />
-        //   </IconButton>
-        // </Tooltip>
       )}
     </Toolbar>
   );
@@ -394,6 +389,7 @@ export default function BillRunCandidate() {
          selectedIDs={selectedIDs} 
          setHandBRC={setHandBRC} 
          setSelected={setSelected} 
+         setSelectedIDs={setSelectedIDs}
          selectedBr={selectedBr}
          setSelectedBr={setSelectedBr}
          selectedGroupname={selectedGroupname}
@@ -472,10 +468,6 @@ export default function BillRunCandidate() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </div>
   );
 }
