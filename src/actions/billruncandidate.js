@@ -27,7 +27,7 @@ export const getBRCById = id => async dispatch => {
   }
 };
 
-export const updateBRC = (req) => async (dispatch) => {
+export const updateBRC = (req, type) => async (dispatch) => {
   try {
     console.log('API-updateBRC-REQ:::: ', req);
     const { data } = await api.updateBRC(req);

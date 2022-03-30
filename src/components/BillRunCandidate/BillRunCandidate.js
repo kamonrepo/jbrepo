@@ -127,8 +127,8 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
-  const {numSelected, setHandBRC, selectedIDs, selectedBr,setSelectedIDs,
-        setSelected,setSelectedBr,selectedGroupname, setSelectedGroupname } = props;
+  const {numSelected, setHandBRC, selectedIDs, selectedBr, setSelectedIDs, statusPlaceHolder, setStatusPlaceHolder,
+        setSelected, setSelectedBr, selectedGroupname, setSelectedGroupname } = props;
   const [total, setTotal] = useState(0);  
   const [paid, setPaid] = useState(0);
   const [unpaid, setUnpaid] = useState(0);
@@ -181,15 +181,42 @@ const EnhancedTableToolbar = props => {
     grps = [];
   }
   
-
   const doneClick = () => {
-      //update brc status to paid
-      dispatch(updateBRC(selectedIDs));
-      dispatch(getBRCById(selectedBr));
 
-      setSelected([]);
-      setSelectedIDs([])
-      // setSelectedBr([]);
+    //update brc status to paid
+    let isPaid = isAllPaid(statusPlaceHolder);
+    dispatch(updateBRC({selectedIDs, isPaid}));
+    dispatch(getBRCById(selectedBr));
+
+    setSelected([]);
+    setSelectedIDs([])
+  }
+
+  const backButton = () => {
+    setSelected([]);
+    setStatusPlaceHolder([]);
+  }
+
+  const allEqual = arr => {
+    let arrReturn = arr.every(elem => elem === arr[0]);
+    return arrReturn;
+  }
+  const isAllPaid = arr => {
+    let arrReturn = arr.every(elem => elem === 'PAID');
+    return arrReturn;
+  }
+
+
+  const dynamicButton = () => {
+    let toggle = allEqual(statusPlaceHolder);
+    let isPaid = isAllPaid(statusPlaceHolder);
+
+    return(
+      <Button disabled={!toggle} onClick={doneClick}  variant="contained" color="primary" size="large" type="submit" fullWidth>        
+        {toggle? `${isPaid ? 'UNPAID' : 'PAID'}`
+               :'SELECT ITEM AS A GROUP'}
+      </Button>      
+    )
   }
 
   return (
@@ -205,7 +232,7 @@ const EnhancedTableToolbar = props => {
               <Typography style={{ display: 'flex', justifyContent: 'center', paddingBottom: '20px'}} color="inherit" variant="subtitle1" component="div">
                 {numSelected} SELECTED
               </Typography>
-              <Button onClick={() => setSelected([])}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
+              <Button onClick={backButton}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
                <b>BACK</b>  
               </Button>
             </Grid>
@@ -218,10 +245,7 @@ const EnhancedTableToolbar = props => {
                   </IconButton>
                 </Tooltip>
               </div>
-
-              <Button onClick={doneClick}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
-              <b>PAID</b>  
-              </Button>             
+              {dynamicButton()}
             </Grid>
 
           </Grid>
@@ -311,8 +335,8 @@ export default function BillRunCandidate() {
   const [selected, setSelected] = useState([]);
   const [selectedIDs, setSelectedIDs] = useState([]);
   const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -329,37 +353,58 @@ export default function BillRunCandidate() {
     setSelected([]);
   };
 
-  const handleClick = (event, name, id) => {
+  const handleClick = (event, name, id, status) => {
 
     const selectedIndex = selected.indexOf(name);
     
     let newSelected = [];
+    let newSelectedStatus = [];
   
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
+      newSelectedStatus = newSelectedStatus.concat(statusPlaceHolder, status);
+
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
+      newSelectedStatus = newSelectedStatus.concat(statusPlaceHolder.slice(1));
+
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
+      newSelectedStatus = newSelectedStatus.concat(statusPlaceHolder.slice(0, -1));
+
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1),
       );
 
+      newSelectedStatus = newSelectedStatus.concat(
+        statusPlaceHolder.slice(0, selectedIndex),
+        statusPlaceHolder.slice(selectedIndex + 1),
+      );
+
     }
 
     // the -1 value means it is checked/selected
     if(selectedIndex === -1) {
-      setSelectedIDs(prev => [...prev, id])
-
+      setSelectedIDs(prev => [...prev, id]);
+      setStatusPlaceHolder(prev => [...prev, status]);
     } else {
-    // uncheck
+
+      //uncheck
       let index = selectedIDs.indexOf(id);
+      let statusIndex = statusPlaceHolder.indexOf(status);
+      
       if(index > -1) {
         selectedIDs.splice(index, 1);
       }
+      if(statusIndex > -1){
+        statusPlaceHolder.splice(statusIndex, 1);
+      }
     }
+
+    console.log('newSelected::: ', newSelected);
+    console.log('statusPlaceHolder::: ', newSelectedStatus);
 
     setSelected(newSelected);
   };
@@ -372,10 +417,6 @@ export default function BillRunCandidate() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
   
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
@@ -384,23 +425,25 @@ export default function BillRunCandidate() {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar 
-         numSelected={selected.length} 
-         handBRC={handBRC} 
-         selectedIDs={selectedIDs} 
-         setHandBRC={setHandBRC} 
-         setSelected={setSelected} 
-         setSelectedIDs={setSelectedIDs}
-         selectedBr={selectedBr}
-         setSelectedBr={setSelectedBr}
-         selectedGroupname={selectedGroupname}
-         setSelectedGroupname={setSelectedGroupname}
+          numSelected={selected.length} 
+          handBRC={handBRC} 
+          selectedIDs={selectedIDs} 
+          setHandBRC={setHandBRC} 
+          setSelected={setSelected} 
+          setSelectedIDs={setSelectedIDs}
+          selectedBr={selectedBr}
+          setSelectedBr={setSelectedBr}
+          selectedGroupname={selectedGroupname}
+          setSelectedGroupname={setSelectedGroupname}
+          statusPlaceHolder={statusPlaceHolder}
+          setStatusPlaceHolder={setStatusPlaceHolder}
          />
 
         <TableContainer>
             <Table
               className={classes.table}
               aria-labelledby="tableTitle"
-              size={dense ? 'small' : 'medium'}
+              size={'medium'}
               aria-label="enhanced table"
             >
               <EnhancedTableHead
@@ -422,7 +465,7 @@ export default function BillRunCandidate() {
                     return (
                       <TableRow
                         hover
-                        onClick={(e) => handleClick(e, row.name, row._id)}
+                        onClick={(e) => handleClick(e, row.name, row._id, row.status)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -448,7 +491,7 @@ export default function BillRunCandidate() {
                     );
                   })}
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                  <TableRow style={{ height: (66) * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
