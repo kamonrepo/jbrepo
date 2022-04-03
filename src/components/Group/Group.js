@@ -37,33 +37,30 @@ const Group = () => {
     return (     
       <>
       <Grid style={{ display: 'flex'}} container spacing={9}>
+        <Grid style={ {paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
+              <Paper className={classes.addGroupForm} elevation={6}>
+                <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+                    <Typography className={classes.Header} variant="h6"><b>ADD GROUP</b> </Typography>
 
-      <Grid style={ {paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
-            <Paper className={classes.addGroupForm} elevation={6}>
-              <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-                  <Typography className={classes.Header} variant="h6"> Add Group </Typography>
-
-                  <TextField name="name" variant="outlined" label="Group" fullWidth value={groupData.name} onChange={(e) => setGroupData({...groupData, name: e.target.value})} />
-                  <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-                  <Button variant="contained" color="secondary" size="small"  fullWidth>Clear</Button>
-              </form>
-            </Paper>
-        </Grid>
+                    <TextField required name="name" variant="outlined" label="Group" fullWidth value={groupData.name} onChange={(e) => setGroupData({...groupData, name: e.target.value})} />
+                    <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+                    <Button variant="contained" color="secondary" size="small"  fullWidth>Clear</Button>
+                </form>
+              </Paper>
+          </Grid>
 
         <Grid style={ {paddingBottom: '99px',marginTop: '3px' }} item lg={12} sm={12} xs={12}>
           <Paper className={classes.groupListPaper} elevation={6}>
-          <Typography variant="h6"> List of group </Typography>
-              {groups?.map((g => (<ul>
-                  <li> <Typography variant="h9"> {g.name} </Typography></li>
-              </ul>
-            )))}
-            </Paper>
+            <Typography className={classes.Header}  variant="h6"> List of group </Typography>
+                {groups?.map((g => (<ul>
+                    <li> <Typography className={classes.Header} variant="h9"> {g.name} </Typography></li>
+                </ul>
+              )))}
+          </Paper>
         </Grid>
-
       </Grid>
-
     </>
-    )
+  )
 }
 
 export default Group;

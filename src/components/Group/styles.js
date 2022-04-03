@@ -9,7 +9,8 @@ export default makeStyles((theme) => ({
   },
   Header: {
     display: 'flex',
-    margin: '3px 3px 3px 3px'
+    margin: '3px 3px 3px 3px',
+    fontFamily: 'Segoe UI'
 
   },
   groupListPaper: {
@@ -26,7 +27,7 @@ export default makeStyles((theme) => ({
   },
 
   buttonSubmit: {
-    marginBottom: 10,
+    marginBottom: 10
   },
 
 }));

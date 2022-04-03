@@ -46,7 +46,7 @@ const Client = () => {
 
   return (     
     <>        
-      <Paper className={classes.paper} elevation={6}>
+      <Paper className={classes.paper} elevation={9}>
         <form onSubmit={handleSubmit}>
             <Typography className={classes.Header} variant="h6"><b>ADD CLIENT</b></Typography>
 

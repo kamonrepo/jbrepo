@@ -139,7 +139,8 @@ const EnhancedTableToolbar = props => {
   useEffect(() => {
     setHandBRC(brc);
     zCompute(brc);
-  },[brc]);
+    console.log('BRC/EToolbar-component mount')
+  },[brc, selectedBr]);
 
   let zCompute = (brc) => {
     let sum = 0;
@@ -183,13 +184,14 @@ const EnhancedTableToolbar = props => {
   
   const doneClick = () => {
 
-    //update brc status to paid
     let isPaid = isAllPaid(statusPlaceHolder);
+
     dispatch(updateBRC({selectedIDs, isPaid}));
     dispatch(getBRCById(selectedBr));
 
     setSelected([]);
-    setSelectedIDs([])
+    setSelectedIDs([]);
+    setStatusPlaceHolder([]);
   }
 
   const backButton = () => {
@@ -205,7 +207,6 @@ const EnhancedTableToolbar = props => {
     let arrReturn = arr.every(elem => elem === 'PAID');
     return arrReturn;
   }
-
 
   const dynamicButton = () => {
     let toggle = allEqual(statusPlaceHolder);
@@ -326,7 +327,7 @@ export default function BillRunCandidate() {
 
   useEffect(() => {
         dispatch(getBillrun());
-        console.log('brb-component-mount:::getBillrun:::dispatched');
+        console.log('BRC-component mount');
   }, [handBRC])
 
   const classes = useStyles();
@@ -495,9 +496,7 @@ export default function BillRunCandidate() {
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
-              </TableBody>
-
-              
+              </TableBody>             
             </Table>
         </TableContainer>
         
