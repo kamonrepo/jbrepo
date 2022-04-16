@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateBRC, getBRCById } from '../../actions/billruncandidate';
 import { getBillrun } from '../../actions/billrun';
 
-
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
   { id: 'package', numeric: false, disablePadding: false, label: 'Package' },
@@ -47,7 +46,6 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
 function EnhancedTableHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
@@ -121,179 +119,6 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-  // TODODODODODO:::START
-  // TODODODODODO:::START
-  // TODODODODODO:::START
-const EnhancedTableToolbar = props => {
-  const classes = useToolbarStyles();
-  const dispatch = useDispatch();
-  const {numSelected, setHandBRC, selectedIDs, selectedBr, setSelectedIDs, statusPlaceHolder, setStatusPlaceHolder,
-        setSelected, setSelectedBr, selectedGroupname, setSelectedGroupname } = props;
-  const [total, setTotal] = useState(0);  
-  const [paid, setPaid] = useState(0);
-  const [unpaid, setUnpaid] = useState(0);
-
-  const brc = useSelector(state => state.billruncandidates);
-  const billruns = useSelector(state => state.billruns);
-
-  useEffect(() => {
-    setHandBRC(brc);
-    zCompute(brc);
-    console.log('BRC/EToolbar-component mount')
-  },[brc, selectedBr]);
-
-  let zCompute = (brc) => {
-    let sum = 0;
-    let paidSum = 0;
-    let unpaindSum = 0;
-
-    //get total
-    Object.keys(brc).forEach(key => {
-      sum = sum + parseFloat(brc[key].monthlyFee);
-
-      if(brc[key].status === 'PAID') {
-          paidSum = paidSum + parseFloat(brc[key].monthlyFee);
-      } else {
-          unpaindSum = unpaindSum + parseFloat(brc[key].monthlyFee);
-      }
-    })
-
-    setTotal(sum);
-    setPaid(paidSum);
-    setUnpaid(unpaindSum);
-  }
-
-  const handleGroupOnChange = brid => {
-  dispatch(getBRCById(brid));
-
-    //get merged group name
-    let grps = [];
-    Object.keys(billruns).forEach(brKey => {
-    if(billruns[brKey]._id == brid) {
-      Object.keys(billruns[brKey].mergedGroup).forEach(arrKey => {
-        grps.push(billruns[brKey].mergedGroup[arrKey].name)
-      })}
-    })
-
-    setSelectedGroupname(grps);
-    setSelectedBr(brid);
-
-    //reset array
-    grps = [];
-  }
-  
-  const doneClick = () => {
-
-    let isPaid = isAllPaid(statusPlaceHolder);
-
-    dispatch(updateBRC({selectedIDs, isPaid}));
-    dispatch(getBRCById(selectedBr));
-
-    setSelected([]);
-    setSelectedIDs([]);
-    setStatusPlaceHolder([]);
-  }
-
-  const backButton = () => {
-    setSelected([]);
-    setStatusPlaceHolder([]);
-  }
-
-  const allEqual = arr => {
-    let arrReturn = arr.every(elem => elem === arr[0]);
-    return arrReturn;
-  }
-  const isAllPaid = arr => {
-    let arrReturn = arr.every(elem => elem === 'PAID');
-    return arrReturn;
-  }
-
-  const dynamicButton = () => {
-    let toggle = allEqual(statusPlaceHolder);
-    let isPaid = isAllPaid(statusPlaceHolder);
-
-    return(
-      <Button disabled={!toggle} onClick={doneClick}  variant="contained" color="primary" size="large" type="submit" fullWidth>        
-        {toggle? `${isPaid ? 'UNPAID' : 'PAID'}`
-               :'SELECT ITEM AS A GROUP'}
-      </Button>      
-    )
-  }
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (      
-        <>
-          <Grid container spacing={9}>
-            <Grid style={ {paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
-              <Typography style={{ display: 'flex', justifyContent: 'center', paddingBottom: '20px'}} color="inherit" variant="subtitle1" component="div">
-                {numSelected} SELECTED
-              </Typography>
-              <Button onClick={backButton}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
-               <b>BACK</b>  
-              </Button>
-            </Grid>
-
-            <Grid style={{paddingBottom: '99px', paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
-              <div style={{ display:'flex', justifyContent: 'center' }}>
-                <Tooltip style={{ display:'flex', justifyContent: 'center' }} title="Delete">
-                  <IconButton aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              {dynamicButton()}
-            </Grid>
-
-          </Grid>
-        </>
-       ):(
-        <>
-          <Grid container spacing={9}>
-            <Grid style={ { paddingBottom: '99px', paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
-          
-                <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontWeight: 'bolder', fontFamily: 'Segoe UI'}} variant="h6" id="tableTitle" component="div">
-                  GROUP: {selectedGroupname? `${selectedGroupname}` : null}
-                </Typography>
-
-                <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontFamily: 'Segoe UI', color:'#88562e'}} variant="h6" id="tableTitle" component="div">
-                 <b>TOTAL: {`₱ ${total.toLocaleString()}`}</b> 
-                </Typography>
-
-                <Typography style={{paddingBottom: '3px', marginLeft:'30px', color:'green',  fontFamily: 'Segoe UI'}} variant="h6" id="tableTitle" component="div">
-                <b>PAID: {`₱ ${paid.toLocaleString()}`}</b>
-                </Typography>
-
-                <Typography style={{paddingBottom: '3px', color:'red',  fontFamily: 'Segoe UI' }} variant="h6" id="tableTitle" component="div">
-                  <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
-                </Typography>
-
-                <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." />
-
-                <Select fullWidth onChange={e => handleGroupOnChange(e.target.value)}>
-                  {billruns.map((data) => (
-                    <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
-                  ))}
-                </Select>             
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </Toolbar>
-  );
-};
-  // TODODODODODO:::END
-  // TODODODODODO:::END
-  // TODODODODODO:::END
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -317,6 +142,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
 }));
+
 
 export default function BillRunCandidate() {
 
@@ -403,9 +229,6 @@ export default function BillRunCandidate() {
         statusPlaceHolder.splice(statusIndex, 1);
       }
     }
-
-    console.log('newSelected::: ', newSelected);
-    console.log('statusPlaceHolder::: ', newSelectedStatus);
 
     setSelected(newSelected);
   };
@@ -513,6 +336,185 @@ export default function BillRunCandidate() {
     </div>
   );
 }
+
+// TODODODODODO:::START
+// TODODODODODO:::START
+// TODODODODODO:::START
+const EnhancedTableToolbar = props => {
+  const classes = useToolbarStyles();
+  const dispatch = useDispatch();
+  const {numSelected, setHandBRC, selectedIDs, setSelectedIDs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
+        setSelected, selectedGroupname, setSelectedGroupname } = props;
+  const [total, setTotal] = useState(0);  
+  const [paid, setPaid] = useState(0);
+  const [unpaid, setUnpaid] = useState(0);
+
+  const brc = useSelector(state => state.billruncandidates);
+  const billruns = useSelector(state => state.billruns);
+
+  useEffect(() => {
+    setHandBRC(brc);
+    zCompute(brc);
+    console.log('BRC/EToolbar-component mount');
+  },[brc]);
+
+  let zCompute = (brc) => {
+    let sum = 0;
+    let paidSum = 0;
+    let unpaindSum = 0;
+
+    //get total
+    Object.keys(brc).forEach(key => {
+      sum = sum + parseFloat(brc[key].monthlyFee);
+
+      if(brc[key].status === 'PAID') {
+          paidSum = paidSum + parseFloat(brc[key].monthlyFee);
+      } else {
+          unpaindSum = unpaindSum + parseFloat(brc[key].monthlyFee);
+      }
+    })
+
+    setTotal(sum);
+    setPaid(paidSum);
+    setUnpaid(unpaindSum);
+  }
+
+  const displayGroupName = brid => {
+
+    let grps = [];
+    Object.keys(billruns).forEach(brKey => {
+    if(billruns[brKey]._id == brid) {
+      Object.keys(billruns[brKey].mergedGroup).forEach(arrKey => {
+        grps.push(billruns[brKey].mergedGroup[arrKey].name)
+      })}
+    })
+
+    setSelectedGroupname(grps);
+    return grps;
+  }
+
+  const handleGroupOnChange = async brid => {
+
+  await dispatch(getBRCById(brid));
+
+    displayGroupName(brid);
+    setSelectedBr(brid);
+  }
+  
+  //PAID BUTTON
+  const doneClick = async () => {
+
+    let isPaid = isAllPaid(statusPlaceHolder);
+
+    await dispatch(updateBRC({selectedIDs, isPaid}));
+    await dispatch(getBRCById(selectedBr));
+
+    setSelected([]);
+    setSelectedIDs([]);
+    setStatusPlaceHolder([]);
+  }
+
+  const backButton = () => {
+    setSelected([]);
+    setStatusPlaceHolder([]);
+  }
+
+  const allEqual = arr => {
+    let arrReturn = arr.every(elem => elem === arr[0]);
+    return arrReturn;
+  }
+  const isAllPaid = arr => {
+    let arrReturn = arr.every(elem => elem == 'PAID');
+    return arrReturn;
+  }
+
+  const dynamicButton = () => {
+    let toggle = allEqual(statusPlaceHolder);
+    let isPaid = isAllPaid(statusPlaceHolder);
+
+    return(
+      <Button disabled={!toggle} onClick={doneClick}  variant="contained" color="primary" size="large" type="submit" fullWidth>        
+        {toggle? `${isPaid ? 'UNPAID' : 'PAID'}`
+               :'SELECT ITEM AS A GROUP'}
+      </Button>      
+    )
+  }
+
+  return (
+    <Toolbar
+      className={clsx(classes.root, {
+        [classes.highlight]: numSelected > 0,
+      })}
+    >
+      {numSelected > 0 ? (      
+        <>
+          <Grid container spacing={9}>
+            <Grid style={ {paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
+              <Typography style={{ display: 'flex', justifyContent: 'center', paddingBottom: '20px'}} color="inherit" variant="subtitle1" component="div">
+                {numSelected} SELECTED
+              </Typography>
+              <Button onClick={backButton}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
+               <b>BACK</b>  
+              </Button>
+            </Grid>
+
+            <Grid style={{paddingBottom: '99px', paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
+              <div style={{ display:'flex', justifyContent: 'center' }}>
+                <Tooltip style={{ display:'flex', justifyContent: 'center' }} title="Delete">
+                  <IconButton aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              {dynamicButton()}
+            </Grid>
+
+          </Grid>
+        </>
+       ):(
+        <>
+          <Grid container spacing={9}>
+            <Grid style={ { paddingBottom: '99px', paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
+          
+                <Typography style={{paddingBottom: '3px', marginLeft:'10px',  fontWeight: 'bolder', fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
+                GROUP: {selectedGroupname? `${selectedGroupname}` : null}
+                </Typography>
+
+                <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontFamily: 'Segoe UI', color:'#88562e', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
+                 <b>TOTAL: {`₱ ${total.toLocaleString()}`}</b> 
+                </Typography>
+
+                <Typography style={{paddingBottom: '3px', marginLeft:'25px', color:'green',  fontFamily: 'Segoe UI', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
+                <b>PAID: {`₱ ${paid.toLocaleString()}`}</b>
+                </Typography>
+
+                <Typography style={{paddingBottom: '3px', marginLeft:'7px', color:'red',  fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
+                <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
+                </Typography>
+
+                <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." />
+
+                <Select fullWidth onChange={e => handleGroupOnChange(e.target.value)}>
+                  {billruns.map((data) => (
+                    <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
+                  ))}
+                </Select>             
+            </Grid>
+          </Grid>
+        </>
+      )}
+    </Toolbar>
+  );
+};
+// TODODODODODO:::END
+// TODODODODODO:::END
+// TODODODODODO:::END
+
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+};
+
+
 
 
 

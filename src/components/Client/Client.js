@@ -57,12 +57,12 @@ const Client = () => {
                 ))}
              </Select>
 
-            <TextField className={classes.textFields} name="name" variant="outlined" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
-            <TextField className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth multiline rows={4} value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
-            <TextField className={classes.textFields} name="package" variant="outlined" label="Package" fullWidth value={clientData.package} onChange={(e) => setClientData({ ...clientData, package: e.target.value})} />
-            <TextField className={classes.textFields} name="dueDate" variant="outlined" label="Due Date" fullWidth value={clientData.dueDate} onChange={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
-            <TextField className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
-            <TextField className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
+            <TextField required className={classes.textFields} name="name" variant="outlined" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
+            <TextField required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth multiline rows={4} value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
+            <TextField required className={classes.textFields} name="package" variant="outlined" label="Package" fullWidth value={clientData.package} onChange={(e) => setClientData({ ...clientData, package: e.target.value})} />
+            <TextField required className={classes.textFields} name="dueDate" variant="outlined" label="Due Date" fullWidth value={clientData.dueDate} onChange={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
+            <TextField required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
+            <TextField required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
           
             <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth> Submit </Button>
             <Button variant="contained" color="secondary" size="small" fullWidth> Clear </Button>

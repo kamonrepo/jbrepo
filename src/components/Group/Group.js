@@ -39,7 +39,7 @@ const Group = () => {
       <Grid style={{ display: 'flex'}} container spacing={9}>
         <Grid style={ {paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
               <Paper className={classes.addGroupForm} elevation={6}>
-                <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+                <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
                     <Typography className={classes.Header} variant="h6"><b>ADD GROUP</b> </Typography>
 
                     <TextField required name="name" variant="outlined" label="Group" fullWidth value={groupData.name} onChange={(e) => setGroupData({...groupData, name: e.target.value})} />

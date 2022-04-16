@@ -131,7 +131,7 @@ export default function NavigationBar() {
   //mobile
   const displayToggleMenu = () => {
     
-    const handleToggleMenuOpen = ()  =>  setState((prevState) => ({ ...prevState,  toggleMenuOpen: true })); 
+    const handleToggleMenuOpen = () => setState((prevState) => ({ ...prevState,  toggleMenuOpen: true })); 
     const handleToggleMenuClose = () => setState((prevState) => ({ ...prevState, toggleMenuOpen: false }));
     
     return (
@@ -165,6 +165,7 @@ export default function NavigationBar() {
                   <Button component={Link} to="/billrun" className={classes.mobileHeading}>WORKSPACE</Button> 
                   <Divider style={{ marginBottom: '11px'}}/>
                   <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
+                  <Button component={Link} to="/services" className={classes.mobileHeading}>SERVICES</Button> 
                   <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
 
                   <Typography className={classes.mobileHeading} variant="h6">{user?.result.firstname}</Typography>
@@ -190,6 +191,7 @@ export default function NavigationBar() {
             {(user?.result)  && (        
               <>   
                 <div style={{ display: 'flex', marginLeft: '99px', justifyContent: 'flex-start' }}>
+                  <Button component={Link} to="/services" className={classes.mobileHeading}>SERVICES</Button> 
                   <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
                   <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
                 </div>
