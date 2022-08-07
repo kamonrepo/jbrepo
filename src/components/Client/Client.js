@@ -25,7 +25,7 @@ const Client = () => {
 
     console.log('setClientData:: ', JSON.stringify({ ...clientData, group: group[0]._id}));
 
-    setClientData({ ...clientData, group: group[0]._id})
+    setClientData({ ...clientData, group: group[0]._id});
   }
 
   const handleSubmit = async (e) => {
@@ -51,11 +51,11 @@ const Client = () => {
             <Typography className={classes.Header} variant="h6"><b>ADD CLIENT</b></Typography>
 
             <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;assigned group</b></InputLabel>
-              <Select labelId="demo-simple-select-standard-label" id="demo-simple-select-standard" className={classes.Select} fullWidth value={group} onChange={e => handleOnchange(e.target.value)}>
-                {groups.map((data) => (
-                  <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
-                ))}
-             </Select>
+            <Select labelId="demo-simple-select-standard-label" id="demo-simple-select-standard" className={classes.Select} fullWidth value={group} onChange={e => handleOnchange(e.target.value)}>
+              {groups.map((data) => (
+                <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
+              ))}
+            </Select>
 
             <TextField required className={classes.textFields} name="name" variant="outlined" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
             <TextField required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth multiline rows={4} value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />

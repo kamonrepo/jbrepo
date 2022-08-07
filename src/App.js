@@ -10,6 +10,7 @@ import Client from './components/Client/Client';
 import Group from './components/Group/Group';
 import BillRun from './components/BillRun/BillRun';
 import BillRunCandidate from './components/BillRunCandidate/BillRunCandidate';
+import Services from './components/Services/Services';
 
 const App = () => {
 
@@ -29,6 +30,7 @@ const App = () => {
                     <Route path="/group" exact component={Group} /> 
                     <Route path="/billrun" exact component={BillRun} /> 
                     <Route path="/billruncandidate" exact component={BillRunCandidate} /> 
+                    <Route path="/services" exact component={Services} /> 
                 </Switch>
             </Container>
         </BrowserRouter>
