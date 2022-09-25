@@ -166,6 +166,7 @@ export default function NavigationBar() {
                   <Divider style={{ marginBottom: '11px'}}/>
                   <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
                   <Button component={Link} to="/services" className={classes.mobileHeading}>SERVICES</Button> 
+                  <Button component={Link} to="/plan" className={classes.mobileHeading}>PLAN</Button> 
                   <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
 
                   <Typography className={classes.mobileHeading} variant="h6">{user?.result.firstname}</Typography>
@@ -192,6 +193,7 @@ export default function NavigationBar() {
               <>   
                 <div style={{ display: 'flex', marginLeft: '99px', justifyContent: 'flex-start' }}>
                   <Button component={Link} to="/services" className={classes.mobileHeading}>SERVICES</Button> 
+                  <Button component={Link} to="/plan" className={classes.mobileHeading}>PLAN</Button> 
                   <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
                   <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
                 </div>

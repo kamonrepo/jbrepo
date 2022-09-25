@@ -6,6 +6,7 @@ import clientReducer from './client';
 import billRunReducer from './billrun';
 import billRunCanReducer from './billruncandidate';
 import categoryReducer from '././services/category';
+import planReducer from '././services/plan';
 
 export default combineReducers({ 
     auth: authReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
     groups: groupReducer,
     clients: clientReducer,
     billruns: billRunReducer,
-    billruncandidates: billRunCanReducer
+    billruncandidates: billRunCanReducer,
+    plan: planReducer
 });

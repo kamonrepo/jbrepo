@@ -3,19 +3,30 @@ import { TextField, Button, Typography, Paper, Select, MenuItem, InputLabel } fr
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
 import { createClient } from '../../actions/client';
+import { getCategory } from '../../actions/services/category';
+import { getPlan } from '../../actions/services/plan';
+
 import useStyles from './styles';
 
 const Client = () => {
 
-  const groups = useSelector(state => state.groups)
-  const [clientData, setClientData] = useState({  group:'', name: '', contactNumber: '', package: '', dueDate: '', monthlyFee: '', address: '' });
+  const groups = useSelector(state => state.groups);
+  const categories = useSelector(state => state.categories);
+  const plans = useSelector(state => state.plan);
+
+  const [clientData, setClientData] = useState({ group:'', name: '', contactNumber: '', package: '', dueDate: '', monthlyFee: '', address: '' });
+  const [category, setCategory] = useState('');
+  const [plan, setPlan] = useState('');
   const [group, setGroup] = useState('');
+  const [selectedCategId, setSelectedCategId] = useState('');
+
   const dispatch = useDispatch();
   const classes = useStyles();
   const user = JSON.parse(localStorage.getItem('profile'));
 
   useEffect(() => {
     dispatch(getGroups());
+    dispatch(getCategory());
 
   }, [])
 
@@ -26,13 +37,34 @@ const Client = () => {
     console.log('setClientData:: ', JSON.stringify({ ...clientData, group: group[0]._id}));
 
     setClientData({ ...clientData, group: group[0]._id});
-  }
+  };
 
   const handleSubmit = async (e) => {
     
     e.preventDefault();
     dispatch(createClient(clientData));
   };
+
+  const handleOnchangeCategory = data => {
+
+     setCategory(data);
+     dispatch(getPlan());
+
+     let category = categories.filter(c => c.category == data);
+
+     //setFormData({ ...formData, category: category[0]._id});
+     setSelectedCategId(category[0]._id);
+  };
+
+  const categoryOnClick = () => {
+  };
+
+  const handleOnchangePlan = data => {
+    setPlan(data);
+
+    let selectedPlan = plans.filter(p => p.plan == data);
+    // setFormData({...formData, plan: selectedPlan[0].plan, price: selectedPlan[0].price});
+  }
 
   if (!user?.result?._id) {
     return (
@@ -59,7 +91,41 @@ const Client = () => {
 
             <TextField required className={classes.textFields} name="name" variant="outlined" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
             <TextField required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth multiline rows={4} value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
-            <TextField required className={classes.textFields} name="package" variant="outlined" label="Package" fullWidth value={clientData.package} onChange={(e) => setClientData({ ...clientData, package: e.target.value})} />
+           
+            <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;PRODUCT</b></InputLabel>
+            {/* <TextField required className={classes.textFields} name="package" variant="outlined" label="Package" fullWidth value={clientData.package} onChange={(e) => setClientData({ ...clientData, package: e.target.value})} /> */}
+            <Select                      
+                style={{paddingBottom: '.3em'}} 
+                labelId="demo-simple-select-standard-label" 
+                id="demo-simple-select-standard" 
+                className={classes.Select}                             
+                value={category} 
+                visible={false}
+                onClick={categoryOnClick}
+                onChange={e => handleOnchangeCategory(e.target.value)}>
+
+                {categories.map((data) => (
+                  <MenuItem key={data._id} value={data.category}>{data.category}</MenuItem>
+                ))}
+            </Select>   
+
+            <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;PLAN</b></InputLabel>
+            <Select                      
+                style={{paddingBottom: '.3em'}} 
+                labelId="demo-simple-select-standard-label" 
+                id="demo-simple-select-standard" 
+                className={classes.Select} 
+                fullWidth
+                value={plan}                       
+                onChange={e => handleOnchangePlan(e.target.value)}>
+
+                {plans.map((data) => {
+                    if(data.category === selectedCategId) {
+                      return(<MenuItem key={data._id} value={data.plan}>{data.plan}</MenuItem>)                              
+                    }                          
+                })}
+              </Select>    
+            
             <TextField required className={classes.textFields} name="dueDate" variant="outlined" label="Due Date" fullWidth value={clientData.dueDate} onChange={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
             <TextField required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
             <TextField required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
