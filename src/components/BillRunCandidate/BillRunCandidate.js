@@ -16,7 +16,7 @@ import { getBillrun } from '../../actions/billrun';
 
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-  { id: 'package', numeric: false, disablePadding: false, label: 'Package' },
+  { id: 'plan', numeric: false, disablePadding: false, label: 'Plan' },
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'Monthly Fee' },
   { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
 ];
@@ -307,7 +307,7 @@ export default function BillRunCandidate() {
                               {row.name}
                             </TableCell>
 
-                            <TableCell align="center">{row.package}</TableCell>
+                            <TableCell align="center">{row.plan}</TableCell>
                             <TableCell align="center">{row.monthlyFee}</TableCell>
                             <TableCell align="center">{row.status}</TableCell>
 
@@ -337,9 +337,7 @@ export default function BillRunCandidate() {
   );
 }
 
-// TODODODODODO:::START
-// TODODODODODO:::START
-// TODODODODODO:::START
+
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
@@ -506,9 +504,6 @@ const EnhancedTableToolbar = props => {
     </Toolbar>
   );
 };
-// TODODODODODO:::END
-// TODODODODODO:::END
-// TODODODODODO:::END
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,

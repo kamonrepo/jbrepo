@@ -8,11 +8,7 @@ const Services = () => {
 
   const categories = useSelector(state => state.categories);
 
-  const [formData, setFormData] = 
-  useState({  category:'',
-              service: ''
-          });
-
+  const [formData, setFormData] =  useState({ category:''});
   const [category, setCategory] = useState('');
   const [btnState, setBtnState] = useState(false);
   const [existingSvc, setExistingSvc] = useState(false);
@@ -32,22 +28,31 @@ const Services = () => {
 
     let category = await categories.filter(c => c.category == data);
 
-    setFormData({ ...formData, category: category[0]._id});
+     setFormData({ ...formData, category: category[0]._id});
   }
 
     const AddServiceSubmit = async e => {
     e.preventDefault();
-    // dispatch(createCategory());
+    console.log('createCategory-req::: ', formData.service);
+     dispatch(createCategory(formData.category));
   };
 
   const NewPlanSubmit = async e => {
     e.preventDefault();
 
     setExistingSvc(false);
+    setFormData({...formData, 
+                    type: 'create'                  
+               });
   };
 
   const ServiceHandleOnChange = e => {
     setFormData({ ...formData, service: e});
+  }
+
+  const debugg = () => {
+
+    console.log('debugg-formData', formData);
   }
 
   return (
@@ -71,6 +76,7 @@ const Services = () => {
 
               <TextField style={{paddingBottom: '.9em'}}  name="category" variant="outlined"   fullWidth  onChange={ e => ServiceHandleOnChange(e.target.value)} />
               <Button variant="contained" color="primary" size="large" type="submit" fullWidth> {`${btnState? 'EDIT' : 'SAVE'}`} SERVICE </Button>
+              <Button variant="contained" color="primary" size="large" type="submit" onClick={debugg}>DEBUGG</Button>
             </form>
           </Paper>
         </Grid>

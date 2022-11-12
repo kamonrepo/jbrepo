@@ -14,7 +14,7 @@ const Client = () => {
   const categories = useSelector(state => state.categories);
   const plans = useSelector(state => state.plan);
 
-  const [clientData, setClientData] = useState({ group:'', name: '', contactNumber: '', package: '', dueDate: '', monthlyFee: '', address: '' });
+  const [clientData, setClientData] = useState({ group:'', name: '', contactNumber: '', category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', address: '' });
   const [category, setCategory] = useState('');
   const [plan, setPlan] = useState('');
   const [group, setGroup] = useState('');
@@ -30,41 +30,46 @@ const Client = () => {
 
   }, [])
 
+  //group dropdown list
   const handleOnchange = data => {
     setGroup(data);
     let group = groups.filter(g => g.name == data);
 
-    console.log('setClientData:: ', JSON.stringify({ ...clientData, group: group[0]._id}));
-
     setClientData({ ...clientData, group: group[0]._id});
-  };
-
-  const handleSubmit = async (e) => {
-    
-    e.preventDefault();
-    dispatch(createClient(clientData));
   };
 
   const handleOnchangeCategory = data => {
 
-     setCategory(data);
-     dispatch(getPlan());
+    setCategory(data);
+    dispatch(getPlan());
 
-     let category = categories.filter(c => c.category == data);
+    let category = categories.filter(c => c.category == data);
 
-     //setFormData({ ...formData, category: category[0]._id});
-     setSelectedCategId(category[0]._id);
+    setClientData({ ...clientData, category: category[0]._id});
+    setSelectedCategId(category[0]._id);
+ };
+
+ const handleOnchangePlan = data => {
+  setPlan(data);
+
+  let selectedPlan = plans.filter(p => p.plan == data);
+     setClientData({ ...clientData, plan: selectedPlan[0]._id, planName: selectedPlan[0].plan});
+ };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('clientData::: ', clientData);
+    dispatch(createClient(clientData));
   };
 
   const categoryOnClick = () => {
+
   };
 
-  const handleOnchangePlan = data => {
-    setPlan(data);
-
-    let selectedPlan = plans.filter(p => p.plan == data);
-    // setFormData({...formData, plan: selectedPlan[0].plan, price: selectedPlan[0].price});
-  }
+  const debugg = e => {
+    e.preventDefault();
+    console.log('clientData:: ', clientData);
+  };
 
   if (!user?.result?._id) {
     return (
@@ -93,7 +98,6 @@ const Client = () => {
             <TextField required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth multiline rows={4} value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
            
             <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;PRODUCT</b></InputLabel>
-            {/* <TextField required className={classes.textFields} name="package" variant="outlined" label="Package" fullWidth value={clientData.package} onChange={(e) => setClientData({ ...clientData, package: e.target.value})} /> */}
             <Select                      
                 style={{paddingBottom: '.3em'}} 
                 labelId="demo-simple-select-standard-label" 
@@ -131,7 +135,7 @@ const Client = () => {
             <TextField required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
           
             <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth> Submit </Button>
-            <Button variant="contained" color="secondary" size="small" fullWidth> Clear </Button>
+            <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
       </form>
     </Paper>
     </>
