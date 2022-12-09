@@ -9,7 +9,7 @@ export const createPlan = req => async dispatch => {
         dispatch({ type: CREATE_PLAN, payload: data});
         
     } catch (error) {
-        console.log('redux-action-create-category-ERROR: ', error.message);
+        console.log('redux-action-plan-category-ERROR: ', error.message);
     }
 };
 

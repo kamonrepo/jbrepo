@@ -13,6 +13,7 @@ const Plan = () => {
   useState({  
             type:'',
             category:'',
+            planId:'',
             plan: '',
             price: ''
           });
@@ -25,16 +26,20 @@ const Plan = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
+  const init = () => {
+    if(plans.length == 0) {
+      setFormData({ ...formData, type: 'create'});
+    }
+  }
+
   useEffect(() => {
      dispatch(getCategory());
+     init();
     // dispatch(getPlan());
 
      console.log('useEffect[]-dispatch-getCategory-getPlan');
   }, []);
 
-  const categoryOnClick = () => {
-    setFormData({ ...formData, price:'', plan: ''});
-  }
 
   const handleOnchangeCategory =  data => {
 
@@ -42,10 +47,12 @@ const Plan = () => {
      dispatch(getPlan());
 
      let category = categories.filter(c => c.category == data);
+     let CID =  category[0]._id;
 
+     console.log('CID::: ', CID);
      setPlanHeader({...planHeader, head: data});
-     setFormData({ ...formData, category: category[0]._id});
-     setSelectedCategId(category[0]._id);
+     setFormData({ ...formData, category: CID});
+     setSelectedCategId(CID);
   }
 
   const handleOnchangePlan = data => {
@@ -60,7 +67,7 @@ const Plan = () => {
 
     //todo::: validate ung plan name para unique/no-duplicates
     console.log('plan-formData:: ', formData);
-    //dispatch(createPlan(formData));
+    dispatch(createPlan(formData));
   };
 
   const newPlanOnClick = e => {
@@ -75,8 +82,8 @@ const Plan = () => {
   }
 
   const debugg = () => {
-
     console.log('debugg-formData', formData);
+    console.log('plans-', plans);
   }
 
   return (
@@ -93,7 +100,6 @@ const Plan = () => {
                             className={classes.Select}                             
                             value={category} 
                             visible={false}
-                            onClick={categoryOnClick}
                             onChange={e => handleOnchangeCategory(e.target.value)}>
 
                             {categories.map((data) => (
@@ -102,33 +108,44 @@ const Plan = () => {
                         </Select>     
 
                         <Typography style={{paddingLeft: '.9em', paddingBottom: '.9em'}}> 
-                          {`${planHeader.head}`} PLAN | 
-                            <Button variant="contained" color="primary" type="submit" onClick={newPlanOnClick}>*new</Button> 
+                          {`${planHeader.head}`} PLAN 
+                            <Button variant="contained" color="primary" onClick={newPlanOnClick}>*new</Button> 
                         </Typography>   
 
-                        <Select                      
-                            style={{paddingBottom: '.3em'}} 
-                            labelId="demo-simple-select-standard-label" 
-                            id="demo-simple-select-standard" 
-                            className={classes.Select} 
-                            fullWidth
-                            value={plan}                       
-                            onChange={e => handleOnchangePlan(e.target.value)}>
+                              {
+                                (plans && plans.length > 0) ? (
+                                  <>
+                                    <Select                      
+                                        style={{paddingBottom: '.3em'}} 
+                                        labelId="demo-simple-select-standard-label" 
+                                        id="demo-simple-select-standard" 
+                                        className={classes.Select} 
+                                        fullWidth
+                                        value={plan}                       
+                                        onChange={e => handleOnchangePlan(e.target.value)}>
 
-                        {plans.map((data) => {
-                            if(data.category === selectedCategId) {
-                                return(
-                                  <MenuItem key={data._id} value={data.plan}>{data.plan}</MenuItem>
-                                )                              
-                            }                          
-                        })}
-                        </Select>                       
+                                    {plans.map((data) => {
+                                        if(data.category === selectedCategId) {
+                                            return(
+                                              <MenuItem key={data._id} value={data.plan}>{data.plan}</MenuItem>
+                                            )                              
+                                        }                          
+                                    })}
+                                    </Select>  
+                                  </>
+                                ) : (
+                                  <>
+                                  No plan record/s
+                                  </>
+                                )
+                              }
+                     
                             
                         <TextField style={{paddingBottom: '.9em'}} required name="plan" variant="outlined" label="Plan" fullWidth  value={formData.plan} onChange={(e) => setFormData({ ...formData, plan: e.target.value})} />   
                         <TextField style={{paddingBottom: '.9em'}} required name="planPrice"  variant="outlined" label="Price" fullWidth value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value})} />
                        
                         <Button variant="contained" color="primary" size="large" type="submit">UPDATE</Button>
-                        <Button variant="contained" color="primary" size="large" type="submit" onClick={debugg}>DEBUGG</Button>
+                        <Button variant="contained" color="primary" size="large" onClick={debugg}>DEBUGG</Button>
                     </form>
                 </Paper>
             </Grid>

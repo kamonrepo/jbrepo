@@ -153,7 +153,7 @@ export default function BillRunCandidate() {
 
   useEffect(() => {
         dispatch(getBillrun());
-        console.log('BRC-component mount');
+
   }, [handBRC])
 
   const classes = useStyles();
@@ -307,9 +307,9 @@ export default function BillRunCandidate() {
                               {row.name}
                             </TableCell>
 
-                            <TableCell align="center">{row.plan}</TableCell>
-                            <TableCell align="center">{row.monthlyFee}</TableCell>
-                            <TableCell align="center">{row.status}</TableCell>
+                            <TableCell align="left">{row.planName}</TableCell>
+                            <TableCell align="left">{row.monthlyFee}</TableCell>
+                            <TableCell align="left">{row.status}</TableCell>
 
                       </TableRow>
                     );
@@ -353,7 +353,7 @@ const EnhancedTableToolbar = props => {
   useEffect(() => {
     setHandBRC(brc);
     zCompute(brc);
-    console.log('BRC/EToolbar-component mount');
+
   },[brc]);
 
   let zCompute = (brc) => {
@@ -447,11 +447,11 @@ const EnhancedTableToolbar = props => {
       {numSelected > 0 ? (      
         <>
           <Grid container spacing={9}>
-            <Grid style={ {paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
+            <Grid style={{paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
               <Typography style={{ display: 'flex', justifyContent: 'center', paddingBottom: '20px'}} color="inherit" variant="subtitle1" component="div">
                 {numSelected} SELECTED
               </Typography>
-              <Button onClick={backButton}  variant="contained" color="primary" size="large" type="submit" fullWidth> 
+              <Button onClick={backButton} variant="contained" color="primary" size="large" type="submit" fullWidth> 
                <b>BACK</b>  
               </Button>
             </Grid>
@@ -489,7 +489,7 @@ const EnhancedTableToolbar = props => {
                 <Typography style={{paddingBottom: '3px', marginLeft:'7px', color:'red',  fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
                 <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
                 </Typography>
-
+                
                 <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." />
 
                 <Select fullWidth onChange={e => handleGroupOnChange(e.target.value)}>

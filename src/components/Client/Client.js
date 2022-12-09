@@ -53,7 +53,8 @@ const Client = () => {
   setPlan(data);
 
   let selectedPlan = plans.filter(p => p.plan == data);
-     setClientData({ ...clientData, plan: selectedPlan[0]._id, planName: selectedPlan[0].plan});
+  console.log(' selectedPlan[0].monthlyFee::: ',  selectedPlan[0].price);
+     setClientData({ ...clientData, plan: selectedPlan[0]._id, planName: selectedPlan[0].plan, monthlyFee: selectedPlan[0].price});
  };
 
   const handleSubmit = async (e) => {

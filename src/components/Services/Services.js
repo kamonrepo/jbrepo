@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Button, TextField, Paper, Select, MenuItem, InputLabel, Typography, Link } from '@material-ui/core';
+import { Grid, Button, TextField, Paper, Select, MenuItem, Typography } from '@material-ui/core';
 import { getCategory, createCategory } from '../../actions/services/category';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
@@ -8,7 +8,7 @@ const Services = () => {
 
   const categories = useSelector(state => state.categories);
 
-  const [formData, setFormData] =  useState({ category:''});
+  const [formData, setFormData] =  useState({ category:'' });
   const [category, setCategory] = useState('');
   const [btnState, setBtnState] = useState(false);
   const [existingSvc, setExistingSvc] = useState(false);
@@ -16,71 +16,91 @@ const Services = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
+  const init = () => {
+    if(categories.length == 0) {
+      console.log('init create');
+      setFormData({ ...formData, type: 'create'});
+    }
+  }
+
   useEffect( () => {
      dispatch(getCategory());
-
-     console.log('useEffect[]-dispatch-getCategory-getPlan');
+     init();
+     console.log('useEffect-dispatch-getCategory');
   }, [])
 
   const handleOnchange = async data => {
     setExistingSvc(true);
+    console.log('handleOnchange-data::: ', data);
     setCategory(data);
 
-    let category = await categories.filter(c => c.category == data);
+    let categ = await categories.filter(c => c.category == data);
 
-     setFormData({ ...formData, category: category[0]._id});
+     setFormData({ ...formData, type: 'update', category: categ[0]._id, service: categ[0].category});
   }
-
     const AddServiceSubmit = async e => {
     e.preventDefault();
-    console.log('createCategory-req::: ', formData.service);
-     dispatch(createCategory(formData.category));
+
+    console.log('ONSUBMIT formData', formData);
+    console.log('category-category::: ', category);
+    dispatch(createCategory(formData));
   };
 
   const NewPlanSubmit = async e => {
     e.preventDefault();
 
+    setCategory('');
     setExistingSvc(false);
-    setFormData({...formData, 
-                    type: 'create'                  
-               });
+    setFormData({ type: 'create' });
   };
 
-  const ServiceHandleOnChange = e => {
-    setFormData({ ...formData, service: e});
+  const debugg = () => {
+    console.log('category-state::: ', category);
+    console.log('formData-state', formData);
   }
 
-  const debugg = () => {
-
-    console.log('debugg-formData', formData);
+  const tbOnChange = value => {
+    console.log('tbOnChange::: ', value);
+    setCategory(value);
+    setFormData({ ...formData, service: value});
   }
 
   return (
-    <>
-      <Grid style={{ display: 'flex'}} container spacing={9}>
-        <Grid style={{paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
-          <Paper className={''} elevation={6}>
-            <form autoComplete="off" className={''} onSubmit={AddServiceSubmit}>
-              <InputLabel style={{paddingBottom: '.3em'}} id="demo-simple-select-standard-label">
-                <div style={{ display: 'flex'}}>
-                <Typography>SELECT SERVICE &nbsp;&nbsp;</Typography>         
-                  <Button className={''} variant="contained" color="primary" size="large" type="submit" onClick={NewPlanSubmit}>*new</Button>
-                </div>
-              </InputLabel>
+      <>
+        <Grid class={classes.container} container >
+          <Grid style={{paddingTop: '30px' }} item lg={12} sm={12} xs={12}>
+            <Paper class={classes.Paper} elevation={9}>
+              <form class={classes.form} autoComplete="off" onSubmit={AddServiceSubmit}>
+                  <div class={classes.createButton}>
+                    <Button variant="text" onClick={(e) => NewPlanSubmit(e)}><b style={{color:'green'}}>* create new</b></Button>
+                  </div>
+                {(categories.length > 0) 
+                ? (
+                  <div>
+                    <Typography>SELECT SERVICE &nbsp;&nbsp;</Typography>      
+                    <Select 
+                      fullWidth
+                      style={{paddingBottom: '.3em'}} 
+                      className={classes.Select}                   
+                      value={category} 
+                      onChange={e => handleOnchange(e.target.value)}>
+                        {categories.map((data) => (
+                          <MenuItem key={data._id} value={data.category}>{data.category}</MenuItem>
+                        ))}
+                    </Select>
+                    <TextField required fullWidth onChange={(e) => tbOnChange(e.target.value)} value={category} style={{paddingBottom: '.9em'}}  name="category" variant="outlined"/>
 
-              <Select style={{paddingBottom: '.3em'}} labelId="demo-simple-select-standard-label" id="demo-simple-select-standard" className={classes.Select} fullWidth value={category} onChange={e => handleOnchange(e.target.value)}>
-                {categories.map((data) => (
-                  <MenuItem key={data._id} value={data.category}>{data.category}</MenuItem>
-                ))}
-              </Select>
+                  </div>
+                )
+                : null 
+                }
 
-              <TextField style={{paddingBottom: '.9em'}}  name="category" variant="outlined"   fullWidth  onChange={ e => ServiceHandleOnChange(e.target.value)} />
-              <Button variant="contained" color="primary" size="large" type="submit" fullWidth> {`${btnState? 'EDIT' : 'SAVE'}`} SERVICE </Button>
-              <Button variant="contained" color="primary" size="large" type="submit" onClick={debugg}>DEBUGG</Button>
-            </form>
-          </Paper>
+                <Button variant="contained" color="primary" size="large" type="submit"> {`${btnState? 'EDIT' : 'SAVE'}`} SERVICE </Button>
+                {/* <Button variant="contained" color="primary" size="large" onClick={debugg}> debugg </Button> */}
+              </form>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
     </>
   );
 };

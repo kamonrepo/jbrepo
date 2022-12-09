@@ -2,31 +2,30 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
-  Header: {
+  container: {
     display: 'flex',
-    margin: '3px 3px 33px 3px',
-    fontFamily: 'Segoe UI'
+    width: '100%',
   },
-  textFields: {
-    marginBottom: '12px'
-  },
-  Select: {
+  Paper: {
     display: 'flex',
-    margin: '3px 3px 33px 3px',
-    fontFamily: 'Segoe UI'
-  },
-  paper: {
-    display: 'flex',
-    padding: theme.spacing(6),
+    justifyContent: 'center',
+    width: '100%'
   },
   form: {
     display: 'flex',
-    flexWrap: 'wrap',
     flexDirection: 'column'
   },
-
-  buttonSubmit: {
-    marginBottom: 10,
+  Select: {
+    margin: '3px 3px 33px 3px',
+    fontFamily: 'Segoe UI'
   },
+  createButton: {
+    display: 'flex', 
+    justifyContent:'flex-end',
+    marginBottom: '33px'
+  },
+  Button: {
+    display: 'flex'
+  }
 
 }));
