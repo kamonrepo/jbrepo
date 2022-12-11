@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import DeleteIcon from '@material-ui/icons/Delete';
-
 import { lighten, makeStyles, Table, 
         TableBody, TableCell, TableContainer, 
         TableHead, TablePagination, TableRow, 
@@ -53,39 +52,41 @@ function EnhancedTableHead(props) {
   };
 
   return (
+    <>
     <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
-            </TableSortLabel>
+        <TableRow>
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputProps={{ 'aria-label': 'select all desserts' }}
+            />
           </TableCell>
-        ))}
-      </TableRow>
+            {headCells.map((headCell) => (
+              <TableCell
+                key={headCell.id}
+                align={headCell.numeric ? 'right' : 'left'}
+                padding={headCell.disablePadding ? 'none' : 'normal'}
+                sortDirection={orderBy === headCell.id ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : 'asc'}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <span className={classes.visuallyHidden}>
+                      {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </span>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
+            ))}
+        </TableRow>
     </TableHead>
+    </>
   );
 }
 
@@ -153,8 +154,7 @@ export default function BillRunCandidate() {
 
   useEffect(() => {
         dispatch(getBillrun());
-
-  }, [handBRC])
+  }, [handBRC]);
 
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
@@ -164,6 +164,7 @@ export default function BillRunCandidate() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
+  const [query, setQuery] = useState('');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -241,6 +242,22 @@ export default function BillRunCandidate() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const handleDataTable = () => {
+
+    if(query.length != 0) {
+      let lowerCaseQuery = query.toLowerCase();
+      const filtered = handBRC.filter(brc => brc.name.toLowerCase() == lowerCaseQuery);
+
+      if(filtered.length > 0) {
+        return filtered;
+      }
+      return handBRC;
+    } else {
+      return handBRC;
+    }
+
+  }
   
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
@@ -261,6 +278,8 @@ export default function BillRunCandidate() {
           setSelectedGroupname={setSelectedGroupname}
           statusPlaceHolder={statusPlaceHolder}
           setStatusPlaceHolder={setStatusPlaceHolder}
+          query={query}
+          setQuery={setQuery}
          />
 
         <TableContainer>
@@ -280,7 +299,7 @@ export default function BillRunCandidate() {
                 rowCount={handBRC.length}
               />
               <TableBody>
-                { stableSort(handBRC, getComparator(order, orderBy))
+                { stableSort(handleDataTable(), getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name);
@@ -337,12 +356,11 @@ export default function BillRunCandidate() {
   );
 }
 
-
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const {numSelected, setHandBRC, selectedIDs, setSelectedIDs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
-        setSelected, selectedGroupname, setSelectedGroupname } = props;
+        setSelected, selectedGroupname, setSelectedGroupname, query, setQuery } = props;
   const [total, setTotal] = useState(0);  
   const [paid, setPaid] = useState(0);
   const [unpaid, setUnpaid] = useState(0);
@@ -392,11 +410,13 @@ const EnhancedTableToolbar = props => {
   }
 
   const handleGroupOnChange = async brid => {
+  console.log('handleGroupOnChange::: ', brid);
 
+  setQuery('');
   await dispatch(getBRCById(brid));
+  displayGroupName(brid);
+  setSelectedBr(brid);
 
-    displayGroupName(brid);
-    setSelectedBr(brid);
   }
   
   //PAID BUTTON
@@ -436,6 +456,18 @@ const EnhancedTableToolbar = props => {
                :'SELECT ITEM AS A GROUP'}
       </Button>      
     )
+  }
+
+  const searchOnChange =  value => {
+    setQuery(value);
+    // return new Promise(async (resolve, reject) => {
+    //   try{
+    //     resolve(setQuery(value));
+    //   } catch(e) {
+    //     reject(e);
+    //   }
+
+    // })
   }
 
   return (
@@ -490,7 +522,7 @@ const EnhancedTableToolbar = props => {
                 <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
                 </Typography>
                 
-                <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." />
+                <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : null} onChange={e => searchOnChange(e.target.value)} />
 
                 <Select fullWidth onChange={e => handleGroupOnChange(e.target.value)}>
                   {billruns.map((data) => (
