@@ -41,7 +41,7 @@ const Plan = () => {
   }, []);
 
 
-  const handleOnchangeCategory =  data => {
+  const handleOnchangeCategory = data => {
 
      setCategory(data);
      dispatch(getPlan());
@@ -144,7 +144,7 @@ const Plan = () => {
                         <TextField style={{paddingBottom: '.9em'}} required name="plan" variant="outlined" label="Plan" fullWidth  value={formData.plan} onChange={(e) => setFormData({ ...formData, plan: e.target.value})} />   
                         <TextField style={{paddingBottom: '.9em'}} required name="planPrice"  variant="outlined" label="Price" fullWidth value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value})} />
                        
-                        <Button variant="contained" color="primary" size="large" type="submit">UPDATE</Button>
+                        <Button variant="contained" color="primary" size="large" type="submit">{formData && formData.type == 'create' ? 'CREATE' : 'UPDATE'}</Button>
                         <Button variant="contained" color="primary" size="large" onClick={debugg}>DEBUGG</Button>
                     </form>
                 </Paper>

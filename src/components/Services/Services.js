@@ -88,15 +88,14 @@ const Services = () => {
                           <MenuItem key={data._id} value={data.category}>{data.category}</MenuItem>
                         ))}
                     </Select>
-                    <TextField required fullWidth onChange={(e) => tbOnChange(e.target.value)} value={category} style={{paddingBottom: '.9em'}}  name="category" variant="outlined"/>
+                   
 
                   </div>
                 )
                 : null 
                 }
-
+                <TextField required fullWidth onChange={(e) => tbOnChange(e.target.value)} value={category} style={{paddingBottom: '.9em'}}  name="category" variant="outlined"/>
                 <Button variant="contained" color="primary" size="large" type="submit"> {`${btnState? 'EDIT' : 'SAVE'}`} SERVICE </Button>
-                {/* <Button variant="contained" color="primary" size="large" onClick={debugg}> debugg </Button> */}
               </form>
             </Paper>
           </Grid>
