@@ -17,7 +17,9 @@ export default makeStyles((theme) => ({
   },
   paper: {
     display: 'flex',
+    backgroundColor: '#dce8e0',
     padding: theme.spacing(6),
+    justifyContent:'center'
   },
   form: {
     display: 'flex',
@@ -28,5 +30,10 @@ export default makeStyles((theme) => ({
   buttonSubmit: {
     marginBottom: 10,
   },
+  createButton: {
+    display: 'flex', 
+    justifyContent:'flex-end',
+    marginBottom: '33px'
+  }
 
 }));

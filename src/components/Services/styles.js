@@ -2,14 +2,11 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    width: '100%',
-  },
   Paper: {
     display: 'flex',
-    justifyContent: 'center',
-    width: '100%'
+    backgroundColor: '#dce8e0',
+    padding: theme.spacing(6),
+    justifyContent:'center'
   },
   form: {
     display: 'flex',
@@ -23,9 +20,5 @@ export default makeStyles((theme) => ({
     display: 'flex', 
     justifyContent:'flex-end',
     marginBottom: '33px'
-  },
-  Button: {
-    display: 'flex'
   }
-
 }));

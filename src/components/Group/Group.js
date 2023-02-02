@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Paper, Grid } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, Grid, Container } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { createGroup, getGroups } from '../../actions/group';
 import useStyles from './styles';
@@ -32,7 +32,7 @@ const Group = () => {
   }
 
   return (     
-    <>
+    <Container component="main" maxWidth="xs">
     <Grid style={{ display: 'flex'}} container spacing={9}>
       <Grid style={ {paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
             <Paper className={classes.addGroupForm} elevation={6}>
@@ -56,7 +56,7 @@ const Group = () => {
         </Paper>
       </Grid>
     </Grid>
-  </>
+    </Container>
   )
 }
 

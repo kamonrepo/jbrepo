@@ -28,5 +28,6 @@ export const FETCH_CATEGORY = 'FETCH_CATEGORY';
 //PLAN
 export const CREATE_PLAN = 'CREATE_PLAN';
 export const FETCH_PLAN = 'FETCH_PLAN';
+export const FETCH_PLAN_BY_CATEGORY_ID = 'FETCH_PLAN_BY_CATEGORY_ID';
 
 

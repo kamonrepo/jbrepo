@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Typography, Paper, Select, MenuItem, InputLabel } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, Select, MenuItem, InputLabel, Container } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
 import { createClient } from '../../actions/client';
@@ -83,9 +83,9 @@ const Client = () => {
   }
 
   return (     
-    <>        
+    <Container component="main" maxWidth="xs">     
       <Paper className={classes.paper} elevation={9}>
-        <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
             <Typography className={classes.Header} variant="h6"><b>ADD CLIENT</b></Typography>
 
             <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;assigned group</b></InputLabel>
@@ -139,7 +139,7 @@ const Client = () => {
             <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
       </form>
     </Paper>
-    </>
+    </Container>
   )
 }
 

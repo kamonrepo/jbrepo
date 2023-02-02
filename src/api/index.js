@@ -38,4 +38,5 @@ export const createCategory = newCategory => API.post('/category', newCategory);
 export const fetchCategory = () => API.get('/category');
 
 export const createPlan = newPlan => API.post('/plan', newPlan);
+export const fetchPlanByCategoryId = id => API.get(`/plan/${id}`);
 export const fetchPlan = () => API.get('/plan');

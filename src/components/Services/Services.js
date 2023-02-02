@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Button, TextField, Paper, Select, MenuItem, Typography } from '@material-ui/core';
+import { Button, TextField, Paper, Select, MenuItem, Typography, Container } from '@material-ui/core';
 import { getCategory, createCategory } from '../../actions/services/category';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
@@ -10,8 +10,6 @@ const Services = () => {
 
   const [formData, setFormData] =  useState({ category:'' });
   const [category, setCategory] = useState('');
-  const [btnState, setBtnState] = useState(false);
-  const [existingSvc, setExistingSvc] = useState(false);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -30,27 +28,26 @@ const Services = () => {
   }, [])
 
   const handleOnchange = async data => {
-    setExistingSvc(true);
+
     console.log('handleOnchange-data::: ', data);
     setCategory(data);
 
     let categ = await categories.filter(c => c.category == data);
 
-     setFormData({ ...formData, type: 'update', category: categ[0]._id, service: categ[0].category});
+    setFormData({ ...formData, type: 'update', category: categ[0]._id, service: categ[0].category});
   }
     const AddServiceSubmit = async e => {
     e.preventDefault();
 
     console.log('ONSUBMIT formData', formData);
-    console.log('category-category::: ', category);
     dispatch(createCategory(formData));
   };
 
+  //create new service
   const NewPlanSubmit = async e => {
     e.preventDefault();
 
     setCategory('');
-    setExistingSvc(false);
     setFormData({ type: 'create' });
   };
 
@@ -66,41 +63,34 @@ const Services = () => {
   }
 
   return (
-      <>
-        <Grid class={classes.container} container >
-          <Grid style={{paddingTop: '30px' }} item lg={12} sm={12} xs={12}>
-            <Paper class={classes.Paper} elevation={9}>
-              <form class={classes.form} autoComplete="off" onSubmit={AddServiceSubmit}>
-                  <div class={classes.createButton}>
-                    <Button variant="text" onClick={(e) => NewPlanSubmit(e)}><b style={{color:'green'}}>* create new</b></Button>
-                  </div>
-                {(categories.length > 0) 
-                ? (
-                  <div>
-                    <Typography>SELECT SERVICE &nbsp;&nbsp;</Typography>      
-                    <Select 
-                      fullWidth
-                      style={{paddingBottom: '.3em'}} 
-                      className={classes.Select}                   
-                      value={category} 
-                      onChange={e => handleOnchange(e.target.value)}>
-                        {categories.map((data) => (
-                          <MenuItem key={data._id} value={data.category}>{data.category}</MenuItem>
-                        ))}
-                    </Select>
-                   
-
-                  </div>
-                )
-                : null 
-                }
-                <TextField required fullWidth onChange={(e) => tbOnChange(e.target.value)} value={category} style={{paddingBottom: '.9em'}}  name="category" variant="outlined"/>
-                <Button variant="contained" color="primary" size="large" type="submit"> {`${btnState? 'EDIT' : 'SAVE'}`} SERVICE </Button>
-              </form>
-            </Paper>
-          </Grid>
-        </Grid>
-    </>
+    <Container component="main" maxWidth="xs">
+        <Paper class={classes.Paper} elevation={9}>
+          <form class={classes.form} autoComplete="off" onSubmit={AddServiceSubmit}>
+              <div class={classes.createButton}>
+                <Button variant="text" onClick={(e) => NewPlanSubmit(e)}><b style={{color:'green' }}>* create new service</b></Button>
+              </div>
+            {(categories.length > 0) 
+            ? (
+              <div>
+                <Typography>SELECT SERVICE &nbsp;&nbsp;</Typography>      
+                <Select 
+                  style={{paddingBottom: '.3em', width: '333px'}} 
+                  className={classes.Select}                   
+                  value={category} 
+                  onChange={e => handleOnchange(e.target.value)}>
+                    {categories.map((data) => (
+                      <MenuItem key={data._id} value={data.category}>{data.category}</MenuItem>
+                    ))}
+                </Select>
+              </div>
+            )
+            : null 
+            }
+            <TextField label={`${category.length == 0 ? 'CREATE SERVICE' : 'UPDATE SERVICE'}`} required onChange={(e) => tbOnChange(e.target.value)} value={category} style={{paddingBottom: '.9em'}}  name="category" variant="outlined"/>
+            <Button variant="contained" color="primary" size="large" type="submit"> {`${category.length == 0 ? 'CREATE' : 'UPDATE'}`} </Button>
+          </form>
+        </Paper>
+      </Container>
   );
 };
 
