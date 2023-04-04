@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Button, TextField, Paper, Select, MenuItem, Typography, Container } from '@material-ui/core';
+import { Button, TextField, Paper, Select, MenuItem, Typography, Container } from '@material-ui/core';
 import { getCategory } from '../../actions/services/category';
 import { getPlanByCategoryId, createPlan } from '../../actions/services/plan';
 import { useDispatch, useSelector } from 'react-redux';

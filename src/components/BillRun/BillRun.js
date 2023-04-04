@@ -26,8 +26,8 @@ const BillRun = () => {
         e.preventDefault();
 
         const temp = new Date();
-        const today = temp.getFullYear() + ':::' + temp.getDate() + ':::' + temp.getHours() + ':::' + temp.getMilliseconds();
-        let uniqueId =  today + ':::' + id.toString();
+        const today = temp.getFullYear() + '-' + temp.getDate() + '-' + temp.getHours() + '-' + temp.getMilliseconds();
+        let uniqueId =  today + '-' + id.toString();
 
         let payload = { newWOs: uniqueId }
         let buildMergedGroup = [];

@@ -161,6 +161,7 @@ export default function BillRunCandidate() {
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
   const [selectedIDs, setSelectedIDs] = useState([]);
+  const [selectedMFs, setSelectedMFs] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
@@ -181,7 +182,7 @@ export default function BillRunCandidate() {
     setSelected([]);
   };
 
-  const handleClick = (event, name, id, status) => {
+  const handleClick = (event, name, id, status, monthlyFee) => {
 
     const selectedIndex = selected.indexOf(name);
     
@@ -216,6 +217,7 @@ export default function BillRunCandidate() {
     // the -1 value means it is checked/selected
     if(selectedIndex === -1) {
       setSelectedIDs(prev => [...prev, id]);
+      setSelectedMFs(prev => [...prev, monthlyFee]);
       setStatusPlaceHolder(prev => [...prev, status]);
     } else {
 
@@ -225,6 +227,7 @@ export default function BillRunCandidate() {
       
       if(index > -1) {
         selectedIDs.splice(index, 1);
+        selectedMFs.splice(index, 1);
       }
       if(statusIndex > -1){
         statusPlaceHolder.splice(statusIndex, 1);
@@ -269,9 +272,11 @@ export default function BillRunCandidate() {
           numSelected={selected.length} 
           handBRC={handBRC} 
           selectedIDs={selectedIDs} 
+          selectedMFs={selectedMFs} 
           setHandBRC={setHandBRC} 
           setSelected={setSelected} 
           setSelectedIDs={setSelectedIDs}
+          setSelectedMFs={setSelectedMFs}
           selectedBr={selectedBr}
           setSelectedBr={setSelectedBr}
           selectedGroupname={selectedGroupname}
@@ -308,7 +313,7 @@ export default function BillRunCandidate() {
                     return (
                       <TableRow
                         hover
-                        onClick={(e) => handleClick(e, row.name, row._id, row.status)}
+                        onClick={(e) => handleClick(e, row.name, row._id, row.status, row.monthlyFee)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -359,7 +364,7 @@ export default function BillRunCandidate() {
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
-  const {numSelected, setHandBRC, selectedIDs, setSelectedIDs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
+  const {numSelected, setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
         setSelected, selectedGroupname, setSelectedGroupname, query, setQuery } = props;
   const [total, setTotal] = useState(0);  
   const [paid, setPaid] = useState(0);
@@ -370,27 +375,26 @@ const EnhancedTableToolbar = props => {
 
   useEffect(() => {
     setHandBRC(brc);
-    zCompute(brc);
+    // zCompute(brc, billruns);
 
   },[brc]);
 
-  let zCompute = (brc) => {
-    let sum = 0;
+  let zCompute = brid => {
+
+    let total = 0;
     let paidSum = 0;
     let unpaindSum = 0;
 
-    //get total
-    Object.keys(brc).forEach(key => {
-      sum = sum + parseFloat(brc[key].monthlyFee);
 
-      if(brc[key].status === 'PAID') {
-          paidSum = paidSum + parseFloat(brc[key].monthlyFee);
-      } else {
-          unpaindSum = unpaindSum + parseFloat(brc[key].monthlyFee);
+    Object.keys(billruns).forEach(brKey => {
+      if(billruns[brKey]._id == brid) {
+        total =  billruns[brKey].total;
+        paidSum = billruns[brKey].paid;
+        unpaindSum = billruns[brKey].unpaid;
       }
     })
 
-    setTotal(sum);
+    setTotal(total);
     setPaid(paidSum);
     setUnpaid(unpaindSum);
   }
@@ -416,6 +420,7 @@ const EnhancedTableToolbar = props => {
   await dispatch(getBRCById(brid));
   displayGroupName(brid);
   setSelectedBr(brid);
+  zCompute(brid);
 
   }
   
@@ -424,11 +429,12 @@ const EnhancedTableToolbar = props => {
 
     let isPaid = isAllPaid(statusPlaceHolder);
 
-    await dispatch(updateBRC({selectedIDs, isPaid}));
+    await dispatch(updateBRC({selectedIDs, isPaid, selectedMFs, selectedBr}));
     await dispatch(getBRCById(selectedBr));
 
     setSelected([]);
     setSelectedIDs([]);
+    setSelectedMFs([]);
     setStatusPlaceHolder([]);
   }
 
