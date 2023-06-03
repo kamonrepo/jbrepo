@@ -53,7 +53,7 @@ const Services = () => {
 
   const debugg = () => {
     console.log('category-state::: ', category);
-    console.log('formData-state', formData);
+    console.log('formData-state', formData.type);
   }
 
   const tbOnChange = value => {
@@ -86,8 +86,9 @@ const Services = () => {
             )
             : null 
             }
-            <TextField label={`${category.length == 0 ? 'CREATE SERVICE' : 'UPDATE SERVICE'}`} required onChange={(e) => tbOnChange(e.target.value)} value={category} style={{paddingBottom: '.9em'}}  name="category" variant="outlined"/>
-            <Button variant="contained" color="primary" size="large" type="submit"> {`${category.length == 0 ? 'CREATE' : 'UPDATE'}`} </Button>
+            <TextField label={`${formData.type == 'create' ? 'CREATE SERVICE' : 'UPDATE SERVICE'}`} required onChange={(e) => tbOnChange(e.target.value)} value={category} style={{paddingBottom: '.9em'}}  name="category" variant="outlined"/>
+            <Button variant="contained" color="primary" size="large" type="submit"> {`${formData.type == 'create' ? 'CREATE' : 'UPDATE'}`} </Button>
+            <Button variant="contained" color="primary" size="large" onClick={() => debugg()} > debugg </Button>
           </form>
         </Paper>
       </Container>
