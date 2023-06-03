@@ -183,7 +183,7 @@ export default function BillRunCandidate() {
   };
 
   const handleClick = (event, name, id, status, monthlyFee) => {
-
+    
     const selectedIndex = selected.indexOf(name);
     
     let newSelected = [];
@@ -219,8 +219,10 @@ export default function BillRunCandidate() {
       setSelectedIDs(prev => [...prev, id]);
       setSelectedMFs(prev => [...prev, monthlyFee]);
       setStatusPlaceHolder(prev => [...prev, status]);
-    } else {
+      console.log('checked: ');
 
+    } else {
+      console.log('unchecked: ');
       //uncheck
       let index = selectedIDs.indexOf(id);
       let statusIndex = statusPlaceHolder.indexOf(status);
@@ -440,6 +442,8 @@ const EnhancedTableToolbar = props => {
 
   const backButton = () => {
     setSelected([]);
+    setSelectedIDs([]);
+    setSelectedMFs([]);
     setStatusPlaceHolder([]);
   }
 
