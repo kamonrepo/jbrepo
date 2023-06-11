@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, TextField, Paper, Select, MenuItem, Typography, Container } from '@material-ui/core';
 import { getCategory, createCategory } from '../../actions/services/category';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +7,7 @@ import useStyles from './styles';
 const Services = () => {
 
   const categories = useSelector(state => state.categories);
-
+  const windowRef = useRef(null); //delete this later
   const [formData, setFormData] =  useState({ category:'' });
   const [category, setCategory] = useState('');
 
@@ -51,9 +51,9 @@ const Services = () => {
     setFormData({ type: 'create' });
   };
 
+
   const debugg = () => {
-    console.log('category-state::: ', category);
-    console.log('formData-state', formData.type);
+
   }
 
   const tbOnChange = value => {
