@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBillrun, getBillrun } from '../../actions/billrun';
 import { getGroups } from '../../actions/group';
-import { Grid, TextField, Button, Paper } from '@material-ui/core';
+import { Grid, TextField, Button, Paper, Container } from '@material-ui/core';
 import Tags from './Tags';
 import useStyles from './styles';
 
@@ -45,31 +45,33 @@ const BillRun = () => {
     }
 
     return(
-        <Paper className={classes.paper} elevation={9}>
-            <form onSubmit={handleSubmit}>
-                <Grid container>
-                    <Grid className={classes.tags} item lg={12} md={12} sm={12} xs={12}>
-                        <Tags       
-                            fullWidth                 
-                            grpNames={grpNames} 
-                            setGrpNames={setGrpNames} 
-                            grpIds={grpIds} 
-                            setGrpIds={setGrpIds} 
-                            groups={groups} 
-                            selectedGRP={selectedGRP} 
-                            setSelectedGRP={setSelectedGRP}/>
-                    </Grid>
+        <Container component="main" maxWidth="xs" >
+            <Paper className={classes.paper} elevation={9}>
+                <form class={classes.form} onSubmit={handleSubmit}>
+                    <Grid className={classes.maincon} container>
+                        <Grid className={classes.tags} item lg={12} md={12} sm={12} xs={12}>
+                            <Tags                 
+                                grpNames={grpNames} 
+                                setGrpNames={setGrpNames} 
+                                grpIds={grpIds} 
+                                setGrpIds={setGrpIds} 
+                                groups={groups} 
+                                selectedGRP={selectedGRP} 
+                                setSelectedGRP={setSelectedGRP}
+                            />
+                        </Grid>
 
-                    <Grid className={classes.id} item lg={12} md={12} sm={12} xs={12}>
-                        <TextField fullWidth required name="id" variant="outlined" label="ID" onChange={(e) => setId(e.target.value)} />
-                    </Grid>
+                        <Grid className={classes.id} item lg={12} md={12} sm={12} xs={12}>
+                            <TextField fullWidth required name="id" variant="outlined" label="ID" onChange={(e) => setId(e.target.value)} />
+                        </Grid>
 
-                    <Grid className={classes.submit} item lg={12} md={12} sm={12} xs={12}>
-                        <Button fullWidth variant="contained" color="primary" size="large" type="submit"><b>SUBMIT</b></Button>
+                        <Grid className={classes.submit} item lg={12} md={12} sm={12} xs={12}>
+                            <Button fullWidth variant="contained" color="primary" size="large" type="submit"><b>SUBMIT</b></Button>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </form>
-        </Paper>
+                </form>
+            </Paper>
+        </Container>
     );
 }
 

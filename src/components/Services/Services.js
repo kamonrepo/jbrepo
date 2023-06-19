@@ -7,7 +7,6 @@ import useStyles from './styles';
 const Services = () => {
 
   const categories = useSelector(state => state.categories);
-  const windowRef = useRef(null); //delete this later
   const [formData, setFormData] =  useState({ category:'' });
   const [category, setCategory] = useState('');
 

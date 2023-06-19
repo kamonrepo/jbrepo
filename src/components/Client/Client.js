@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Typography, Paper, Select, MenuItem, InputLabel, Container } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, Select, MenuItem, InputLabel, Container, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel} from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
 import { createClient } from '../../actions/client';
@@ -130,8 +130,15 @@ const Client = () => {
                     }                          
                 })}
               </Select>    
+
+              <FormControl>
+              <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+                <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="female" name="radio-buttons-group">
+                  <FormControlLabel value="15th" control={<Radio />} label="15th of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})} />
+                  <FormControlLabel value="Endth" control={<Radio />} label="End of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
+                </RadioGroup>
+            </FormControl>
             
-            <TextField required className={classes.textFields} name="dueDate" variant="outlined" label="Due Date" fullWidth value={clientData.dueDate} onChange={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
             <TextField required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
             <TextField required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
           

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 
 export default function Tags( { groups, setGrpIds, setGrpNames } ) {
@@ -21,7 +20,8 @@ export default function Tags( { groups, setGrpIds, setGrpNames } ) {
   }
 
   return (
-    <Paper elevation={9}>
+    // <Paper style={{ display: 'flex', justifyContent: 'center' }} elevation={9}>
+    <div>
       <Stack spacing={3} sx={{ width: 600 }}>
         <Autocomplete
           style={{ backgroundColor: 'whitesmoke'}}
@@ -40,6 +40,6 @@ export default function Tags( { groups, setGrpIds, setGrpNames } ) {
           )}
         />
       </Stack>
-    </Paper>
+    </div>
   );
 }

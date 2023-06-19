@@ -12,6 +12,7 @@ import BillRun from './components/BillRun/BillRun';
 import BillRunCandidate from './components/BillRunCandidate/BillRunCandidate';
 import Services from './components/Services/Services';
 import Plan from './components/Plan/Plan';
+import Report from './components/Report/Report';
 
 const App = () => {
 
@@ -33,6 +34,7 @@ const App = () => {
                     <Route path="/billruncandidate" exact component={BillRunCandidate} /> 
                     <Route path="/services" exact component={Services} /> 
                     <Route path="/plan" exact component={Plan} /> 
+                    <Route path="/report" exact component={Report} /> 
                 </Switch>
             </Container>
         </BrowserRouter>

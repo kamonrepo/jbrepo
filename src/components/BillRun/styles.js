@@ -1,27 +1,34 @@
-
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
   paper: {
     display: 'flex',
-    backgroundColor: '#88a3bd',
-    alignItems: 'center',
-    padding: theme.spacing(3),
+    justifyContent: 'center',
+    width: '200%',
+    padding: theme.spacing(3)
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  maincon: {
+    display: 'flex',
+    alignItems: 'center'
   },
   tags: {
     display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(3),
+    justifyContent: 'center',
+    padding: theme.spacing(1)
   },
   id: {
     display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(3),
+    justifyContent: 'center',
+    padding: theme.spacing(1)
   },
   submit: {
     display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(3),
+    justifyContent: 'center',
+    padding: theme.spacing(1)
   },
 
 }));
