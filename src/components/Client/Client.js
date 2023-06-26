@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Typography, Paper, Select, MenuItem, InputLabel, Container, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel} from '@material-ui/core';
+import { TextField, Button, Typography, Paper, Select, MenuItem, Container, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel} from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
-import { getBillrun } from '../../actions/billrun';
 import { createClient } from '../../actions/client';
 import { getCategory } from '../../actions/services/category';
 import { getPlan } from '../../actions/services/plan';
@@ -12,15 +11,13 @@ import useStyles from './styles';
 const Client = () => {
 
   const groups = useSelector(state => state.groups);
-  const billruns = useSelector(state => state.billruns);
   const categories = useSelector(state => state.categories);
   const plans = useSelector(state => state.plan);
 
-  const [clientData, setClientData] = useState({ group:'', mergedGroup: '', name: '', ipaddr: '', contactNumber: '', category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', address: '' });
+  const [clientData, setClientData] = useState({ group:'', name: '', ipaddr: '', contactNumber: '', category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', address: '' });
   const [category, setCategory] = useState('');
   const [plan, setPlan] = useState('');
   const [group, setGroup] = useState('');
-  const [mergedGroup, setMergedGroup] = useState('');
   const [selectedCategId, setSelectedCategId] = useState('');
 
   const dispatch = useDispatch();
@@ -29,7 +26,6 @@ const Client = () => {
 
   useEffect(() => {
     dispatch(getGroups());
-    dispatch(getBillrun());
     dispatch(getCategory());
 
   }, [])
@@ -40,13 +36,6 @@ const Client = () => {
     let group = groups.filter(g => g.name == data);
 
     setClientData({ ...clientData, group: group[0]._id});
-  };
-
-  const handleOnchangeMG = data => {
-    setMergedGroup(data);
-    let mgroup = billruns.filter(br => br.billRun == data);
-
-    setClientData({ ...clientData, mergedGroup: mgroup[0]._id});
   };
 
   const handleOnchangeCategory = data => {
@@ -97,26 +86,27 @@ const Client = () => {
     <Container component="main" maxWidth="xs">     
       <Paper className={classes.paper} elevation={9}>
       <form onSubmit={handleSubmit}>
-            <Typography className={classes.Header} variant="h9"><b>ADD CLIENT</b></Typography>
+            <Typography className={classes.Header} variant="h6"><b>ADD CUSTOMER</b></Typography>
 
-            <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;Main Location</b></InputLabel>
-            <Select labelId="demo-simple-select-standard-label" id="demo-simple-select-standard" className={classes.Select} fullWidth value={group} onChange={e => handleOnchange(e.target.value)}>
+            <FormLabel>Main Location</FormLabel>
+            <Select className={classes.Select} fullWidth value={group} onChange={e => handleOnchange(e.target.value)}>
               {groups.map((data) => (
                 <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
               ))}
             </Select>
 
-            <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;Sub Location</b></InputLabel>
-            <Select labelId="demo-simple-select-standard-label" id="demo-simple-select-standard" className={classes.Select} fullWidth value={mergedGroup} onChange={e => handleOnchangeMG(e.target.value)}>
-              {billruns.map((data) => (
-                <MenuItem key={data._id} value={data.billRun}>{data.billRun}</MenuItem>
+            <FormLabel>Sub Location</FormLabel>
+            <Select className={classes.Select} fullWidth value={group} onChange={e => handleOnchange(e.target.value)}>
+              {groups.map((data) => (
+                <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
               ))}
             </Select>
 
             <TextField required className={classes.textFields} name="name" variant="outlined" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
+            <TextField required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
             <TextField required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
            
-            <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;PRODUCT</b></InputLabel>
+            <FormLabel>Product</FormLabel>
             <Select                      
                 style={{paddingBottom: '.3em'}} 
                 labelId="demo-simple-select-standard-label" 
@@ -132,16 +122,13 @@ const Client = () => {
                 ))}
             </Select>   
 
-            <InputLabel id="demo-simple-select-standard-label"><b>&nbsp;PLAN</b></InputLabel>
+            <FormLabel>Plan</FormLabel>
             <Select                      
                 style={{paddingBottom: '.3em'}} 
-                labelId="demo-simple-select-standard-label" 
-                id="demo-simple-select-standard" 
                 className={classes.Select} 
                 fullWidth
                 value={plan}                       
                 onChange={e => handleOnchangePlan(e.target.value)}>
-
                 {plans.map((data) => {
                     if(data.category === selectedCategId) {
                       return(<MenuItem key={data._id} value={data.plan}>{data.plan}</MenuItem>)                              
@@ -150,16 +137,15 @@ const Client = () => {
               </Select>    
 
               <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">Due Date</FormLabel>
+              <FormLabel id="demo-radio-buttons-group-label">Due Date</FormLabel>
                 <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="15th" name="radio-buttons-group">
                   <FormControlLabel value="15th" control={<Radio />} label="15th of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})} />
                   <FormControlLabel value="Endth" control={<Radio />} label="End of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
                 </RadioGroup>
-              </FormControl>
+            </FormControl>
 
             <TextField required className={classes.textFields} name="ipaddr" variant="outlined" label="IP Address" fullWidth value={clientData.ipaddr} onChange={(e) => setClientData({ ...clientData, ipaddr: e.target.value})}/>
             <TextField required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
-            <TextField required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
           
             <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth> Submit </Button>
             <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
