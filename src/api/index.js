@@ -40,3 +40,8 @@ export const fetchCategory = () => API.get('/category');
 export const createPlan = newPlan => API.post('/plan', newPlan);
 export const fetchPlanByCategoryId = id => API.get(`/plan/${id}`);
 export const fetchPlan = () => API.get('/plan');
+
+export const createFamily = combinedData => API.post('/family', combinedData);
+export const updateFamily = (id, updatedFamily) => API.patch(`/family/${id}`, updatedFamily);
+export const fetchFamilies = () => API.get('/family');
+export const deleteFamily = id => API.delete(`/family/${id}`);
