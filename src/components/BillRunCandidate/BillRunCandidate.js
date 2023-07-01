@@ -17,7 +17,7 @@ const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
   { id: 'plan', numeric: false, disablePadding: false, label: 'Plan' },
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'Monthly Fee' },
-  { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
+  { id: 'status', numeric: true, disablePadding: false, label: 'June 30, 2023' },
 ];
 
 function descendingComparator(a, b, orderBy) {

@@ -95,12 +95,12 @@ const Client = () => {
               ))}
             </Select>
 
-            <FormLabel>Sub Location</FormLabel>
+            {/* <FormLabel>Sub Location</FormLabel>
             <Select className={classes.Select} fullWidth value={group} onChange={e => handleOnchange(e.target.value)}>
               {groups.map((data) => (
                 <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
               ))}
-            </Select>
+            </Select> */}
 
             <TextField required className={classes.textFields} name="name" variant="outlined" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
             <TextField required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />

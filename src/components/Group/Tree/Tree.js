@@ -88,26 +88,6 @@ const Tree = () => {
                                             </Link>
                                             <Divider/>
 
-                                            <strong>Mother:</strong> &nbsp;
-                                            <Link component="button" variant="body2" 
-                                              onClick={() => {
-                                                
-                                                setDataCollection({...dataCollection, 
-                                                  currentId:fam._id,
-                                                  firstname:fam.name,
-                                                  lastname: fam.name,
-                                                  typeCollection: 'families',
-                                                  selectedMember: 'mother'
-                                                })
-
-                                                setStaticChildren({...staticChildren, children: fam.children } )
-
-                                              }}>
-
-                                              {` ${fam.name} ${fam.name}` }
-                                            </Link>
-                                            <Divider/>
-
                                     </TreeItem>
                                     ))}         
                                 </>

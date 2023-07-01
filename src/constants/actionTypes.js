@@ -8,6 +8,7 @@ export const FETCH_LOCATIONS = 'FETCH_LOCATIONS';
 //GROUP
 export const CREATE_GROUP = 'CREATE_GROUP';
 export const FETCH_GROUPS = 'FETCH_GROUPS';
+export const CREATE_SUBLOC = 'CREATE_SUBLOC';
 
 //CLIENT
 export const CREATE_CLIENT = 'CREATE_CLIENT';
