@@ -21,7 +21,6 @@ const Tree = () => {
     const [dataCollection, setDataCollection] = useState({ selectedMember: '', currentId: '', firstname: '', lastname: '', typeCollection: ''});
 
     useEffect(() => {
-      //dispatch(getGroups());
     },[])
 
     const handleToggle = (event, nodeIds) => {
@@ -68,9 +67,7 @@ const Tree = () => {
                           {!groups?.length ? <CircularProgress /> : (
                                 <>
                                     {groups.map((fam) => (
-                                    <TreeItem nodeId={fam._id} label={fam.name}>
-                              
-                                            <strong>Father:</strong> &nbsp;
+                                    <TreeItem key={fam._id} nodeId={fam._id} label={fam.name}>
                                             <Link component="button" variant="body2" 
                                               onClick={() => {
                                                  setDataCollection({...dataCollection, 
@@ -86,6 +83,7 @@ const Tree = () => {
 
                                               {` ${fam.name} ${fam.name}` }
                                             </Link>
+                                            {` ${fam.name} ${fam.name}` }
                                             <Divider/>
 
                                     </TreeItem>

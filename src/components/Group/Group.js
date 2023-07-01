@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Paper, Grid, Container, Tab, Tabs, Box, FormLabel, Select, MenuItem  } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { createGroup, getGroups, createSubLoc } from '../../actions/group';
+import { createGroup, getGroups, createSubLoc, getSublocs, createTargetLoc } from '../../actions/group';
 import Tree from '../Group/Tree/Tree.js';
 
 import useStyles from './styles';
@@ -41,40 +41,73 @@ function a11yProps(index) {
 
 const Group = () => {
 
-    const [groupData, setGroupData] = useState({ name: '', groupId: '', newSubloc: ''});
+    const [groupData, setGroupData] = useState({ name: '' });
+    const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
+    const [targetlocData, setTargetlocData] = useState({ name: '', sublocId: '' });
     const [subloc, setSubloc] = useState('');
+    const [group, setGroup] = useState('');
     const [value, setValue] = useState(0);
     const dispatch = useDispatch();
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('profile'));
     const groups = useSelector(state => state.groups);
+    const sublocations = useSelector(state => state.sublocations);
     
     useEffect(() => {
         dispatch(getGroups());
+        dispatch(getSublocs());
     }, [])
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('group-handleSubmit');
+
+    console.log('group-handleSubmit:, ', groupData);
     dispatch(createGroup(groupData));
   };
 
   const handleSubmitSubLoc = async e => {
+
     e.preventDefault();
-    console.log('createSubLoc-groupData: ', groupData);
-    dispatch(createSubLoc(groupData));
+    console.log('handleSubmitSubLoc-sublocData: ', sublocData);
+    dispatch(createSubLoc(sublocData));
   };
 
-  const handleChange = (event, newValue) => {
+  const handleSubmitTargetLoc = async e => {
+
+    e.preventDefault();
+    console.log('handleSubmitTargetLoc-targetlocData: ', targetlocData);
+    dispatch(createSubLoc(sublocData));
+  };
+
+  const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
 
-  //group dropdown list
-  const handleOnChangeForSubloc = groupId => {
-    console.log('handleOnChangeForSubloc-groupId: ', groupId);
+  const sublocTabSelectLocation = groupId => {
+
+    console.log('sublocTabSelectLocation-groupId: ', groupId);
     setSubloc(groupId);
-    setGroupData({ ...groupData, groupId: groupId})
+    setSublocData({ ...sublocData, groupId: groupId});
+
   };
+
+  const targetlocTabSelectSubLocation = sublocId => {
+
+    console.log('targetlocTabSelectSubLocation-sublocId: ', sublocId);
+    setSubloc(sublocId);
+    setSublocData({ ...sublocData, sublocId: sublocId});
+  };
+
+  
+
+  const hocLocForTargetloc = async sublocId => {
+
+    console.log('hocLocForTargetloc-createSubLoc: ', sublocData);
+    setGroup(sublocId)
+    setTargetlocData({ ...targetlocData,  sublocId: sublocId})
+    dispatch(createTargetLoc(targetlocData));
+  };
+
 
   if(!user?.result?._id) {
     return (
@@ -93,7 +126,7 @@ const Group = () => {
 
             <Box sx={{ backgroundColor: 'gray', width: '150%' }}>
               <Box sx={{  width: '100%', borderBottom: 11, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs value={value} onChange={handleChangeTab} aria-label="basic tabs example">
                   <Tab label="Location" {...a11yProps(0)} />
                   <Tab label="Sub location" {...a11yProps(1)} />
                   <Tab label="Target Location" {...a11yProps(2)} />
@@ -114,13 +147,13 @@ const Group = () => {
                   <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
                     
                     <FormLabel>Location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={subloc} onChange={e => handleOnChangeForSubloc(e.target.value)}>
+                    <Select className={classes.Select} fullWidth value={subloc} onChange={e => sublocTabSelectLocation(e.target.value)}>
                       {groups.map((data) => (
                         <MenuItem key={data.id} value={data._id}>{data.name}</MenuItem>
                       ))}
                     </Select>
 
-                    <TextField required name="name" variant="outlined" label="New sub location" fullWidth value={groupData.newSubloc} onChange={(e) => setGroupData({...groupData, newSubloc: e.target.value})} />
+                    <TextField required name="tfsubloc" variant="outlined" label="New sub location" fullWidth value={sublocData.name} onChange={(e) => setSublocData({...sublocData, name: e.target.value})} />
                     <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
 
                   </form>
@@ -131,23 +164,23 @@ const Group = () => {
               {/* targetloc */}
               <TabPanel value={value} index={2}>
               <Paper className={classes.addGroupForm} elevation={6}>
-                  <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
+                  <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
                     
                     <FormLabel>Location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={subloc} onChange={e => handleOnChangeForSubloc(e.target.value)}>
+                    <Select className={classes.Select} fullWidth value={group} onChange={e => hocLocForTargetloc(e.target.value)}>
                       {groups.map((data) => (
-                        <MenuItem key={data.id} value={data._id}>{data.name}</MenuItem>
+                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                       ))}
                     </Select>
 
                     <FormLabel style={{ paddingTop: '20px'}}>Sub location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={subloc} onChange={e => handleOnChangeForSubloc(e.target.value)}>
-                      {groups.map((data) => (
-                        <MenuItem key={data.id} value={data._id}>{data.name}</MenuItem>
+                    <Select className={classes.Select} fullWidth value={subloc} onChange={e => targetlocTabSelectSubLocation(e.target.value)}>
+                      {sublocations.map((data) => (
+                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                       ))}
                     </Select>
 
-                    <TextField required name="name" variant="outlined" label="New Target Location" fullWidth value={groupData.newSubloc} onChange={(e) => setGroupData({...groupData, newSubloc: e.target.value})} />
+                    <TextField required name="name" variant="outlined" label="New Target Location" fullWidth value={targetlocData.name} onChange={(e) => setGroupData({...targetlocData, name: e.target.value})} />
                     <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
 
                   </form>

@@ -1,4 +1,4 @@
-import { CREATE_GROUP, FETCH_GROUPS, CREATE_SUBLOC } from '../constants/actionTypes';
+import { FETCH_SUBLOCS, CREATE_SUBLOC } from '../constants/actionTypes';
 import * as api from '../api/index';
 
 export const createSubLoc = subloc => async dispatch => {
@@ -15,11 +15,11 @@ export const createSubLoc = subloc => async dispatch => {
 
 
 //accept the history object that came from the front end
-export const getGroups = () => async dispatch => {
+export const getSublocs = () => async dispatch => {
     try {
 
-      const { data } = await api.fetchGroups();
-      dispatch({ type: FETCH_GROUPS, payload: data});
+      const { data } = await api.fetchSublocs();
+      dispatch({ type: FETCH_SUBLOCS, payload: data});
 
     } catch (error) {
       console.log(error);

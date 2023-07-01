@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import authReducer from './auth.js';
-import locationReducer from './locations.js';
 import groupReducer from './group';
+import sublocationReducer from './sublocation.js';
 import clientReducer from './client';
 import billRunReducer from './billrun';
 import billRunCanReducer from './billruncandidate';
@@ -10,9 +10,9 @@ import planReducer from '././services/plan';
 
 export default combineReducers({ 
     auth: authReducer,
-    locations: locationReducer,
     categories: categoryReducer,
     groups: groupReducer,
+    sublocations: sublocationReducer,
     clients: clientReducer,
     billruns: billRunReducer,
     billruncandidates: billRunCanReducer,

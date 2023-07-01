@@ -1,14 +1,13 @@
-import { FETCH_LOCATIONS } from '../constants/actionTypes';
+import { FETCH_SUBLOCS } from '../constants/actionTypes';
 
-export default (locations = [], action) => {
+export default (sublocations = [], action) => {
    // console.log('client/src/reducers/chat/users action.payload: ', action.payload,'\n','client/src/reducers/chat/users/users: ', users);
     switch (action.type) {
-        case FETCH_LOCATIONS:
-
-            // console.log('reducer-locations: ', action.payload)
+        case FETCH_SUBLOCS:
+            
             return action.payload;        
 
         default:
-            return locations; 
+            return sublocations; 
     }
 };
