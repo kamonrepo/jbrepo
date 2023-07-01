@@ -107,6 +107,8 @@ const Group = () => {
                   </form>
                 </Paper>
               </TabPanel>
+
+              {/* subloc */}
               <TabPanel value={value} index={1}>
               <Paper className={classes.addGroupForm} elevation={6}>
                   <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
@@ -125,6 +127,8 @@ const Group = () => {
                 </Paper>
               </TabPanel>
 
+
+              {/* targetloc */}
               <TabPanel value={value} index={2}>
               <Paper className={classes.addGroupForm} elevation={6}>
                   <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
