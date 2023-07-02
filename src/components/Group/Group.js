@@ -47,17 +47,18 @@ const Group = () => {
 
     const [sublocTabloc, setSublocTabloc] = useState('');
 
-    const [targetlocTabLoc, setTargetlocTabLoc] = useState('');
+    const [targetlocTabLoc, setTargetSublocTabLoc] = useState('');
     const [targetlocTabSubLoc, setTargetSublocTabSubLoc] = useState('');
+
+    const [sublocDataByGid, setSublocDataByGid] = useState([]);
+
     
-
-    const [sublocByGroupId, setSublocByGroupId] = useState('');
-    const [group, setGroup] = useState('');
-
+    
     const [value, setValue] = useState(0);
     const dispatch = useDispatch();
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('profile'));
+
     const groups = useSelector(state => state.groups);
     const sublocations = useSelector(state => state.sublocations);
     
@@ -91,47 +92,56 @@ const Group = () => {
     setValue(newValue);
   };
 
-  const sublocTabSelectLocation = groupId => {
+  const sublocTabSelect1= groupId => {
     console.log('setSublocTabloc  ', groupId);
      setSublocTabloc(groupId);
      setSublocData({ ...sublocData, groupId: groupId});
   };
 
-  const targetlocTabSelectLocation = async groupId => {
-
+  const targetlocTabSelect1= async groupId => {
     console.log('FETCH-SUBLOC-USING-THIS-GROUP-ID:  ', groupId);
-
-    // let holdSubloc = [];
-
-    // if(groups){
-    //   Object.keys(sublocations).forEach(i => {
-    //     if(sublocations[i].groupId == groupId) {
-    //       holdSubloc.push(sublocations[i].name);
-    //     }
-    //   })
-    // }
+    let holdSubloc = [];
 
 
-      // setTargetlocTabLoc(holdSubloc);
-
-      // console.log('setTargetlocTabLoc=name', holdSubloc);
-    
-
+    if(groups){
+      Object.keys(sublocations).forEach(i => {
+        if(sublocations[i].groupId == groupId) {
+          holdSubloc.push({ _id:  sublocations[i]._id, name: sublocations[i].name});
+        }
+      })
+      console.log('holdSubloc-for-select::::  ', holdSubloc);
+      setSublocDataByGid(holdSubloc);
+    }
     //setTargetlocGroup(sublocId)
     //setTargetlocData({ ...targetlocData,  sublocId: groupId})
     //dispatch(createTargetLoc(targetlocData));
   };
 
-
-  const targetlocTabSelectSubLocation = sublocId => {
-
+  const targetlocTabSelect2 = sublocId => {
     console.log('targetloc-Tab-Select-SubLocation-sublocId: ', sublocId);
+
+    let holdSublocName = '';
+
+    Object.keys(sublocations).forEach(i => {
+      if(sublocations[i].sublocId == sublocId) {
+        holdSublocName = sublocations[i].name;
+      }
+    })
+
+    setTargetSublocTabSubLoc(holdSublocName);
+
     setTargetlocData({ ...targetlocData, sublocId: sublocId});
   };
 
   const debugg = e => {
     e.preventDefault();
-    console.log('targetlocData:: ', targetlocData);
+    // console.log('targetlocData:: ', targetlocData);
+    // console.log('sublocDataByGid:: ', sublocDataByGid);
+
+    console.log('sublocations:: ', typeof(sublocations));
+    console.log('sublocations:: ', JSON.stringify(sublocations));
+    
+    
   };
 
   if(!user?.result?._id) {
@@ -172,7 +182,7 @@ const Group = () => {
                   <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
                     
                     <FormLabel>Location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={sublocTabloc} onChange={e => sublocTabSelectLocation(e.target.value)}>
+                    <Select className={classes.Select} fullWidth value={sublocTabloc} onChange={e => sublocTabSelect1(e.target.value)}>
                       {groups.map((data) => (
                         <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                       ))}
@@ -192,18 +202,18 @@ const Group = () => {
                   <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
                     
                     <FormLabel>Location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={targetlocTabLoc} onChange={e => targetlocTabSelectLocation(e.target.value)}>
+                    <Select className={classes.Select} fullWidth value={targetlocTabLoc} onChange={e => targetlocTabSelect1(e.target.value)}>
                       {groups.map((data) => (
                         <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                       ))}
                     </Select>
 
                     <FormLabel style={{ paddingTop: '20px'}}>Sub location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={targetlocTabSubLoc} onChange={e => targetlocTabSelectSubLocation(e.target.value)}>
+                    <Select className={classes.Select} fullWidth value={sublocDataByGid} onChange={e => targetlocTabSelect2(e.target.value)}>
                       
                       {/* dapat dito na ung filtered sublocations */}
-                      {sublocations.map((data) => (
-                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
+                      {sublocDataByGid.map((data) => (
+                        <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
                       ))}
                     </Select>
 
