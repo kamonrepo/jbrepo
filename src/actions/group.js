@@ -51,7 +51,6 @@ export const getSublocs = () => async dispatch => {
   try {
 
     const { data } = await api.fetchSublocs();
-    console.log('datadatadatadatadatadatadatadatadatadatadata::::::: ', data);
     dispatch({ type: FETCH_SUBLOCS, payload: data});
 
   } catch (error) {
