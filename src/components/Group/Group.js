@@ -48,7 +48,7 @@ const Group = () => {
     const [sublocTabloc, setSublocTabloc] = useState('');
 
     const [targetlocTabLoc, setTargetSublocTabLoc] = useState('');
-    const [targetlocTabSubLoc, setTargetSublocTabSubLoc] = useState('');
+    const [holdTargetLoc, setHoldTargetLoc] = useState('');
 
     const [sublocDataByGid, setSublocDataByGid] = useState([]);
 
@@ -85,52 +85,11 @@ const Group = () => {
 
     e.preventDefault();
     console.log('handleSubmitTargetLoc-targetlocData: ', targetlocData);
-    //dispatch(createSubLoc(sublocData));
+    dispatch(createTargetLoc(targetlocData));
   };
 
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const sublocTabSelect1= groupId => {
-    console.log('setSublocTabloc  ', groupId);
-     setSublocTabloc(groupId);
-     setSublocData({ ...sublocData, groupId: groupId});
-  };
-
-  const targetlocTabSelect1= async groupId => {
-    console.log('FETCH-SUBLOC-USING-THIS-GROUP-ID:  ', groupId);
-    let holdSubloc = [];
-
-
-    if(groups){
-      Object.keys(sublocations).forEach(i => {
-        if(sublocations[i].groupId == groupId) {
-          holdSubloc.push({ _id:  sublocations[i]._id, name: sublocations[i].name});
-        }
-      })
-      console.log('holdSubloc-for-select::::  ', holdSubloc);
-      setSublocDataByGid(holdSubloc);
-    }
-    //setTargetlocGroup(sublocId)
-    //setTargetlocData({ ...targetlocData,  sublocId: groupId})
-    //dispatch(createTargetLoc(targetlocData));
-  };
-
-  const targetlocTabSelect2 = sublocId => {
-    console.log('targetloc-Tab-Select-SubLocation-sublocId: ', sublocId);
-
-    let holdSublocName = '';
-
-    Object.keys(sublocations).forEach(i => {
-      if(sublocations[i].sublocId == sublocId) {
-        holdSublocName = sublocations[i].name;
-      }
-    })
-
-    setTargetSublocTabSubLoc(holdSublocName);
-
-    setTargetlocData({ ...targetlocData, sublocId: sublocId});
   };
 
   const debugg = e => {
@@ -153,6 +112,47 @@ const Group = () => {
       </Paper>
     );
   }
+
+  const sublocTabSelect1= groupId => {
+    console.log('sublocTabSelect1  ', groupId);
+     setSublocTabloc(groupId);
+     
+     setSublocData({ ...sublocData, groupId: groupId});
+  };
+
+  const targetlocTabSelect1= async groupId => {
+    console.log('FETCH-SUBLOC-USING-THIS-GROUP-ID:  ', groupId);
+    let holdSubloc = [];
+    setTargetSublocTabLoc(groupId);
+
+    if(groups){
+      Object.keys(sublocations).forEach(i => {
+        if(sublocations[i].groupId == groupId) {
+          holdSubloc.push({ _id:  sublocations[i]._id, name: sublocations[i].name});
+        }
+      })
+      console.log('holdSubloc-for-select::::  ', holdSubloc);
+      setSublocDataByGid(holdSubloc);
+
+    }
+
+  };
+
+  const targetlocTabSelect2 = sublocId => {
+    console.log('targetloc-Tab-Select-SubLocation-sublocId: ', sublocId);
+    setHoldTargetLoc(sublocId);
+    let holdSublocName = '';
+
+    Object.keys(sublocations).forEach(i => {
+      if(sublocations[i].sublocId == sublocId) {
+        holdSublocName = sublocations[i].name;
+      }
+    })
+
+   // setTargetSublocTabSubLoc(holdSublocName);
+
+    setTargetlocData({ ...targetlocData, sublocId: sublocId});
+  };
 
   return (     
     <Container component="main" maxWidth="xs">
@@ -209,11 +209,11 @@ const Group = () => {
                     </Select>
 
                     <FormLabel style={{ paddingTop: '20px'}}>Sub location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={sublocDataByGid} onChange={e => targetlocTabSelect2(e.target.value)}>
+                    <Select className={classes.Select} fullWidth value={holdTargetLoc} onChange={e => targetlocTabSelect2(e.target.value)}>
                       
                       {/* dapat dito na ung filtered sublocations */}
                       {sublocDataByGid.map((data) => (
-                        <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
+                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                       ))}
                     </Select>
 
