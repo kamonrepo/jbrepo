@@ -3,7 +3,7 @@ import { TextField, Button, Typography, Paper, Select, MenuItem, Container, Radi
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
 import { getSublocs } from '../../actions/sublocation';
-import { getTargetlocs } from '../../actions/group';
+import { getTargetLocs } from '../../actions/targetlocation';
 import { createClient } from '../../actions/client';
 import { getCategory } from '../../actions/services/category';
 import { getPlan } from '../../actions/services/plan';
@@ -13,6 +13,8 @@ import useStyles from './styles';
 const Client = () => {
 
   const groups = useSelector(state => state.groups);
+  const sublocations = useSelector(state => state.sublocations);
+  const targetlocations = useSelector(state => state.targetlocations);
   const categories = useSelector(state => state.categories);
   const plans = useSelector(state => state.plan);
   
@@ -20,6 +22,8 @@ const Client = () => {
   const [category, setCategory] = useState('');
   const [plan, setPlan] = useState('');
   const [group, setGroup] = useState('');
+  const [sublocation, setSublocation] = useState('');
+  const [targetlocation, setTargetlocation] = useState('');
   const [selectedCategId, setSelectedCategId] = useState('');
 
   const dispatch = useDispatch();
@@ -29,7 +33,7 @@ const Client = () => {
   useEffect(() => {
     dispatch(getGroups());
     dispatch(getSublocs());
-    dispatch(getTargetlocs());
+    dispatch(getTargetLocs());
     dispatch(getCategory());
 
   }, [])
@@ -42,6 +46,14 @@ const Client = () => {
     setClientData({ ...clientData, group: group[0]._id});
   };
 
+  const handleOnchangeSL = data => {
+    setSublocation(data);
+  };
+
+  const handleOnchangeTL = data => {
+    setTargetlocation(data);
+  };
+
   const handleOnchangeCategory = data => {
 
     setCategory(data);
@@ -51,7 +63,7 @@ const Client = () => {
 
     setClientData({ ...clientData, category: category[0]._id});
     setSelectedCategId(category[0]._id);
- };
+  };
 
  const handleOnchangePlan = data => {
   setPlan(data);
@@ -91,13 +103,26 @@ const Client = () => {
       <Paper className={classes.paper} elevation={9}>
         <form onSubmit={handleSubmit}>
           <FormControl>
-            {/* <FormLabel className={classes.Header} variant="h6"><b>ADD CUSTOMER</b></FormLabel> */}
 
-            <InputLabel shrink>
-              Select an option
-            </InputLabel>
+            <FormLabel>LOCATION</FormLabel>
             <Select className={classes.Select} fullWidth value={group} onChange={e => handleOnchange(e.target.value)}>
               {groups.map((data) => (
+                <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
+              ))}
+            </Select>
+
+            <FormLabel>SUB LOCATION</FormLabel>
+            <Select className={classes.Select} fullWidth value={sublocation} onChange={e => handleOnchangeSL(e.target.value)}>
+              {/* dapat dito na ung filtered sublocations */}
+              {sublocations.map((data) => (
+                <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
+              ))}
+            </Select>
+
+            <FormLabel>TARGET LOCATION</FormLabel>
+            <Select className={classes.Select} fullWidth value={targetlocation} onChange={e => handleOnchangeTL(e.target.value)}>
+              {/* dapat dito na ung filtered sublocations */}
+              {targetlocations.map((data) => (
                 <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
               ))}
             </Select>
@@ -135,7 +160,6 @@ const Client = () => {
                     }                          
                 })}
             </Select>    
-
 
             <FormLabel id="demo-radio-buttons-group-label">Due Date</FormLabel>
             <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="15th" name="radio-buttons-group">

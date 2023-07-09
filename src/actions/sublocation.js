@@ -24,5 +24,5 @@ export const getSublocs = () => async dispatch => {
     } catch (error) {
       console.log(error);
     }
-  };
+};
   

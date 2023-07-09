@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import authReducer from './auth.js';
 import groupReducer from './group';
 import sublocationReducer from './sublocation.js';
+import targetlocationReducer from './targetlocation.js';
 import clientReducer from './client';
 import billRunReducer from './billrun';
 import billRunCanReducer from './billruncandidate';
@@ -13,6 +14,7 @@ export default combineReducers({
     categories: categoryReducer,
     groups: groupReducer,
     sublocations: sublocationReducer,
+    targetlocations: targetlocationReducer,
     clients: clientReducer,
     billruns: billRunReducer,
     billruncandidates: billRunCanReducer,
