@@ -1,4 +1,4 @@
-import { CREATE_GROUP, FETCH_GROUPS, FETCH_SUBLOCS, CREATE_SUBLOC,  CREATE_TARGETLOC } from '../constants/actionTypes';
+import { CREATE_GROUP, FETCH_GROUPS, FETCH_SUBLOCS, CREATE_SUBLOC, FETCH_TARGETLOCS, CREATE_TARGETLOC } from '../constants/actionTypes';
 import * as api from '../api/index';
 
 export const createGroup = group => async dispatch => {
@@ -52,6 +52,17 @@ export const getSublocs = () => async dispatch => {
 
     const { data } = await api.fetchSublocs();
     dispatch({ type: FETCH_SUBLOCS, payload: data});
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getTargetlocs = () => async dispatch => {
+  try {
+
+    const { data } = await api.fetchTargetlocs();
+    dispatch({ type: FETCH_TARGETLOCS, payload: data});
 
   } catch (error) {
     console.log(error);

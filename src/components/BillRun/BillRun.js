@@ -41,6 +41,7 @@ const BillRun = () => {
         )}
 
         Object.assign(payload, {mergedGroup: buildMergedGroup});
+        console.log('dispatch::: ', payload);
         dispatch(createBillrun(payload));
     }
 

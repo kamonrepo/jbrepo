@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Paper, Grid, Container, Tab, Tabs, Box, FormLabel, Select, MenuItem  } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { createGroup, getGroups, createSubLoc, getSublocs, createTargetLoc } from '../../actions/group';
+import { createBillrun } from '../../actions/billrun';
 import Tree from '../Group/Tree/Tree.js';
 
 import useStyles from './styles';
@@ -44,21 +45,14 @@ const Group = () => {
     const [groupData, setGroupData] = useState({ name: '' });
     const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
     const [targetlocData, setTargetlocData] = useState({ name: '', sublocId: '' });
-
     const [sublocTabloc, setSublocTabloc] = useState('');
-
     const [targetlocTabLoc, setTargetSublocTabLoc] = useState('');
     const [holdTargetLoc, setHoldTargetLoc] = useState('');
-
     const [sublocDataByGid, setSublocDataByGid] = useState([]);
-
-    
-    
     const [value, setValue] = useState(0);
     const dispatch = useDispatch();
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('profile'));
-
     const groups = useSelector(state => state.groups);
     const sublocations = useSelector(state => state.sublocations);
     
@@ -84,7 +78,11 @@ const Group = () => {
   const handleSubmitTargetLoc = async e => {
 
     e.preventDefault();
+
     console.log('handleSubmitTargetLoc-targetlocData: ', targetlocData);
+
+     //create tgartget loc first. -> pre req -> targetloc Id on billrun 
+    //gawa ng payload req na ang content ay targetloc and billrun
     dispatch(createTargetLoc(targetlocData));
   };
 
@@ -195,7 +193,6 @@ const Group = () => {
                 </Paper>
               </TabPanel>
 
-
               {/* targetloc */}
               <TabPanel value={value} index={2}>
               <Paper className={classes.addGroupForm} elevation={6}>
@@ -217,9 +214,10 @@ const Group = () => {
                       ))}
                     </Select>
 
-                    <TextField required name="name" variant="outlined" label="New Target Location" fullWidth value={targetlocData.name} onChange={(e) => setTargetlocData({...targetlocData, name: e.target.value})} />
+                    <TextField required name="tftargetloc" variant="outlined" label="New Target Location" fullWidth value={targetlocData.name} onChange={(e) => setTargetlocData({...targetlocData, name: e.target.value})} />
                     <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
                     <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
+
                   </form>
                 </Paper>
               </TabPanel>

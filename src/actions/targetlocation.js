@@ -1,40 +1,23 @@
-import { CREATE_GROUP, FETCH_GROUPS, CREATE_SUBLOC } from '../constants/actionTypes';
+import { FETCH_TARGETLOCS, CREATE_TARGETLOC } from '../constants/actionTypes';
 import * as api from '../api/index';
 
-export const createGroup = group => async dispatch => {
-    try {
-
-        const { data } = await api.createGroup(group);
-        dispatch({ type: CREATE_GROUP, payload: data});
-      
-
-    } catch (error) {
-        console.log('reduxERROR: ', error)
-    }
-}
-
-export const createSubLoc = subloc => async dispatch => {
+export const createTargetLoc = targetloc => async dispatch => {
   try {
-
-      const { data } = await api.createSubloc(subloc);
-      dispatch({ type: CREATE_SUBLOC, payload: data});
+      const { data } = await api.createTargetloc(targetloc);
+      dispatch({ type: CREATE_TARGETLOC, payload: data});
     
-
   } catch (error) {
       console.log('reduxERROR: ', error)
   }
 }
 
-
 //accept the history object that came from the front end
-export const getGroups = () => async dispatch => {
+export const getTargetLocs = () => async dispatch => {
     try {
-
-      const { data } = await api.fetchGroups();
-      dispatch({ type: FETCH_GROUPS, payload: data});
-
+      const { data } = await api.fetchTargetlocs();
+      dispatch({ type: FETCH_TARGETLOCS, payload: data});
+      
     } catch (error) {
       console.log(error);
     }
-  };
-  
+};

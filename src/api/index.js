@@ -27,6 +27,7 @@ export const createSubloc = newSubloc => API.post('/group/subloc', newSubloc);
 export const fetchSublocs = () => API.get('/group/get/sublocs');
 
 export const createTargetloc = newTargetloc => API.post('/group/targetloc', newTargetloc);
+export const fetchTargetlocs = () => API.get('/group/get/targetlocs');
 
 export const createClient = newClient => API.post('/client', newClient);
 export const fetchClientGroupBy = (group) => API.get(`/client/${group}`);
