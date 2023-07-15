@@ -19,12 +19,18 @@ const Client = () => {
   const plans = useSelector(state => state.plan);
   
   const [clientData, setClientData] = useState({ group:'', name: '', ipaddr: '', contactNumber: '', category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', address: '' });
+  const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
   const [category, setCategory] = useState('');
   const [plan, setPlan] = useState('');
-  const [group, setGroup] = useState('');
-  const [sublocation, setSublocation] = useState('');
+  const [ggroup, setGgroup] = useState('');
+  const [sublocOnChangeValue, setSublocOnChangeValue] = useState('');
+  const [targetLocationOnChangeValue, setTargetlocationOnChangeValue] = useState('');
+  
   const [targetlocation, setTargetlocation] = useState('');
   const [selectedCategId, setSelectedCategId] = useState('');
+
+  const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
+  const [targetlocDataBySublocId, setSublocDataBySublocId] = useState([]);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -40,19 +46,12 @@ const Client = () => {
 
   //group dropdown list
   const handleOnchange = data => {
-    setGroup(data);
+    setGgroup(data);
     let group = groups.filter(g => g.name == data);
 
     setClientData({ ...clientData, group: group[0]._id});
   };
 
-  const handleOnchangeSL = data => {
-    setSublocation(data);
-  };
-
-  const handleOnchangeTL = data => {
-    setTargetlocation(data);
-  };
 
   const handleOnchangeCategory = data => {
 
@@ -98,32 +97,75 @@ const Client = () => {
     );
   }
 
+  const LocationOnChange = groupId => {
+
+    setSublocOnChangeValue(groupId);
+    setGgroup(groupId);
+    setSublocData({ ...sublocData, groupId: groupId});
+
+     let holdSubloc = [];
+
+    if(groups){
+      Object.keys(sublocations).forEach(i => {
+        if(sublocations[i].groupId == groupId) {
+          holdSubloc.push({ _id:  sublocations[i]._id, name: sublocations[i].name});
+        }
+      })
+
+      setSublocDataByGroupId(holdSubloc);
+    }
+  };
+
+  const SubLocationOnChange = sublocId => {
+    console.log('sublocIdsublocIdsublocId::: ', sublocId);
+     setTargetlocationOnChangeValue(sublocId);
+     setSublocDataBySublocId(sublocId);
+    // setGgroup(groupId);
+    // setSublocData({ ...sublocData, groupId: groupId});
+
+    //  let holdSubloc = [];
+
+    // if(groups){
+    //   Object.keys(sublocations).forEach(i => {
+    //     if(sublocations[i].groupId == groupId) {
+    //       holdSubloc.push({ _id:  sublocations[i]._id, name: sublocations[i].name});
+    //     }
+    //   })
+
+    //   setSublocDataByGroupId(holdSubloc);
+    // }
+  };
+
+  const targetLocationOnChange = targetLocId => {
+    setTargetlocation(targetLocId);
+  };
+
   return (     
     <Container component="main" maxWidth="xs">     
       <Paper className={classes.paper} elevation={9}>
         <form onSubmit={handleSubmit}>
           <FormControl>
 
-            <FormLabel>LOCATION</FormLabel>
-            <Select className={classes.Select} fullWidth value={group} onChange={e => handleOnchange(e.target.value)}>
+            <FormLabel>Location</FormLabel>
+            <Select className={classes.Select} fullWidth value={ggroup} onChange={e => LocationOnChange(e.target.value)}>
               {groups.map((data) => (
-                <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
+                <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
               ))}
             </Select>
 
-            <FormLabel>SUB LOCATION</FormLabel>
-            <Select className={classes.Select} fullWidth value={sublocation} onChange={e => handleOnchangeSL(e.target.value)}>
-              {/* dapat dito na ung filtered sublocations */}
-              {sublocations.map((data) => (
-                <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
+            <FormLabel>Sub Location</FormLabel>
+            <Select className={classes.Select} fullWidth value={sublocOnChangeValue} onChange={e => SubLocationOnChange(e.target.value)}>
+              {sublocDataByGroupId.map((data) => (
+                <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
               ))}
             </Select>
 
-            <FormLabel>TARGET LOCATION</FormLabel>
-            <Select className={classes.Select} fullWidth value={targetlocation} onChange={e => handleOnchangeTL(e.target.value)}>
-              {/* dapat dito na ung filtered sublocations */}
-              {targetlocations.map((data) => (
-                <MenuItem key={data.id} value={data.name}>{data.name}</MenuItem>
+            {/* targetloc */}
+            <FormLabel>Target Location</FormLabel>
+            <Select className={classes.Select} fullWidth value={targetlocation} onChange={e => targetLocationOnChange(e.target.value)}>
+
+              {targetlocDataBySublocId.map((data) => (
+                <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
               ))}
             </Select>
 
