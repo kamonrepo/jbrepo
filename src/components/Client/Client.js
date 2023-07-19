@@ -138,7 +138,6 @@ const Client = () => {
             </Select>
           </FormControl>
 
-
           <FormControl>
             <FormLabel>Sub Location</FormLabel>
             <Select className={classes.Select} fullWidth value={ssubloc} onChange={e => SubLocationOnChange(e.target.value)}>
@@ -156,13 +155,13 @@ const Client = () => {
                 <MenuItem key={tl._id} value={tl._id}>{tl.name}</MenuItem>
               ))}
             </Select>
-            </FormControl>
+          </FormControl>
             
-            <TextField id="tfOne"  required className={classes.textFields} name="name" variant="standard" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
-            <TextField id="tfTwo"  required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
-            <TextField id="tfThree"  required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
+            <TextField id="tfOne" required className={classes.textFields} name="name" variant="standard" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
+            <TextField id="tfTwo" required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
+            <TextField id="tfThree" required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
             
-            <FormControl>
+          <FormControl>
             <FormLabel>Product</FormLabel>
             <Select                      
                 style={{paddingBottom: '.3em'}} 
@@ -176,9 +175,9 @@ const Client = () => {
                   <MenuItem key={data._id} value={data.category}>{data.category}</MenuItem>
                 ))}
             </Select>   
-            </FormControl>
+          </FormControl>
             
-            <FormControl>
+          <FormControl>
             <FormLabel>Plan</FormLabel>
             <Select                      
                 style={{paddingBottom: '.3em'}} 
@@ -192,7 +191,7 @@ const Client = () => {
                     }                          
                 })}
             </Select>    
-            </FormControl>
+          </FormControl>
 
             <FormLabel id="demo-radio-buttons-group-label">Due Date</FormLabel>
             <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="15th" name="radio-buttons-group">
