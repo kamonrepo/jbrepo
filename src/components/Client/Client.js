@@ -7,7 +7,6 @@ import { getTargetLocs } from '../../actions/targetlocation';
 import { createClient } from '../../actions/client';
 import { getCategory } from '../../actions/services/category';
 import { getPlan } from '../../actions/services/plan';
-
 import useStyles from './styles';
 
 const Client = () => {
@@ -18,7 +17,7 @@ const Client = () => {
   const categories = useSelector(state => state.categories);
   const plans = useSelector(state => state.plan);
   
-  const [clientData, setClientData] = useState({ group:'', subloc:'', targloc:'',  name: '', ipaddr: '', contactNumber: '', category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', firstPayment:'', address: '' });
+  const [clientData, setClientData] = useState({ targloc:'',  name: '', ipaddr: '', contactNumber: '', category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', firstPayment:'', address: '' });
   const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
   const [category, setCategory] = useState('');
   const [plan, setPlan] = useState('');
@@ -115,7 +114,6 @@ const Client = () => {
         }
       })
       setTargetlocDataBySublocId(holdTargloc);
-      setClientData({ ...clientData, subloc: sublocId});
     }
   };
 
