@@ -7,17 +7,21 @@ import { lighten, makeStyles, Table,
         TableHead, TablePagination, TableRow, 
         TableSortLabel, Toolbar, Typography, 
         Paper, Checkbox, IconButton, 
-        Tooltip, Select, MenuItem, TextField, Grid, Button
+        Tooltip, Select, MenuItem, TextField, Grid, Button,
+        FormControl, FormLabel
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBRC, getBRCById } from '../../actions/billruncandidate';
 import { getBillrun } from '../../actions/billrun';
+import { getGroups } from '../../actions/group';
+import { getSublocs } from '../../actions/sublocation';
+import { getTargetLocs } from '../../actions/targetlocation';
 
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
   { id: 'plan', numeric: false, disablePadding: false, label: 'Plan' },
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'Monthly Fee' },
-  { id: 'status', numeric: true, disablePadding: false, label: 'June 30, 2023' },
+  { id: 'status', numeric: true, disablePadding: false, label: 'July 30, 2023' },
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -154,6 +158,9 @@ export default function BillRunCandidate() {
 
   useEffect(() => {
         dispatch(getBillrun());
+        dispatch(getGroups());
+        dispatch(getSublocs());
+        dispatch(getTargetLocs());
   }, [handBRC]);
 
   const classes = useStyles();
@@ -374,6 +381,9 @@ const EnhancedTableToolbar = props => {
 
   const brc = useSelector(state => state.billruncandidates);
   const billruns = useSelector(state => state.billruns);
+  const groups = useSelector(state => state.groups);
+  const sublocations = useSelector(state => state.sublocations);
+  const targetlocations = useSelector(state => state.targetlocations);
 
   useEffect(() => {
     setHandBRC(brc);
@@ -532,13 +542,35 @@ const EnhancedTableToolbar = props => {
                 <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
                 </Typography>
                 
-                <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : null} onChange={e => searchOnChange(e.target.value)} />
+                <FormControl>
+                <FormLabel>CITY</FormLabel>
+                  <Select fullWidth onChange={e => handleGroupOnChange(e.target.value)}>
+                    {billruns.map((data) => (
+                      <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
+                    ))}
+                  </Select>       
+                </FormControl>
 
-                <Select fullWidth onChange={e => handleGroupOnChange(e.target.value)}>
-                  {billruns.map((data) => (
-                    <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
-                  ))}
-                </Select>             
+                <FormControl>
+                  <FormLabel>MUNICIPALITY</FormLabel>
+                  <Select className={classes.Select} fullWidth >
+                    {billruns.map((data) => (
+                      <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+
+              <FormControl>
+                  <FormLabel>LOCATION</FormLabel>
+                  <Select className={classes.Select} fullWidth >
+                    {billruns.map((data) => (
+                      <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+
+              <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : null} onChange={e => searchOnChange(e.target.value)} />
+
             </Grid>
           </Grid>
         </>
