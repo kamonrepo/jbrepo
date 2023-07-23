@@ -419,7 +419,7 @@ const EnhancedTableToolbar = props => {
   console.log('handleGroupOnChange::: ', brid);
 
   setQuery('');
-  await dispatch(getBRCById(brid));
+  dispatch(getBRCById(brid));
   displayGroupName(brid);
   setSelectedBr(brid);
   zCompute(brid);

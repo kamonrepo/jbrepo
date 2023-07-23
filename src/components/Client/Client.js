@@ -17,7 +17,13 @@ const Client = () => {
   const categories = useSelector(state => state.categories);
   const plans = useSelector(state => state.plan);
   
-  const [clientData, setClientData] = useState({ targloc:'',  name: '', ipaddr: '', contactNumber: '', category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', firstPayment:'', address: '' });
+  const [clientData, setClientData] = 
+  useState({ 
+      targetlocId: '', targloc:'',  name: '', ipaddr: '', contactNumber: '', 
+      category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', 
+      firstPayment:'', address: '' 
+  });
+
   const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
   const [category, setCategory] = useState('');
   const [plan, setPlan] = useState('');
@@ -100,7 +106,7 @@ const Client = () => {
       setSublocDataByGroupId(holdSubloc);
     }
 
-    setClientData({ ...clientData, group: groupId});
+    
   };
 
   const SubLocationOnChange = sublocId => {
@@ -119,7 +125,18 @@ const Client = () => {
 
   const TargetLocationOnChange = data => {
     setTtargloc(data);
-    setClientData({ ...clientData, targloc: data});
+
+    let tlName = "";
+
+    if(targetlocations){
+      Object.keys(targetlocations).forEach(i => {
+        if(targetlocations[i]._id == data) {
+          tlName = targetlocations[i].name;
+        }
+      })
+    }
+
+    setClientData({ ...clientData, targetlocId: data, targetloc: tlName });
   };
 
   return (     
