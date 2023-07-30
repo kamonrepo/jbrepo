@@ -385,6 +385,16 @@ const EnhancedTableToolbar = props => {
   const sublocations = useSelector(state => state.sublocations);
   const targetlocations = useSelector(state => state.targetlocations);
 
+
+  const [ggroup, setGgroup] = useState('');
+  const [ssubloc, setSsubloc] = useState('');
+  const [bbr, setBbr] = useState('');
+  const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
+  const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
+  const [targetlocDataBySublocId, setTargetlocDataBySublocId] = useState([]);
+  const [brDataBySublocId, setBRDataBySublocId] = useState([]);
+  
+
   useEffect(() => {
     setHandBRC(brc);
     // zCompute(brc, billruns);
@@ -441,8 +451,8 @@ const EnhancedTableToolbar = props => {
 
     let isPaid = isAllPaid(statusPlaceHolder);
 
-    await dispatch(updateBRC({selectedIDs, isPaid, selectedMFs, selectedBr}));
-    await dispatch(getBRCById(selectedBr));
+    dispatch(updateBRC({selectedIDs, isPaid, selectedMFs, selectedBr}));
+    dispatch(getBRCById(selectedBr));
 
     setSelected([]);
     setSelectedIDs([]);
@@ -461,6 +471,7 @@ const EnhancedTableToolbar = props => {
     let arrReturn = arr.every(elem => elem === arr[0]);
     return arrReturn;
   }
+
   const isAllPaid = arr => {
     let arrReturn = arr.every(elem => elem == 'PAID');
     return arrReturn;
@@ -489,6 +500,80 @@ const EnhancedTableToolbar = props => {
 
     // })
   }
+
+  const LocationOnChange = groupId => {
+
+    setGgroup(groupId);
+    setSublocData({ ...sublocData, groupId: groupId});
+    let holdSubloc = [];
+
+    if(groups){
+      Object.keys(sublocations).forEach(i => {
+        if(sublocations[i].groupId == groupId) {
+          holdSubloc.push({ _id:  sublocations[i]._id, name: sublocations[i].name});
+        }
+      });
+
+      setSublocDataByGroupId(holdSubloc);
+    }
+
+    
+  };
+
+  const SubLocationOnChange = sublocId => {
+
+    console.log('SubLocationOnChange::: ', sublocId);
+
+    let holdTlID = [];
+    if(targetlocations){
+      Object.keys(targetlocations).forEach(i => {
+
+        if(targetlocations[i].sublocId == sublocId) {
+        
+          holdTlID.push({ _id:  targetlocations[i]._id, name: targetlocations[i].name});
+        }
+      })
+
+      console.log('holdTlID ', holdTlID);
+    }
+
+    
+    setSsubloc(sublocId);
+     let holdBr = [];
+
+    if(billruns){
+      Object.keys(billruns).forEach(i => {
+        console.log('holdTlID[i]._id ', holdTlID[i]);
+        if(billruns[i].targetLocId == sublocId) {
+          holdBr.push({ _id:  billruns[i]._id, name: billruns[i].name});
+        }
+      })
+
+      setBRDataBySublocId(holdBr);
+    }
+  };
+
+  const BrOnChange = data => {
+    setBbr(data);
+
+    let tlName = "";
+
+    if(billruns){
+      Object.keys(billruns).forEach(i => {
+        if(billruns[i]._id == data) {
+          tlName = billruns[i].name;
+        }
+      })
+    }
+
+    // setClientData({ ...clientData, targetlocId: data, targetloc: tlName });
+  };
+
+  const debugg = e => {
+    e.preventDefault();
+    console.log('brDataBySublocId:: ', brDataBySublocId);
+  };
+
 
   return (
     <Toolbar
@@ -544,33 +629,33 @@ const EnhancedTableToolbar = props => {
                 
                 <FormControl>
                 <FormLabel>CITY</FormLabel>
-                  <Select fullWidth onChange={e => handleGroupOnChange(e.target.value)}>
-                    {billruns.map((data) => (
-                      <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
+                  <Select fullWidth value={ggroup} onChange={e => LocationOnChange(e.target.value)}>
+                    {groups.map((data) => (
+                      <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                     ))}
                   </Select>       
                 </FormControl>
 
                 <FormControl>
                   <FormLabel>MUNICIPALITY</FormLabel>
-                  <Select className={classes.Select} fullWidth >
-                    {billruns.map((data) => (
-                      <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
+                  <Select className={classes.Select} fullWidth value={ssubloc} onChange={e => SubLocationOnChange(e.target.value)}>
+                    {sublocDataByGroupId.map((data) => (
+                      <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                     ))}
                 </Select>
               </FormControl>
 
               <FormControl>
                   <FormLabel>LOCATION</FormLabel>
-                  <Select className={classes.Select} fullWidth >
-                    {billruns.map((data) => (
+                  <Select className={classes.Select} fullWidth value={bbr} onChange={e => BrOnChange(e.target.value)}>
+                    {brDataBySublocId.map((data) => (
                       <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
                     ))}
                 </Select>
               </FormControl>
 
               <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : null} onChange={e => searchOnChange(e.target.value)} />
-
+              <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Debugg </Button>
             </Grid>
           </Grid>
         </>

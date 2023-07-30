@@ -141,9 +141,8 @@ const Client = () => {
 
   return (     
     <Container component="main" maxWidth="xs">     
-      <Paper className={classes.paper} elevation={9}>
+    <Paper className={classes.paper} elevation={9}>
         <form style={{ display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit}>
-
           <FormControl>
             <FormLabel>Location</FormLabel>
             <Select className={classes.Select} fullWidth value={ggroup} onChange={e => LocationOnChange(e.target.value)}>
@@ -172,10 +171,10 @@ const Client = () => {
             </Select>
           </FormControl>
             
-            <TextField id="tfOne" required className={classes.textFields} name="name" variant="standard" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
-            <TextField id="tfTwo" required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
-            <TextField id="tfThree" required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
-            
+          <TextField id="tfOne" required className={classes.textFields} name="name" variant="standard" label="Registered name" fullWidth value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
+          <TextField id="tfTwo" required className={classes.textFields} name="address" variant="outlined" label="Address" fullWidth value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
+          <TextField id="tfThree" required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" fullWidth value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
+          
           <FormControl>
             <FormLabel>Product</FormLabel>
             <Select                      
@@ -208,16 +207,16 @@ const Client = () => {
             </Select>    
           </FormControl>
 
-            <FormLabel id="demo-radio-buttons-group-label">Due Date</FormLabel>
-            <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="15th" name="radio-buttons-group">
-              <FormControlLabel value="15th" control={<Radio />} label="15th of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})} />
-              <FormControlLabel value="Endth" control={<Radio />} label="End of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
-            </RadioGroup>
-      
-            <TextField required className={classes.textFields} name="ipaddr" variant="outlined" label="IP Address" fullWidth value={clientData.ipaddr} onChange={(e) => setClientData({ ...clientData, ipaddr: e.target.value})}/>
-            <TextField required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
-            <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth> Submit </Button>
-            <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
+          <FormLabel id="demo-radio-buttons-group-label">Due Date</FormLabel>
+          <RadioGroup aria-labelledby="demo-radio-buttons-group-label" defaultValue="15th" name="radio-buttons-group">
+            <FormControlLabel value="15th" control={<Radio />} label="15th of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})} />
+            <FormControlLabel value="Endth" control={<Radio />} label="End of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
+          </RadioGroup>
+    
+          <TextField required className={classes.textFields} name="ipaddr" variant="outlined" label="IP Address" fullWidth value={clientData.ipaddr} onChange={(e) => setClientData({ ...clientData, ipaddr: e.target.value})}/>
+          <TextField required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
+          <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth> Submit </Button>
+          <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
         </form>
     </Paper>
     </Container>
