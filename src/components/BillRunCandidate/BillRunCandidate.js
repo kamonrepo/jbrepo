@@ -524,26 +524,38 @@ const EnhancedTableToolbar = props => {
 
     console.log('SubLocationOnChange::: ', sublocId);
 
+    // let holdTlID = {};
     let holdTlID = [];
+
     if(targetlocations){
       Object.keys(targetlocations).forEach(i => {
 
         if(targetlocations[i].sublocId == sublocId) {
         
           holdTlID.push({ _id:  targetlocations[i]._id, name: targetlocations[i].name});
+          // Object.assign({ _id:  targetlocations[i]._id, name: targetlocations[i].name}, holdTlID)
+
         }
       })
 
-      console.log('holdTlID ', holdTlID);
+
     }
 
-    
+    console.log('holdTlID ', holdTlID[0]);
     setSsubloc(sublocId);
      let holdBr = [];
 
+     console.log('holdTlID.length', holdTlID.length);
+     console.log('billruns.length', billruns.length);
+
+     //resume palitan si if(billruns) ng if(holdTlID)
+
     if(billruns){
       Object.keys(billruns).forEach(i => {
-        console.log('holdTlID[i]._id ', holdTlID[i]);
+        for(let k=0; k<holdTlID.length; k++){
+
+        }
+
         if(billruns[i].targetLocId == sublocId) {
           holdBr.push({ _id:  billruns[i]._id, name: billruns[i].name});
         }
