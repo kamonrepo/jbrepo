@@ -516,53 +516,46 @@ const EnhancedTableToolbar = props => {
 
       setSublocDataByGroupId(holdSubloc);
     }
-
-    
   };
 
   const SubLocationOnChange = sublocId => {
-
     console.log('SubLocationOnChange::: ', sublocId);
+    setSsubloc(sublocId);
 
-    // let holdTlID = {};
-    let holdTlID = [];
+    let holdTl = [];
 
     if(targetlocations){
       Object.keys(targetlocations).forEach(i => {
-
         if(targetlocations[i].sublocId == sublocId) {
-        
-          holdTlID.push({ _id:  targetlocations[i]._id, name: targetlocations[i].name});
-          // Object.assign({ _id:  targetlocations[i]._id, name: targetlocations[i].name}, holdTlID)
 
+          holdTl.push({_id: targetlocations[i]._id, name: targetlocations[i].name});
         }
       })
-
-
     }
 
-    console.log('holdTlID ', holdTlID[0]);
-    setSsubloc(sublocId);
-     let holdBr = [];
+    //console.log('holdTlID::: ', holdTl);
+    let holdBR = []
 
-     console.log('holdTlID.length', holdTlID.length);
-     console.log('billruns.length', billruns.length);
+    let targetlocIds = holdTl.map(item => item._id);
+    let targetlocIdsBR = billruns.map(item => item.targetlocId);
 
-     //resume palitan si if(billruns) ng if(holdTlID)
+    let filteredTLids = targetlocIds.filter(id => targetlocIdsBR.includes(id));
+
+    console.log('filteredTLids::: ', filteredTLids);
 
     if(billruns){
       Object.keys(billruns).forEach(i => {
-        for(let k=0; k<holdTlID.length; k++){
 
-        }
-
-        if(billruns[i].targetLocId == sublocId) {
-          holdBr.push({ _id:  billruns[i]._id, name: billruns[i].name});
-        }
+            for(let x=0; x<filteredTLids.length; x++){
+              if(billruns[i].targetlocId == filteredTLids[x]) {
+              // console.log("::: ",billruns[i]);
+              holdBR.push(billruns[i]);
+            }
+          }
       })
-
-      setBRDataBySublocId(holdBr);
     }
+
+    setBRDataBySublocId(holdBR);
   };
 
   const BrOnChange = data => {
@@ -583,9 +576,9 @@ const EnhancedTableToolbar = props => {
 
   const debugg = e => {
     e.preventDefault();
-    console.log('brDataBySublocId:: ', brDataBySublocId);
+    //console.log('brDataBySublocId:: ', brDataBySublocId);
+    
   };
-
 
   return (
     <Toolbar
@@ -660,10 +653,11 @@ const EnhancedTableToolbar = props => {
               <FormControl>
                   <FormLabel>LOCATION</FormLabel>
                   <Select className={classes.Select} fullWidth value={bbr} onChange={e => BrOnChange(e.target.value)}>
-                    {brDataBySublocId.map((data) => (
+                  
+                  {brDataBySublocId.map((data) => (
                       <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
                     ))}
-                </Select>
+                  </Select>
               </FormControl>
 
               <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : null} onChange={e => searchOnChange(e.target.value)} />
