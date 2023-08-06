@@ -326,7 +326,7 @@ export default function BillRunCandidate() {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row._id}
+                        key={index}
                         selected={isItemSelected}
                       >
                             <TableCell padding="checkbox">
@@ -656,7 +656,7 @@ const EnhancedTableToolbar = props => {
                   </Select>
               </FormControl>
 
-              <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : null} onChange={e => searchOnChange(e.target.value)} />
+              <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)} />
               <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Debugg </Button>
             </Grid>
           </Grid>

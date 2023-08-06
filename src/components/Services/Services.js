@@ -63,9 +63,9 @@ const Services = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-        <Paper class={classes.Paper} elevation={9}>
-          <form class={classes.form} autoComplete="off" onSubmit={AddServiceSubmit}>
-              <div class={classes.createButton}>
+        <Paper className={classes.Paper} elevation={9}>
+          <form className={classes.form} autoComplete="off" onSubmit={AddServiceSubmit}>
+              <div className={classes.createButton}>
                 <Button variant="text" onClick={(e) => NewPlanSubmit(e)}><b style={{color:'green' }}>* create new service</b></Button>
               </div>
             {(categories.length > 0) 

@@ -348,7 +348,7 @@ export default function Home() {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.billRun}
+                        key={index}
                         selected={isItemSelected}
                       >
                             <TableCell padding="checkbox">
@@ -425,7 +425,7 @@ const EnhancedTableToolbar = props => {
                 <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
                 </Typography>
                 
-                <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : null} onChange={e => searchOnChange(e.target.value)} />
+                <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)} />
 
             </Grid>
           </Grid>

@@ -48,7 +48,7 @@ const BillRun = () => {
     return(
         <Container component="main" maxWidth="xs" >
             <Paper className={classes.paper} elevation={9}>
-                <form class={classes.form} onSubmit={handleSubmit}>
+                <form className={classes.form} onSubmit={handleSubmit}>
                     <Grid className={classes.maincon} container>
                         <Grid className={classes.tags} item lg={12} md={12} sm={12} xs={12}>
                             <Tags                 
