@@ -21,7 +21,7 @@ const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
   { id: 'plan', numeric: false, disablePadding: false, label: 'Plan' },
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'Monthly Fee' },
-  { id: 'status', numeric: true, disablePadding: false, label: 'July 30, 2023' },
+  { id: 'status', numeric: true, disablePadding: false, label: 'Aug 15, 2023' },
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -326,7 +326,7 @@ export default function BillRunCandidate() {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.name}
+                        key={row._id}
                         selected={isItemSelected}
                       >
                             <TableCell padding="checkbox">
@@ -384,7 +384,6 @@ const EnhancedTableToolbar = props => {
   const groups = useSelector(state => state.groups);
   const sublocations = useSelector(state => state.sublocations);
   const targetlocations = useSelector(state => state.targetlocations);
-
 
   const [ggroup, setGgroup] = useState('');
   const [ssubloc, setSsubloc] = useState('');
@@ -558,20 +557,17 @@ const EnhancedTableToolbar = props => {
     setBRDataBySublocId(holdBR);
   };
 
-  const BrOnChange = data => {
-    setBbr(data);
+  const BrOnChange = brid => {
+    setBbr(brid);
+    console.log('BrOnChange::: ', brid);
 
-    let tlName = "";
+    setQuery('');
+    dispatch(getBRCById(brid));
+    displayGroupName(brid);
+    setSelectedBr(brid);
+    zCompute(brid);
 
-    if(billruns){
-      Object.keys(billruns).forEach(i => {
-        if(billruns[i]._id == data) {
-          tlName = billruns[i].name;
-        }
-      })
-    }
-
-    // setClientData({ ...clientData, targetlocId: data, targetloc: tlName });
+    // setClientData({ ...clientData, targetlocId: brid, targetloc: tlName });
   };
 
   const debugg = e => {

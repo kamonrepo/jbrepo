@@ -99,7 +99,7 @@ const Plan = () => {
                   id="demo-simple-select-standard" 
                   className={classes.Select}                             
                   value={category} 
-                  visible={false}
+             
                   onChange={e => handleOnchangeCategory(e.target.value)}>
 
                   {categories.map((data) => (
@@ -107,7 +107,7 @@ const Plan = () => {
                   ))}
               </Select>     
 
-              <div class={classes.createButton}>
+              <div className={classes.createButton}>
                 <Button variant="text" onClick={newPlanOnClick}><b style={{color:'green' }}>* create new plan</b></Button>
               </div>
 
