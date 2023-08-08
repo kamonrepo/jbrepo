@@ -18,10 +18,10 @@ import { getSublocs } from '../../actions/sublocation';
 import { getTargetLocs } from '../../actions/targetlocation';
 
 const headCells = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-  { id: 'plan', numeric: false, disablePadding: false, label: 'Plan' },
-  { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'Monthly Fee' },
-  { id: 'status', numeric: true, disablePadding: false, label: 'Aug 15, 2023' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'NAME' },
+  { id: 'plan', numeric: false, disablePadding: false, label: 'PLAN' },
+  { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'MONTHLY FEE' },
+  { id: 'status', numeric: true, disablePadding: false, label: 'STATUS' },
 ];
 
 function descendingComparator(a, b, orderBy) {

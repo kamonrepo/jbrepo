@@ -22,7 +22,7 @@ const App = () => {
     return (
         <BrowserRouter>
         <NavigationBar />
-            <Container style={{ display: 'flex', marginTop: '99px'}}> 
+            <Container style={{ display: 'flex', marginTop: '99px', justifyContent: 'center' }}> 
                 <Switch>
                     <Route path="/" exact component={Home} /> 
                     <Route path="/auth" exact component={Auth} />
