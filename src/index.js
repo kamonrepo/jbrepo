@@ -1,14 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { applyMiddleware, compose, createStore } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import './index.css';
 import reducers from './reducers/index';
 import App from './App';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
+const store = configureStore({
+    reducer: reducers,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+    // If you need to add other store enhancers, you can do so here
+    // enhancers: [...]
+});
 
 ReactDOM.render(
     <Provider store={store}>

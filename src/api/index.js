@@ -47,4 +47,8 @@ export const createPlan = newPlan => API.post('/plan', newPlan);
 export const fetchPlanByCategoryId = id => API.get(`/plan/${id}`);
 export const fetchPlan = () => API.get('/plan');
 
+export const createPayment = newPayment => API.post('/payment', newPayment);
+export const updatePayment = id => API.patch('/payment/updatePayment', id);
+export const fetchPayment = () => API.get('/payment');
+
 

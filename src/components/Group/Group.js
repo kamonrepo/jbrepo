@@ -216,7 +216,7 @@ const Group = () => {
 
                     <TextField required name="tftargetloc" variant="outlined" label="New Target Location" fullWidth value={targetlocData.name} onChange={(e) => setTargetlocData({...targetlocData, name: e.target.value})} />
                     <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-                    <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
+                    {/* <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button> */}
 
                   </form>
                 </Paper>

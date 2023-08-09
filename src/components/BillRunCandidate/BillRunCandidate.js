@@ -12,6 +12,7 @@ import { lighten, makeStyles, Table,
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBRC, getBRCById } from '../../actions/billruncandidate';
+import { updatePayment } from '../../actions/payment';
 import { getBillrun } from '../../actions/billrun';
 import { getGroups } from '../../actions/group';
 import { getSublocs } from '../../actions/sublocation';
@@ -391,7 +392,7 @@ const EnhancedTableToolbar = props => {
   useEffect(() => {
     setHandBRC(brc);
     // zCompute(brc, billruns);
-
+    console.log('useEffect setHandBRC: ', brc)
   },[brc]);
 
   let zCompute = brid => {
@@ -442,15 +443,23 @@ const EnhancedTableToolbar = props => {
   //PAID BUTTON
   const doneClick = async () => {
 
+    await new Promise(resolve => {
+
     let isPaid = isAllPaid(statusPlaceHolder);
 
+    dispatch(updatePayment({selectedIDs, isPaid, selectedMFs, selectedBr}));
     dispatch(updateBRC({selectedIDs, isPaid, selectedMFs, selectedBr}));
     dispatch(getBRCById(selectedBr));
+
+    resolve(true);
+    })
 
     setSelected([]);
     setSelectedIDs([]);
     setSelectedMFs([]);
     setStatusPlaceHolder([]);
+
+    console.log('umabot ba dito?')
   }
 
   const backButton = () => {
