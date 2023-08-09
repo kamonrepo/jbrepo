@@ -8,7 +8,7 @@ import { lighten, makeStyles, Table,
         TableSortLabel, Toolbar, Typography, 
         Paper, Checkbox, IconButton, 
         Tooltip, Select, MenuItem, TextField, Grid, Button,
-        FormControl, FormLabel
+        FormControl, InputLabel
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBRC, getBRCById } from '../../actions/billruncandidate';
@@ -105,10 +105,6 @@ EnhancedTableHead.propTypes = {
 };
 
 const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
   highlight:
     theme.palette.type === 'light'
       ? {
@@ -118,15 +114,13 @@ const useToolbarStyles = makeStyles((theme) => ({
       : {
           color: theme.palette.text.primary,
           backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: '1 1 100%',
-  },
+        }
 }));
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    display: 'flex',
+    width: '100%'
   },
   paper: {
     width: '100%',
@@ -547,7 +541,6 @@ const EnhancedTableToolbar = props => {
 
             for(let x=0; x<filteredTLids.length; x++){
               if(billruns[i].targetlocId == filteredTLids[x]) {
-              // console.log("::: ",billruns[i]);
               holdBR.push(billruns[i]);
             }
           }
@@ -559,7 +552,7 @@ const EnhancedTableToolbar = props => {
 
   const BrOnChange = brid => {
     setBbr(brid);
-    console.log('BrOnChange::: ', brid);
+    console.log('BrOnChangeeeeeeeeeee::: ', brid); 
 
     setQuery('');
     dispatch(getBRCById(brid));
@@ -570,99 +563,92 @@ const EnhancedTableToolbar = props => {
     // setClientData({ ...clientData, targetlocId: brid, targetloc: tlName });
   };
 
-  const debugg = e => {
-    e.preventDefault();
-    //console.log('brDataBySublocId:: ', brDataBySublocId);
-    
-  };
-
   return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (      
-        <>
-          <Grid container spacing={9}>
-            <Grid style={{paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
-              <Typography style={{ display: 'flex', justifyContent: 'center', paddingBottom: '20px'}} color="inherit" variant="subtitle1" component="div">
-                {numSelected} SELECTED
-              </Typography>
-              <Button onClick={backButton} variant="contained" color="primary" size="large" type="submit" fullWidth> 
-               <b>BACK</b>  
-              </Button>
-            </Grid>
-
-            <Grid style={{paddingBottom: '99px', paddingTop: '50px' }} item lg={6} sm={6} xs={6}>
-              <div style={{ display:'flex', justifyContent: 'center' }}>
-                <Tooltip style={{ display:'flex', justifyContent: 'center' }} title="Delete">
-                  <IconButton aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
+    <div style={{ display: 'flex', justifyContent: 'center'}}>
+      <Toolbar
+        className={clsx(classes.root, {
+          [classes.highlight]: numSelected > 0,
+        })}
+      >
+        {numSelected > 0 ? (      
+          <div>
+            <Paper elevation={9} style={{ width: '100%', margin: '3px 3px 3px 3px', backgroundColor: '#6db4e3', display: 'flex', flexDirection: 'row'}}>
+              <div style={{ margin: '33px 33px 33px 33px', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>       
+                <Typography style={{ display: 'flex', justifyContent: 'center', paddingBottom: '20px'}} color="inherit" variant="subtitle1" component="div">
+                  {numSelected} SELECTED
+                </Typography>
+                <Button onClick={backButton} variant="contained" color="primary" size="large" type="submit" fullWidth> 
+                <b>BACK</b>  
+                </Button>
               </div>
-              {dynamicButton()}
-            </Grid>
 
-          </Grid>
-        </>
-       ):(
-        <>
-          <Grid container spacing={9}>
-            <Grid style={ { paddingBottom: '99px', paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
-          
-                <Typography style={{paddingBottom: '3px', marginLeft:'10px',  fontWeight: 'bolder', fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
-                GROUP: {selectedGroupname? `${selectedGroupname}` : null}
-                </Typography>
+              <div style={{ margin: '33px 33px 33px 33px', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>       
+                  <Tooltip style={{ display:'flex', justifyContent: 'center' }} title="Delete">
+                    <IconButton aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                  {dynamicButton()}
+              </div>
+            </Paper>
+          </div>
+        ):(
+          <div>
+            <Paper elevation={9} style={{ width: '100%', margin: '9px 9px 9px 9px', backgroundColor: '#dce8e0', display: 'flex', flexDirection: 'row'}}>
+              <div style={{ margin: '33px 33px 33px 33px', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', textAlign: 'center'}}>    
+                  <FormControl>
+                  <InputLabel id="demo-select-small-label">CITY</InputLabel>
+                    <Select style={{width: '200px'}} labelId="demo-select-small-label" id="demo-select-small" value={ggroup} onChange={e => LocationOnChange(e.target.value)}>
+                      {groups.map((data) => (
+                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
+                      ))}
+                    </Select>       
+                  </FormControl>
 
-                <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontFamily: 'Segoe UI', color:'#88562e', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
-                 <b>TOTAL: {`₱ ${total.toLocaleString()}`}</b> 
-                </Typography>
-
-                <Typography style={{paddingBottom: '3px', marginLeft:'25px', color:'green',  fontFamily: 'Segoe UI', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
-                <b>PAID: {`₱ ${paid.toLocaleString()}`}</b>
-                </Typography>
-
-                <Typography style={{paddingBottom: '3px', marginLeft:'7px', color:'red',  fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
-                <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
-                </Typography>
-                
-                <FormControl>
-                <FormLabel>CITY</FormLabel>
-                  <Select fullWidth value={ggroup} onChange={e => LocationOnChange(e.target.value)}>
-                    {groups.map((data) => (
-                      <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
-                    ))}
-                  </Select>       
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>MUNICIPALITY</FormLabel>
-                  <Select className={classes.Select} fullWidth value={ssubloc} onChange={e => SubLocationOnChange(e.target.value)}>
-                    {sublocDataByGroupId.map((data) => (
-                      <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-
-              <FormControl>
-                  <FormLabel>LOCATION</FormLabel>
-                  <Select className={classes.Select} fullWidth value={bbr} onChange={e => BrOnChange(e.target.value)}>
-                  
-                  {brDataBySublocId.map((data) => (
-                      <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
-                    ))}
+                  <FormControl> 
+                    <InputLabel id="demo-select-small-label">MUNICIPALITY</InputLabel>
+                    <Select style={{width: '200px'}} labelId="demo-select-small-label" id="demo-select-small" value={ssubloc} onChange={e => SubLocationOnChange(e.target.value)}>
+                      {sublocDataByGroupId.map((data) => (
+                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
+                      ))}
                   </Select>
-              </FormControl>
+                  </FormControl>
 
-              <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)} />
-              <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Debugg </Button>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </Toolbar>
+                  <FormControl>
+                      <InputLabel id="demo-select-small-label">LOCATION</InputLabel>
+                      <Select style={{width: '200px'}} labelId="demo-select-small-label" id="demo-select-small" value={bbr} onChange={e => BrOnChange(e.target.value)}>
+                      
+                      {brDataBySublocId.map((data) => (
+                          <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
+                        ))}
+                      </Select>
+                  </FormControl>
+
+                  <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)} />
+              </div>
+
+              <div style={{ margin: '33px 33px 33px 33px', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>                   
+                  <Typography style={{paddingBottom: '3px', marginLeft:'10px',  fontWeight: 'bolder', fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
+                    <b>LOCATION: {selectedGroupname? `${selectedGroupname}` : null} </b>
+                  </Typography>
+                    
+                  <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontFamily: 'Segoe UI', color:'#88562e', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
+                    <b>TOTAL: {`₱ ${total.toLocaleString()}`}</b> 
+                  </Typography>
+
+                  <Typography style={{paddingBottom: '3px', marginLeft:'25px', color:'green',  fontFamily: 'Segoe UI', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
+                    <b>PAID: {`₱ ${paid.toLocaleString()}`}</b>
+                  </Typography>
+
+                  <Typography style={{paddingBottom: '3px', marginLeft:'7px', color:'red',  fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
+                    <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
+                  </Typography>
+              </div>
+            </Paper>
+          </div>
+        )}
+      </Toolbar>
+    </div>
   );
 };
 

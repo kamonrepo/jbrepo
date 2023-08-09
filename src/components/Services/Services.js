@@ -50,11 +50,6 @@ const Services = () => {
     setFormData({ type: 'create' });
   };
 
-
-  const debugg = () => {
-
-  }
-
   const tbOnChange = value => {
     console.log('tbOnChange::: ', value);
     setCategory(value);
@@ -87,7 +82,6 @@ const Services = () => {
             }
             <TextField label={`${formData.type == 'create' ? 'CREATE SERVICE' : 'UPDATE SERVICE'}`} required onChange={(e) => tbOnChange(e.target.value)} value={category} style={{paddingBottom: '.9em'}}  name="category" variant="outlined"/>
             <Button variant="contained" color="primary" size="large" type="submit"> {`${formData.type == 'create' ? 'CREATE' : 'UPDATE'}`} </Button>
-            <Button variant="contained" color="primary" size="large" onClick={() => debugg()} > debugg </Button>
           </form>
         </Paper>
       </Container>

@@ -173,7 +173,7 @@ const Client = () => {
               </div>
        
               <div style={{ margin: '33px 33px 33px 33px', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
-                <TextField id="tfOne" required className={classes.textFields} name="name" variant="standard" label="Registered name" value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
+                <TextField id="tfOne" required className={classes.textFields} name="name" variant="outlined" label="Registered name" value={clientData.name} onChange={(e) => setClientData({...clientData, name: e.target.value})} />
                 <TextField id="tfTwo" required className={classes.textFields} name="address" variant="outlined" label="Address" value={clientData.address} onChange={(e) => setClientData({...clientData, address: e.target.value})} />
                 <TextField id="tfThree" required className={classes.textFields} name="contactNumber" variant="outlined" label="Contact Number" value={clientData.contactNumber} onChange={(e) => setClientData({...clientData, contactNumber: e.target.value})}  />
               </div>
