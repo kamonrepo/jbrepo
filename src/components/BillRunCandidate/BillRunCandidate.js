@@ -164,6 +164,7 @@ export default function BillRunCandidate() {
   const [selected, setSelected] = useState([]);
   const [selectedIDs, setSelectedIDs] = useState([]);
   const [selectedMFs, setSelectedMFs] = useState([]);
+  const [selectedBRCClient, setSelectedBRCClient] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
@@ -184,7 +185,7 @@ export default function BillRunCandidate() {
     setSelected([]);
   };
 
-  const handleClick = (event, name, id, status, monthlyFee) => {
+  const handleClick = (event, name, id, status, monthlyFee, clientId) => {
     
     const selectedIndex = selected.indexOf(name);
     
@@ -220,6 +221,7 @@ export default function BillRunCandidate() {
     if(selectedIndex === -1) {
       setSelectedIDs(prev => [...prev, id]);
       setSelectedMFs(prev => [...prev, monthlyFee]);
+      setSelectedBRCClient(prev => [...prev, clientId]);
       setStatusPlaceHolder(prev => [...prev, status]);
       console.log('checked: ');
 
@@ -232,6 +234,7 @@ export default function BillRunCandidate() {
       if(index > -1) {
         selectedIDs.splice(index, 1);
         selectedMFs.splice(index, 1);
+        selectedBRCClient.splice(index, 1);
       }
       if(statusIndex > -1){
         statusPlaceHolder.splice(statusIndex, 1);
@@ -276,10 +279,12 @@ export default function BillRunCandidate() {
           numSelected={selected.length} 
           handBRC={handBRC} 
           selectedIDs={selectedIDs} 
+          selectedBRCClient={selectedBRCClient}
           selectedMFs={selectedMFs} 
           setHandBRC={setHandBRC} 
           setSelected={setSelected} 
           setSelectedIDs={setSelectedIDs}
+          setSelectedBRCClient={setSelectedBRCClient}
           setSelectedMFs={setSelectedMFs}
           selectedBr={selectedBr}
           setSelectedBr={setSelectedBr}
@@ -317,7 +322,7 @@ export default function BillRunCandidate() {
                     return (
                       <TableRow
                         hover
-                        onClick={(e) => handleClick(e, row.name, row._id, row.status, row.monthlyFee)}
+                        onClick={(e) => handleClick(e, row.name, row._id, row.status, row.monthlyFee, row.client)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -368,7 +373,7 @@ export default function BillRunCandidate() {
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
-  const {numSelected, setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
+  const {numSelected, setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
         setSelected, selectedGroupname, setSelectedGroupname, query, setQuery } = props;
   const [total, setTotal] = useState(0);  
   const [paid, setPaid] = useState(0);
@@ -447,8 +452,8 @@ const EnhancedTableToolbar = props => {
 
     let isPaid = isAllPaid(statusPlaceHolder);
 
-    dispatch(updatePayment({selectedIDs, isPaid, selectedMFs, selectedBr}));
-    dispatch(updateBRC({selectedIDs, isPaid, selectedMFs, selectedBr}));
+    dispatch(updatePayment({selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
+    //dispatch(updateBRC({selectedIDs, isPaid, selectedMFs, selectedBr}));
     dispatch(getBRCById(selectedBr));
 
     resolve(true);
@@ -457,6 +462,7 @@ const EnhancedTableToolbar = props => {
     setSelected([]);
     setSelectedIDs([]);
     setSelectedMFs([]);
+    setSelectedBRCClient([]);
     setStatusPlaceHolder([]);
 
     console.log('umabot ba dito?')
@@ -466,6 +472,7 @@ const EnhancedTableToolbar = props => {
     setSelected([]);
     setSelectedIDs([]);
     setSelectedMFs([]);
+    setSelectedBRCClient([]);
     setStatusPlaceHolder([]);
   }
 
