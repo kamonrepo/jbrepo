@@ -7,7 +7,7 @@ import { lighten, makeStyles, Table,
         TableHead, TablePagination, TableRow, 
         TableSortLabel, Toolbar, Typography, 
         Paper, Checkbox, IconButton, 
-        Tooltip, Select, MenuItem, TextField, Grid, Button,
+        Tooltip, Select, MenuItem, TextField, Button,
         FormControl, InputLabel
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,9 +22,14 @@ const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'NAME' },
   { id: 'plan', numeric: false, disablePadding: false, label: 'PLAN' },
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'MONTHLY FEE' },
-  { id: 'dueDate', numeric: false, disablePadding: false, label: 'DUE DATE' },
+  { id: 'dueDate', numeric: false, disablePadding: false, label: `DUE DATE (${getMonthNameFromDate(new Date())})` },
   { id: 'status', numeric: true, disablePadding: false, label: 'STATUS' },
 ];
+
+function getMonthNameFromDate(date) {
+  const monthOptions = { month: 'long' };
+  return date.toLocaleString('en-US', monthOptions);
+}
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
