@@ -22,6 +22,7 @@ const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'NAME' },
   { id: 'plan', numeric: false, disablePadding: false, label: 'PLAN' },
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'MONTHLY FEE' },
+  { id: 'dueDate', numeric: false, disablePadding: false, label: 'DUE DATE' },
   { id: 'status', numeric: true, disablePadding: false, label: 'STATUS' },
 ];
 
@@ -343,6 +344,7 @@ export default function BillRunCandidate() {
 
                             <TableCell align="left">{row.planName}</TableCell>
                             <TableCell align="left">{row.monthlyFee}</TableCell>
+                            <TableCell align="left">{row.dueDate}</TableCell>
                             <TableCell align="left">{row.status}</TableCell>
 
                       </TableRow>
