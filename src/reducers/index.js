@@ -8,6 +8,7 @@ import billRunReducer from './billrun';
 import billRunCanReducer from './billruncandidate';
 import categoryReducer from '././services/category';
 import planReducer from '././services/plan';
+import paymentReducer from './payment.js';
 
 export default combineReducers({ 
     auth: authReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
     clients: clientReducer,
     billruns: billRunReducer,
     billruncandidates: billRunCanReducer,
-    plan: planReducer
+    plan: planReducer,
+    payments: paymentReducer
 });

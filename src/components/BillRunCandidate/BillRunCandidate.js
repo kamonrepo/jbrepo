@@ -12,7 +12,7 @@ import { lighten, makeStyles, Table,
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBRC, getBRCById } from '../../actions/billruncandidate';
-import { updatePayment } from '../../actions/payment';
+import { updatePayment, getPayments } from '../../actions/payment';
 import { getBillrun } from '../../actions/billrun';
 import { getGroups } from '../../actions/group';
 import { getSublocs } from '../../actions/sublocation';
@@ -153,6 +153,7 @@ export default function BillRunCandidate() {
 
   useEffect(() => {
         dispatch(getBillrun());
+        dispatch(getPayments());
         dispatch(getGroups());
         dispatch(getSublocs());
         dispatch(getTargetLocs());
@@ -177,7 +178,7 @@ export default function BillRunCandidate() {
   };
 
   const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
+    if(event.target.checked) {
       const newSelecteds = handBRC.map((n) => n.name);
       setSelected(newSelecteds);
       return;
@@ -384,6 +385,7 @@ const EnhancedTableToolbar = props => {
   const groups = useSelector(state => state.groups);
   const sublocations = useSelector(state => state.sublocations);
   const targetlocations = useSelector(state => state.targetlocations);
+  const payments = useSelector(state => state.payments);
 
   const [ggroup, setGgroup] = useState('');
   const [ssubloc, setSsubloc] = useState('');
@@ -393,7 +395,6 @@ const EnhancedTableToolbar = props => {
   const [targetlocDataBySublocId, setTargetlocDataBySublocId] = useState([]);
   const [brDataBySublocId, setBRDataBySublocId] = useState([]);
   
-
   useEffect(() => {
     setHandBRC(brc);
     // zCompute(brc, billruns);
