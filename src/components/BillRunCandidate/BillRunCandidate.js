@@ -401,11 +401,35 @@ const EnhancedTableToolbar = props => {
   const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
   const [targetlocDataBySublocId, setTargetlocDataBySublocId] = useState([]);
   const [brDataBySublocId, setBRDataBySublocId] = useState([]);
+
+  function getCurrentMonthPeriod(date) {
+
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+    
+    let formattedDate = `${year}-${month}`;
+
+    return formattedDate;
+}
+
+  let filterBRCbyMonthPeriod = brc => {
+
+    let payload = [];
+
+    let returnMonthPeriod = getCurrentMonthPeriod(new Date());
+    Object.keys(brc).forEach(index => {
+
+        if(brc[index].monthPeriod == returnMonthPeriod) {
+          payload.push(brc[index])
+        }
+    })
+    return payload;
+  }
   
   useEffect(() => {
-    setHandBRC(brc);
+    setHandBRC(filterBRCbyMonthPeriod(brc));
     // zCompute(brc, billruns);
-    console.log('useEffect setHandBRC: ', brc)
+    console.log('useEffect setHandBRC: ', filterBRCbyMonthPeriod(brc));
   },[brc]);
 
   let zCompute = brid => {
