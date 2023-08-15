@@ -18,7 +18,7 @@ export const getBRCById = id => async dispatch => {
   try {
 
     const { data } = await api.fetchBRCById(id);
-    console.log('datadatadatadatadatadatadatadatadatadatadatadatadata:::: ', data);
+    console.log('getBRCByIdgetBRCByIdgetBRCByIdgetBRCByIdgetBRCById-responseeeee:::: ', data);
     dispatch({ type: FETCH_BILLRUN_CAN_BY_ID, payload: data});
 
   }

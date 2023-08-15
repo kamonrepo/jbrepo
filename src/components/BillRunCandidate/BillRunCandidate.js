@@ -163,6 +163,7 @@ export default function BillRunCandidate() {
         dispatch(getGroups());
         dispatch(getSublocs());
         dispatch(getTargetLocs());
+
   }, [handBRC]);
 
   const classes = useStyles();
@@ -423,12 +424,14 @@ const EnhancedTableToolbar = props => {
           payload.push(brc[index])
         }
     })
+
+    console.log('filterBRCbyMonthPeriod done running.........: ', payload)
     return payload;
   }
   
   useEffect(() => {
     setHandBRC(filterBRCbyMonthPeriod(brc));
-    // zCompute(brc, billruns);
+    zCompute(brc, billruns);
     console.log('useEffect setHandBRC: ', filterBRCbyMonthPeriod(brc));
   },[brc]);
 
@@ -437,7 +440,6 @@ const EnhancedTableToolbar = props => {
     let total = 0;
     let paidSum = 0;
     let unpaindSum = 0;
-
 
     Object.keys(billruns).forEach(brKey => {
       if(billruns[brKey]._id == brid) {
@@ -486,7 +488,7 @@ const EnhancedTableToolbar = props => {
 
     dispatch(updatePayment({selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
     //dispatch(updateBRC({selectedIDs, isPaid, selectedMFs, selectedBr}));
-    dispatch(getBRCById(selectedBr));
+    setHandBRC(filterBRCbyMonthPeriod(brc));
 
     resolve(true);
     })
