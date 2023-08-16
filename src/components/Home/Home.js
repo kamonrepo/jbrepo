@@ -414,15 +414,15 @@ const EnhancedTableToolbar = props => {
                 </Typography>
 
                 <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontFamily: 'Segoe UI', color:'#88562e', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
-                 <b>TOTAL: {`₱ ${total.toLocaleString()}`}</b> 
+                 <b>TOTAL: {`₱ todo`}</b> 
                 </Typography>
 
                 <Typography style={{paddingBottom: '3px', marginLeft:'25px', color:'green',  fontFamily: 'Segoe UI', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
-                <b>PAID: {`₱ ${paid.toLocaleString()}`}</b>
+                <b>PAID: {`₱ todo`}</b>
                 </Typography>
 
                 <Typography style={{paddingBottom: '3px', marginLeft:'7px', color:'red',  fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
-                <b>UNPAID: {`₱ ${unpaid.toLocaleString()}`}</b>                              
+                <b>UNPAID: {`₱ todo`}</b>                              
                 </Typography>
                 
                 <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)} />
