@@ -11,7 +11,7 @@ import { lighten, makeStyles, Table,
         FormControl, InputLabel
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateBRC, getBRCById } from '../../actions/billruncandidate';
+import { updateBRC, getBRCByBRId } from '../../actions/billruncandidate';
 import { updatePayment, getPayments } from '../../actions/payment';
 import { getBillrun } from '../../actions/billrun';
 import { getGroups } from '../../actions/group';
@@ -157,14 +157,17 @@ export default function BillRunCandidate() {
   const [selectedBr, setSelectedBr] = useState('');
   const [selectedGroupname, setSelectedGroupname] = useState([]);
 
+  const brc = useSelector(state => state.billruncandidates);
+
   useEffect(() => {
         dispatch(getBillrun());
         dispatch(getPayments());
         dispatch(getGroups());
         dispatch(getSublocs());
         dispatch(getTargetLocs());
+        console.log('[parent]BillRunCandidate top useEffect');
 
-  }, [handBRC]);
+  }, [brc]);
 
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
@@ -176,7 +179,9 @@ export default function BillRunCandidate() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(''); // this is for search
+
+  console.log('[parent]BillRunCandidate body-rendering-brc::: ', brc);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -285,6 +290,7 @@ export default function BillRunCandidate() {
       <Paper className={classes.paper}>
         <EnhancedTableToolbar 
           numSelected={selected.length} 
+          brc={brc}
           handBRC={handBRC} 
           selectedIDs={selectedIDs} 
           selectedBRCClient={selectedBRCClient}
@@ -380,27 +386,24 @@ export default function BillRunCandidate() {
 }
 
 const EnhancedTableToolbar = props => {
+
+
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
-  const {numSelected, setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
+  const { brc, numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
         setSelected, selectedGroupname, setSelectedGroupname, query, setQuery } = props;
-  const [total, setTotal] = useState(0);  
-  const [paid, setPaid] = useState(0);
-  const [unpaid, setUnpaid] = useState(0);
 
-  const brc = useSelector(state => state.billruncandidates);
+
   const billruns = useSelector(state => state.billruns);
   const groups = useSelector(state => state.groups);
   const sublocations = useSelector(state => state.sublocations);
   const targetlocations = useSelector(state => state.targetlocations);
-  const payments = useSelector(state => state.payments);
-
+  console.log('[child]EnhancedTableToolbar body-rendering-brc--   ', brc);
   const [ggroup, setGgroup] = useState('');
   const [ssubloc, setSsubloc] = useState('');
   const [bbr, setBbr] = useState('');
   const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
   const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
-  const [targetlocDataBySublocId, setTargetlocDataBySublocId] = useState([]);
   const [brDataBySublocId, setBRDataBySublocId] = useState([]);
 
   function getCurrentMonthPeriod(date) {
@@ -410,10 +413,11 @@ const EnhancedTableToolbar = props => {
     
     let formattedDate = `${year}-${month}`;
 
+    //console.log('getCurrentMonthPeriod:::::: ', formattedDate);
     return formattedDate;
 }
 
-  let filterBRCbyMonthPeriod = brc => {
+  const filterBRCbyMonthPeriod =  brc => {
 
     let payload = [];
 
@@ -425,34 +429,45 @@ const EnhancedTableToolbar = props => {
         }
     })
 
-    console.log('filterBRCbyMonthPeriod done running.........: ', payload)
+    
+    console.log('===filterBRCbyMonthPeriod-return :::::: ', payload);
+
     return payload;
   }
+
+  const temp =  async () => {
+
+
+  }
   
-  useEffect(() => {
-    setHandBRC(filterBRCbyMonthPeriod(brc));
-    zCompute(brc, billruns);
-    console.log('useEffect setHandBRC: ', filterBRCbyMonthPeriod(brc));
+  useEffect(async() => {
+     await new Promise(resolve => {
+     
+     console.log('[child]EnhancedTableToolbar bottom useEffect: ');
+    
+    resolve(setHandBRC(filterBRCbyMonthPeriod(brc))); 
+  })
+
   },[brc]);
 
-  let zCompute = brid => {
+  // let zCompute = brid => {
 
-    let total = 0;
-    let paidSum = 0;
-    let unpaindSum = 0;
+  //   let total = 0;
+  //   let paidSum = 0;
+  //   let unpaindSum = 0;
 
-    Object.keys(billruns).forEach(brKey => {
-      if(billruns[brKey]._id == brid) {
-        total =  billruns[brKey].total;
-        paidSum = billruns[brKey].paid;
-        unpaindSum = billruns[brKey].unpaid;
-      }
-    })
+  //   Object.keys(billruns).forEach(brKey => {
+  //     if(billruns[brKey]._id == brid) {
+  //       total =  billruns[brKey].total;
+  //       paidSum = billruns[brKey].paid;
+  //       unpaindSum = billruns[brKey].unpaid;
+  //     }
+  //   })
 
-    setTotal(total);
-    setPaid(paidSum);
-    setUnpaid(unpaindSum);
-  }
+  //   setTotal(total);
+  //   setPaid(paidSum);
+  //   setUnpaid(unpaindSum);
+  // }
 
   const displayGroupName = brid => {
 
@@ -467,18 +482,20 @@ const EnhancedTableToolbar = props => {
     setSelectedGroupname(grps);
     return grps;
   }
+  const BrOnChange = async brid => {
 
-  const handleGroupOnChange = async brid => {
-  console.log('handleGroupOnChange::: ', brid);
-
-  setQuery('');
-  dispatch(getBRCById(brid));
-  displayGroupName(brid);
-  setSelectedBr(brid);
-  zCompute(brid);
-
-  }
+    await new Promise(resolve => {
+      setBbr(brid);
   
+      setQuery('');
+      dispatch(getBRCByBRId(brid));
+      displayGroupName(brid);
+      setSelectedBr(brid);
+
+      resolve(true);
+      })
+  };
+
   //PAID BUTTON
   const doneClick = async () => {
 
@@ -487,11 +504,8 @@ const EnhancedTableToolbar = props => {
     let isPaid = isAllPaid(statusPlaceHolder);
 
     dispatch(updatePayment({selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
-    //dispatch(updateBRC({selectedIDs, isPaid, selectedMFs, selectedBr}));
-    setHandBRC(filterBRCbyMonthPeriod(brc));
-
-    resolve(true);
-    })
+    dispatch(getBRCByBRId(selectedBr));
+    //setHandBRC(filterBRCbyMonthPeriod(brc));
 
     setSelected([]);
     setSelectedIDs([]);
@@ -499,6 +513,8 @@ const EnhancedTableToolbar = props => {
     setSelectedBRCClient([]);
     setStatusPlaceHolder([]);
 
+    resolve(true);
+    })
     console.log('umabot ba dito?')
   }
 
@@ -520,7 +536,7 @@ const EnhancedTableToolbar = props => {
     return arrReturn;
   }
 
-  const dynamicButton = () => {
+  const dynamicButton =  () => {
     let toggle = allEqual(statusPlaceHolder);
     let isPaid = isAllPaid(statusPlaceHolder);
 
@@ -534,6 +550,7 @@ const EnhancedTableToolbar = props => {
 
   const searchOnChange =  value => {
     setQuery(value);
+    console.log('searchOnChange-setQuery-value::: ', value)
     // return new Promise(async (resolve, reject) => {
     //   try{
     //     resolve(setQuery(value));
@@ -562,7 +579,7 @@ const EnhancedTableToolbar = props => {
   };
 
   const SubLocationOnChange = sublocId => {
-    console.log('SubLocationOnChange::: ', sublocId);
+
     setSsubloc(sublocId);
 
     let holdTl = [];
@@ -576,15 +593,12 @@ const EnhancedTableToolbar = props => {
       })
     }
 
-    //console.log('holdTlID::: ', holdTl);
     let holdBR = []
 
     let targetlocIds = holdTl.map(item => item._id);
     let targetlocIdsBR = billruns.map(item => item.targetlocId);
 
     let filteredTLids = targetlocIds.filter(id => targetlocIdsBR.includes(id));
-
-    console.log('filteredTLids::: ', filteredTLids);
 
     if(billruns){
       Object.keys(billruns).forEach(i => {
@@ -598,19 +612,6 @@ const EnhancedTableToolbar = props => {
     }
 
     setBRDataBySublocId(holdBR);
-  };
-
-  const BrOnChange = brid => {
-    setBbr(brid);
-    console.log('BrOnChangeeeeeeeeeee::: ', brid); 
-
-    setQuery('');
-    dispatch(getBRCById(brid));
-    displayGroupName(brid);
-    setSelectedBr(brid);
-    zCompute(brid);
-
-    // setClientData({ ...clientData, targetlocId: brid, targetloc: tlName });
   };
 
   return (
@@ -699,7 +700,9 @@ const EnhancedTableToolbar = props => {
         )}
       </Toolbar>
     </div>
+
   );
+
 };
 
 EnhancedTableToolbar.propTypes = {

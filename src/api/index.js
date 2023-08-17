@@ -37,7 +37,7 @@ export const fetchBillrun = () => API.get('/billrun');
 
 export const fetchBillrunCan = () => API.get('/billruncandidate');
 
-export const fetchBRCById = id => API.get(`/billruncandidate/${id}`);
+export const fetchBRCByBRId = id => API.get(`/billruncandidate/${id}`);
 export const updateBRC = id => API.patch('/billruncandidate/updateBRC', id);
 
 export const createCategory = newCategory => API.post('/category', newCategory);

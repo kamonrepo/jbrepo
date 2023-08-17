@@ -14,13 +14,14 @@ export const getBillrunCandidate = () => async dispatch => {
     }
 };
 
-export const getBRCById = id => async dispatch => {
+export const getBRCByBRId = id => async dispatch => {
   try {
 
-    const { data } = await api.fetchBRCById(id);
-    console.log('getBRCByIdgetBRCByIdgetBRCByIdgetBRCByIdgetBRCById-responseeeee:::: ', data);
-    dispatch({ type: FETCH_BILLRUN_CAN_BY_ID, payload: data});
+    console.log('api.fetchBRCByBRId(id)-reqqqqq:::: ', id); //todododod optimize fetch, fetch by brid AND monthPeriod
+    const { data } = await api.fetchBRCByBRId(id);
+    console.log('api.fetchBRCByBRId(id)-responseeeee:::: ', data);
 
+    dispatch({ type: FETCH_BILLRUN_CAN_BY_ID, payload: data});
   }
   catch (error) {
     console.log('err: ', error);
@@ -31,7 +32,7 @@ export const updateBRC = (req, type) => async (dispatch) => {
   try {
     console.log('API-updateBRC-REQ:::: ', req);
     const { data } = await api.updateBRC(req);
-    // //console.log('action/action/updatePost payload data: ', data);
+    
     dispatch({ type: UPDATE_BILLRUN_CAN, payload: data});
 
   } catch (error) {
