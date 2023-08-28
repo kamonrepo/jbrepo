@@ -157,17 +157,15 @@ export default function BillRunCandidate() {
   const [selectedBr, setSelectedBr] = useState('');
   const [selectedGroupname, setSelectedGroupname] = useState([]);
 
-  const brc = useSelector(state => state.billruncandidates);
-
   useEffect(() => {
         dispatch(getBillrun());
         dispatch(getPayments());
         dispatch(getGroups());
         dispatch(getSublocs());
         dispatch(getTargetLocs());
-        console.log('[parent]BillRunCandidate top useEffect');
+        console.log('[COMPONENT-PARENT]BillRunCandidate top useEffect');
 
-  }, [brc]);
+  }, []);
 
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
@@ -181,7 +179,7 @@ export default function BillRunCandidate() {
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
   const [query, setQuery] = useState(''); // this is for search
 
-  console.log('[parent]BillRunCandidate body-rendering-brc::: ', brc);
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -281,7 +279,7 @@ export default function BillRunCandidate() {
     }
 
   }
-  
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
 
@@ -290,7 +288,6 @@ export default function BillRunCandidate() {
       <Paper className={classes.paper}>
         <EnhancedTableToolbar 
           numSelected={selected.length} 
-          brc={brc}
           handBRC={handBRC} 
           selectedIDs={selectedIDs} 
           selectedBRCClient={selectedBRCClient}
@@ -390,7 +387,7 @@ const EnhancedTableToolbar = props => {
 
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
-  const { brc, numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
+  const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
         setSelected, selectedGroupname, setSelectedGroupname, query, setQuery } = props;
 
 
@@ -398,7 +395,7 @@ const EnhancedTableToolbar = props => {
   const groups = useSelector(state => state.groups);
   const sublocations = useSelector(state => state.sublocations);
   const targetlocations = useSelector(state => state.targetlocations);
-  console.log('[child]EnhancedTableToolbar body-rendering-brc--   ', brc);
+  const brc = useSelector(state => state.billruncandidates);
   const [ggroup, setGgroup] = useState('');
   const [ssubloc, setSsubloc] = useState('');
   const [bbr, setBbr] = useState('');
@@ -415,7 +412,7 @@ const EnhancedTableToolbar = props => {
 
     //console.log('getCurrentMonthPeriod:::::: ', formattedDate);
     return formattedDate;
-}
+  }
 
   const filterBRCbyMonthPeriod =  brc => {
 
@@ -429,24 +426,21 @@ const EnhancedTableToolbar = props => {
         }
     })
 
-    
-    console.log('===filterBRCbyMonthPeriod-return :::::: ', payload);
-
     return payload;
   }
 
-  const temp =  async () => {
+  useEffect(() => {
 
-
-  }
-  
-  useEffect(async() => {
-     await new Promise(resolve => {
-     
-     console.log('[child]EnhancedTableToolbar bottom useEffect: ');
+    let isCanceled = false;
     
-    resolve(setHandBRC(filterBRCbyMonthPeriod(brc))); 
-  })
+    if(!isCanceled) {
+      setHandBRC(filterBRCbyMonthPeriod(brc)); 
+      console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
+    }
+
+    return () => {
+      isCanceled = true;
+    }
 
   },[brc]);
 
@@ -483,39 +477,28 @@ const EnhancedTableToolbar = props => {
     return grps;
   }
   const BrOnChange = async brid => {
-
-    await new Promise(resolve => {
+      console.log("BrOnChange");
       setBbr(brid);
-  
       setQuery('');
       dispatch(getBRCByBRId(brid));
       displayGroupName(brid);
       setSelectedBr(brid);
-
-      resolve(true);
-      })
   };
 
   //PAID BUTTON
   const doneClick = async () => {
 
-    await new Promise(resolve => {
-
     let isPaid = isAllPaid(statusPlaceHolder);
 
-    dispatch(updatePayment({selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
-    dispatch(getBRCByBRId(selectedBr));
-    //setHandBRC(filterBRCbyMonthPeriod(brc));
+    await dispatch(updatePayment({selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
+    await dispatch(getBRCByBRId(selectedBr));
+    // await setHandBRC(filterBRCbyMonthPeriod(brc));
 
     setSelected([]);
     setSelectedIDs([]);
     setSelectedMFs([]);
     setSelectedBRCClient([]);
     setStatusPlaceHolder([]);
-
-    resolve(true);
-    })
-    console.log('umabot ba dito?')
   }
 
   const backButton = () => {
@@ -700,7 +683,6 @@ const EnhancedTableToolbar = props => {
         )}
       </Toolbar>
     </div>
-
   );
 
 };
