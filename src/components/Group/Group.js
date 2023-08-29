@@ -153,86 +153,81 @@ const Group = () => {
   };
 
   return (     
-    <Container component="main" maxWidth="xs">
-    <Grid style={{ display: 'flex'}} container spacing={9}>
-      <Grid style={ {paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
+    <div>
 
-            <Box sx={{ backgroundColor: 'gray', width: '150%' }}>
-              <Box sx={{  width: '100%', borderBottom: 11, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChangeTab} aria-label="basic tabs example">
-                  <Tab label="Location" {...a11yProps(0)} />
-                  <Tab label="Sub location" {...a11yProps(1)} />
-                  <Tab label="Target Location" {...a11yProps(2)} />
-                </Tabs>
-              </Box>
-              <TabPanel value={value} index={0}>
-                <Paper className={classes.addGroupForm} elevation={6}>
-                  <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-                      <TextField required name="name" variant="outlined" label="Add location" fullWidth value={groupData.name} onChange={(e) => setGroupData({...groupData, name: e.target.value})} />
-                      <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-                  </form>
-                </Paper>
-              </TabPanel>
-
-              {/* subloc */}
-              <TabPanel value={value} index={1}>
-              <Paper className={classes.addGroupForm} elevation={6}>
-                  <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
-                    
-                    <FormLabel>Location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={sublocTabloc} onChange={e => sublocTabSelect1(e.target.value)}>
-                      {groups.map((data) => (
-                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
-                      ))}
-                    </Select>
-
-                    <TextField required name="tfsubloc" variant="outlined" label="New sub location" fullWidth value={sublocData.name} onChange={(e) => setSublocData({...sublocData, name: e.target.value})} />
-                    <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-
-                  </form>
-                </Paper>
-              </TabPanel>
-
-              {/* targetloc */}
-              <TabPanel value={value} index={2}>
-              <Paper className={classes.addGroupForm} elevation={6}>
-                  <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
-                    
-                    <FormLabel>Location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={targetlocTabLoc} onChange={e => targetlocTabSelect1(e.target.value)}>
-                      {groups.map((data) => (
-                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
-                      ))}
-                    </Select>
-
-                    <FormLabel style={{ paddingTop: '20px'}}>Sub location</FormLabel>
-                    <Select className={classes.Select} fullWidth value={holdTargetLoc} onChange={e => targetlocTabSelect2(e.target.value)}>
-                      
-                      {/* dapat dito na ung filtered sublocations */}
-                      {sublocDataByGid.map((data) => (
-                        <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
-                      ))}
-                    </Select>
-
-                    <TextField required name="tftargetloc" variant="outlined" label="New Target Location" fullWidth value={targetlocData.name} onChange={(e) => setTargetlocData({...targetlocData, name: e.target.value})} />
-                    <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-                    {/* <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button> */}
-
-                  </form>
-                </Paper>
-              </TabPanel>
+      <Paper elevation={9} style={{ backgroundColor: '#dce8e0', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+          <Box sx={{ width: '150%' }}>
+            <Box sx={{  width: '100%', borderBottom: 11, borderColor: 'divider' }}>
+              <Tabs value={value} onChange={handleChangeTab} aria-label="basic tabs example">
+                <Tab label="Location" {...a11yProps(0)} />
+                <Tab label="Sub location" {...a11yProps(1)} />
+                <Tab label="Target Location" {...a11yProps(2)} />
+              </Tabs>
             </Box>
+            <TabPanel value={value} index={0}>
+              <Paper className={classes.addGroupForm} elevation={6}>
+                <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+                    <TextField required name="name" variant="outlined" label="Add location" fullWidth value={groupData.name} onChange={(e) => setGroupData({...groupData, name: e.target.value})} />
+                    <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+                </form>
+              </Paper>
+            </TabPanel>
 
-        </Grid>
+            {/* subloc */}
+            <TabPanel value={value} index={1}>
+            <Paper className={classes.addGroupForm} elevation={6}>
+                <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
+                  
+                  <FormLabel>Location</FormLabel>
+                  <Select className={classes.Select} fullWidth value={sublocTabloc} onChange={e => sublocTabSelect1(e.target.value)}>
+                    {groups.map((data) => (
+                      <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
+                    ))}
+                  </Select>
 
-      <Grid style={ {paddingBottom: '99px',marginTop: '3px' }} item lg={12} sm={12} xs={12}>
-        <Paper className={classes.groupListPaper} elevation={6}>
-          <Tree />
-        </Paper>
-      </Grid>
+                  <TextField required name="tfsubloc" variant="outlined" label="New sub location" fullWidth value={sublocData.name} onChange={(e) => setSublocData({...sublocData, name: e.target.value})} />
+                  <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
 
-    </Grid>
-    </Container>
+                </form>
+              </Paper>
+            </TabPanel>
+
+            {/* targetloc */}
+            <TabPanel value={value} index={2}>
+            <Paper className={classes.addGroupForm} elevation={6}>
+                <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
+                  
+                  <FormLabel>Location</FormLabel>
+                  <Select className={classes.Select} fullWidth value={targetlocTabLoc} onChange={e => targetlocTabSelect1(e.target.value)}>
+                    {groups.map((data) => (
+                      <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
+                    ))}
+                  </Select>
+
+                  <FormLabel style={{ paddingTop: '20px'}}>Sub location</FormLabel>
+                  <Select className={classes.Select} fullWidth value={holdTargetLoc} onChange={e => targetlocTabSelect2(e.target.value)}>
+                    
+                    {/* dapat dito na ung filtered sublocations */}
+                    {sublocDataByGid.map((data) => (
+                      <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
+                    ))}
+                  </Select>
+
+                  <TextField required name="tftargetloc" variant="outlined" label="New Target Location" fullWidth value={targetlocData.name} onChange={(e) => setTargetlocData({...targetlocData, name: e.target.value})} />
+                  <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+                  {/* <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button> */}
+
+                </form>
+              </Paper>
+            </TabPanel>
+          </Box>
+      </Paper>
+
+      <Paper elevation={9} style={{ marginTop: '33px', backgroundColor: '#dce8e0', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+        <Tree />
+      </Paper>
+
+    </div>
   )
 }
 
