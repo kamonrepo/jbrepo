@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Paper, Grid, Container, Tab, Tabs, Box, FormLabel, Select, MenuItem  } from '@material-ui/core';
+import { TextField, Button, Typography, Paper, Tab, Tabs, Box, FormLabel, Select, MenuItem  } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { createGroup, getGroups, createSubLoc, getSublocs, createTargetLoc } from '../../actions/group';
 import { createBillrun } from '../../actions/billrun';
@@ -152,22 +152,36 @@ const Group = () => {
     setTargetlocData({ ...targetlocData, sublocId: sublocId});
   };
 
+  const watermark = {
+    italicText: {
+      fontStyle: 'italic',
+      fontSize: '11px',
+      fontWeight: 'bold'
+    }
+  };
+
   return (     
     <div>
 
       <Paper elevation={9} style={{ backgroundColor: '#dce8e0', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
           <Box sx={{ width: '150%' }}>
-            <Box sx={{  width: '100%', borderBottom: 11, borderColor: 'divider' }}>
+            <Box style={{ display: 'flex', justifyContent: 'center'} } sx={{  width: '100%', borderBottom: 11, borderColor: 'divider' }}>
               <Tabs value={value} onChange={handleChangeTab} aria-label="basic tabs example">
-                <Tab label="Location" {...a11yProps(0)} />
-                <Tab label="Sub location" {...a11yProps(1)} />
-                <Tab label="Target Location" {...a11yProps(2)} />
+                <Tab label="CITY" {...a11yProps(0)} />
+                <Tab label="MUNICIPALITY" {...a11yProps(1)} />
+                <Tab label="LOCATION" {...a11yProps(2)} />
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
               <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-                    <TextField required name="name" variant="outlined" label="Add location" fullWidth value={groupData.name} onChange={(e) => setGroupData({...groupData, name: e.target.value})} />
+                    <TextField required 
+                      name="name"
+                      variant="outlined" 
+                      label={<span style={watermark.italicText}>Eg. Cavite, Batanggas, Laguna ...</span>}
+                      fullWidth value={groupData.name} 
+                      onChange={(e) => setGroupData({...groupData, name: e.target.value})}
+                    />
                     <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
                 </form>
               </Paper>
@@ -178,14 +192,14 @@ const Group = () => {
             <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
                   
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>City</FormLabel>
                   <Select className={classes.Select} fullWidth value={sublocTabloc} onChange={e => sublocTabSelect1(e.target.value)}>
                     {groups.map((data) => (
                       <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                     ))}
                   </Select>
 
-                  <TextField required name="tfsubloc" variant="outlined" label="New sub location" fullWidth value={sublocData.name} onChange={(e) => setSublocData({...sublocData, name: e.target.value})} />
+                  <TextField required name="tfsubloc" variant="outlined" label={<span style={watermark.italicText}>Add Municipality</span>} fullWidth value={sublocData.name} onChange={(e) => setSublocData({...sublocData, name: e.target.value})} />
                   <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
 
                 </form>
@@ -197,14 +211,14 @@ const Group = () => {
             <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
                   
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>City</FormLabel>
                   <Select className={classes.Select} fullWidth value={targetlocTabLoc} onChange={e => targetlocTabSelect1(e.target.value)}>
                     {groups.map((data) => (
                       <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                     ))}
                   </Select>
 
-                  <FormLabel style={{ paddingTop: '20px'}}>Sub location</FormLabel>
+                  <FormLabel style={{ paddingTop: '20px'}}>Municipality</FormLabel>
                   <Select className={classes.Select} fullWidth value={holdTargetLoc} onChange={e => targetlocTabSelect2(e.target.value)}>
                     
                     {/* dapat dito na ung filtered sublocations */}
@@ -213,7 +227,7 @@ const Group = () => {
                     ))}
                   </Select>
 
-                  <TextField required name="tftargetloc" variant="outlined" label="New Target Location" fullWidth value={targetlocData.name} onChange={(e) => setTargetlocData({...targetlocData, name: e.target.value})} />
+                  <TextField required name="tftargetloc" variant="outlined" label={<span style={watermark.italicText}>Add Location</span>} fullWidth value={targetlocData.name} onChange={(e) => setTargetlocData({...targetlocData, name: e.target.value})} />
                   <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
                   {/* <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button> */}
 

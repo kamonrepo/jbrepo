@@ -158,8 +158,7 @@ export default function Home() {
   useEffect(() => {
         dispatch(getBillrun());
         setHandBRC(brc);
-        zCompute(brc); //todo
-        console.log('zCompute');
+
   }, [handBRC]);
 
   let zCompute = holdBrc => {
@@ -186,7 +185,7 @@ export default function Home() {
   const [selectedIDs, setSelectedIDs] = useState([]);
   const [selectedMFs, setSelectedMFs] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(9);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
   const [query, setQuery] = useState('');
 
