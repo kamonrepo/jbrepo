@@ -6,6 +6,7 @@ import targetlocationReducer from './targetlocation.js';
 import clientReducer from './client';
 import billRunReducer from './billrun';
 import billRunCanReducer from './billruncandidate';
+import brcComputedFeesReducer from './brccomputedfees.js';
 import categoryReducer from '././services/category';
 import planReducer from '././services/plan';
 import paymentReducer from './payment.js';
@@ -19,6 +20,7 @@ export default combineReducers({
     clients: clientReducer,
     billruns: billRunReducer,
     billruncandidates: billRunCanReducer,
+    brccomputedfees: brcComputedFeesReducer,
     plan: planReducer,
     payments: paymentReducer
 });

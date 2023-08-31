@@ -2,7 +2,8 @@ import { FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID } from '
 
 export default (billrunCandidate = [], action) => {
   
-    switch (action.type) {
+    switch (action.type) { 
+
         case FETCH_BILLRUN_CAN:
             return action.payload;     
 

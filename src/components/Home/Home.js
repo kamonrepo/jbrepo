@@ -12,10 +12,10 @@ import { getBillrun } from '../../actions/billrun';
 import { computeFees } from '../../actions/billruncandidate';
 
 const headCells = [
-    { id: 'group', numeric: false, disablePadding: true, label: 'Group' },
+    { id: 'group', numeric: false, disablePadding: true, label: 'Location' },
     { id: 'paid', numeric: false, disablePadding: false, label: 'Paid' },
     { id: 'unpaid', numeric: false, disablePadding: false, label: 'Unpaid' },
-    { id: 'total', numeric: true, disablePadding: false, label: 'Total' }
+    { id: 'total', numeric: true, disablePadding: false, label: 'Grand Total' }
   ];
 
 function descendingComparator(a, b, orderBy) {
@@ -154,7 +154,7 @@ export default function Home() {
   const [paid, setPaid] = useState(0);
   const [unpaid, setUnpaid] = useState(0);
   
-  const brc = useSelector(state => state.billruns);
+
 
   useEffect(() => {
     let isCanceled = false;
@@ -162,7 +162,7 @@ export default function Home() {
     if(!isCanceled) {
         dispatch(getBillrun());
         dispatch(computeFees());
-        setHandBRC(brc);
+        setHandBRC(computedFees);
     }
 
     return () => {
@@ -171,23 +171,7 @@ export default function Home() {
 
   }, [handBRC]);
 
-  let zCompute = holdBrc => {
-
-    let total = 0;
-    let paidSum = 0;
-    let unpaindSum = 0;
-
-    Object.keys(holdBrc).forEach(index => {
-        total =  parseFloat(total) + parseFloat(holdBrc[index].total);
-        paidSum = parseFloat(paidSum) + parseFloat(holdBrc[index].paid);
-        unpaindSum = parseFloat(unpaindSum) + parseFloat(holdBrc[index].unpaid);
-    });
-
-    setTotal(total);
-    setPaid(paidSum);
-    setUnpaid(unpaindSum);
-  }
-
+  const computedFees = useSelector(state => state.brccomputedfees);
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
@@ -195,7 +179,7 @@ export default function Home() {
   const [selectedIDs, setSelectedIDs] = useState([]);
   const [selectedMFs, setSelectedMFs] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(9);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
   const [query, setQuery] = useState('');
 
@@ -349,11 +333,11 @@ export default function Home() {
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.billRun);
                     const labelId = `enhanced-table-checkbox-${index}`;
-
+                    
                     return (
                       <TableRow
                         hover
-                        onClick={(e) => handleClick(e, row.billRun, row.paid, row.unpaid, row.total)}
+                        onClick={(e) => handleClick(e, row.billRun, row.totalPaidSum, row.totalNotPaidSum, row.total)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -371,8 +355,8 @@ export default function Home() {
                               {row.billRun}
                             </TableCell>
 
-                            <TableCell align="left">{row.paid}</TableCell>
-                            <TableCell align="left">{row.unpaid}</TableCell>
+                            <TableCell align="left">{row.totalPaidSum}</TableCell>
+                            <TableCell align="left">{row.totalNotPaidSum}</TableCell>
                             <TableCell align="left">{row.total}</TableCell>
 
                       </TableRow>

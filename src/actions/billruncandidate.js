@@ -1,4 +1,4 @@
-import {  FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID } from '../constants/actionTypes';
+import {  FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID, FETCH_COMPUTED_FEES } from '../constants/actionTypes';
 import * as api from '../api/index';
 
 export const computeFees = (req) => async dispatch => {
@@ -7,7 +7,7 @@ export const computeFees = (req) => async dispatch => {
     const { data } = await api.computeFees(req);
     console.log('computeFees-RESPONSE::: ', data);
 
-    dispatch({ type: FETCH_BILLRUN_CAN, payload: data});
+    dispatch({ type: FETCH_COMPUTED_FEES, payload: data});
 
   } catch (error) {
     console.log(error);
