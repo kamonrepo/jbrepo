@@ -167,9 +167,9 @@ const Group = () => {
           <Box sx={{ width: '150%' }}>
             <Box style={{ display: 'flex', justifyContent: 'center'} } sx={{  width: '100%', borderBottom: 11, borderColor: 'divider' }}>
               <Tabs value={value} onChange={handleChangeTab} aria-label="basic tabs example">
-                <Tab label="CITY" {...a11yProps(0)} />
-                <Tab label="MUNICIPALITY" {...a11yProps(1)} />
-                <Tab label="LOCATION" {...a11yProps(2)} />
+                <Tab style={{ fontWeight: 'bolder' }} label="CITY" {...a11yProps(0)} />
+                <Tab style={{ fontWeight: 'bolder' }} label="MUNICIPALITY" {...a11yProps(1)} />
+                <Tab style={{ fontWeight: 'bolder' }} label="LOCATION" {...a11yProps(2)} />
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
@@ -192,7 +192,7 @@ const Group = () => {
             <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
                   
-                  <FormLabel>City</FormLabel>
+                  <FormLabel style={{ fontWeight: 'bold'}}>City</FormLabel>
                   <Select className={classes.Select} fullWidth value={sublocTabloc} onChange={e => sublocTabSelect1(e.target.value)}>
                     {groups.map((data) => (
                       <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
@@ -211,14 +211,14 @@ const Group = () => {
             <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
                   
-                  <FormLabel>City</FormLabel>
+                  <FormLabel style={{ fontWeight: 'bold' }}>City</FormLabel>
                   <Select className={classes.Select} fullWidth value={targetlocTabLoc} onChange={e => targetlocTabSelect1(e.target.value)}>
                     {groups.map((data) => (
                       <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                     ))}
                   </Select>
 
-                  <FormLabel style={{ paddingTop: '20px'}}>Municipality</FormLabel>
+                  <FormLabel style={{ fontWeight: 'bold', paddingTop: '20px'}}>Municipality</FormLabel>
                   <Select className={classes.Select} fullWidth value={holdTargetLoc} onChange={e => targetlocTabSelect2(e.target.value)}>
                     
                     {/* dapat dito na ung filtered sublocations */}

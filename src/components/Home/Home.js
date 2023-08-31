@@ -9,6 +9,7 @@ import { lighten, makeStyles, Table,
       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBillrun } from '../../actions/billrun';
+import { computeFees } from '../../actions/billruncandidate';
 
 const headCells = [
     { id: 'group', numeric: false, disablePadding: true, label: 'Group' },
@@ -156,8 +157,17 @@ export default function Home() {
   const brc = useSelector(state => state.billruns);
 
   useEffect(() => {
+    let isCanceled = false;
+    
+    if(!isCanceled) {
         dispatch(getBillrun());
+        dispatch(computeFees());
         setHandBRC(brc);
+    }
+
+    return () => {
+      isCanceled = true;
+    }
 
   }, [handBRC]);
 

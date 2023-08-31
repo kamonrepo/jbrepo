@@ -36,7 +36,7 @@ export const createBillrun = newBillrun => API.post('/billrun', newBillrun);
 export const fetchBillrun = () => API.get('/billrun');
 
 export const fetchBillrunCan = () => API.get('/billruncandidate');
-
+export const computeFees = cf => API.get('/billruncandidate/computeFees', cf);
 export const fetchBRCByBRId = id => API.get(`/billruncandidate/${id}`);
 export const updateBRC = id => API.patch('/billruncandidate/updateBRC', id);
 
