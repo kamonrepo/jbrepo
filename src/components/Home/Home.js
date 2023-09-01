@@ -125,14 +125,14 @@ export default function Home() {
   const dispatch = useDispatch();
   const [handBRC, setHandBRC] = useState([]);
 
-  const computedFees = useSelector(state => state.brccomputedfees);
+  //const computedFees  = useSelector(state => state.brccomputedfees);
+  const { data, isLoading } = useSelector((state) => state.brccomputedfees);
 
   useEffect(() => {
     let isCanceled = false;
     
     if(!isCanceled) {
         dispatch(computeFees());
-        setHandBRC(computedFees);
     }
     console.log('[PARENT] useEffect done dispatch');
     return () => {
@@ -235,10 +235,11 @@ export default function Home() {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
 
   return (
-    <div className={classes.root}>
+    isLoading ? <CircularProgress /> 
+    :<div className={classes.root}>
       <Paper elevation={9} className={classes.paper}>
         <EnhancedTableToolbar 
-          computedFees={computedFees}
+          computedFees={data}
           numSelected={selected.length} 
           handBRC={handBRC} 
           selectedIDs={selectedIDs} 
@@ -324,7 +325,21 @@ export default function Home() {
 }
 
 const EnhancedTableToolbar = props => {
-  const {handBRC} = props;
+  const { handBRC, setHandBRC , computedFees} = props;
+
+  useEffect(() => {
+    let isCanceled = false;
+    
+    if(!isCanceled) {
+      setHandBRC(computedFees);
+      console.log('[CHILD] useEffect done setHandBRC(computedFees)');
+    }
+
+    return () => {
+      isCanceled = true;
+    }
+
+  }, []);
 
   return (
       <Paper elevation={9} style={ { display: 'flex', backgroundColor: 'gray'}}>
