@@ -160,7 +160,7 @@ export default function NavigationBar() {
       <Box className={classes.mobileBox}>
             {user?.result ? (
                <div>
-                  <Button component={Link} to="/" className={classes.mobileHeading}>HOME</Button> 
+                  <Button component={Link} to="/home" className={classes.mobileHeading}>HOME</Button> 
                   <Button component={Link} to="/billruncandidate" className={classes.mobileHeading}>DATA</Button> 
                   {/* <Button component={Link} to="/billrun" className={classes.mobileHeading}>MERGE GROUP</Button>  */}
                   <Button component={Link} to="/report" className={classes.mobileHeading}>REPORT</Button> 
@@ -175,7 +175,7 @@ export default function NavigationBar() {
               </div>
             ): (
                 <div>
-                   <Button component={Link} to="/" className={classes.mobileHeading}>Home</Button> 
+                   <Button component={Link} to="/home" className={classes.mobileHeading}>Home</Button> 
                    <Button component={Link} to="/auth" variant="contained" color="primary" style={{ fontFamily: 'Segoe UI'}}>Sign In</Button>
                 </div>
             )}
@@ -189,7 +189,7 @@ export default function NavigationBar() {
       <Toolbar className={classes.toolbar}>
            <Box className={classes.menuBox}>
             <AcUnitIcon style={{ fontSize: '33px'}}/>
-            <Button component={Link} to="/" className={classes.heading}>HOME</Button> 
+            <Button component={Link} to="/home" className={classes.heading}>HOME</Button> 
             {(user?.result)  && (        
               <>   
                 <div style={{ display: 'flex', marginLeft: '99px', justifyContent: 'flex-start' }}>

@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { lighten, makeStyles, Table, 
-        TableBody, TableCell, TableContainer, 
-        TableHead, TablePagination, TableRow, 
-        TableSortLabel, Toolbar, Typography, 
-        Paper, Checkbox, TextField, Grid
-      } from '@material-ui/core';
+import { CircularProgress, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography, Paper, Checkbox
+       } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBillrun } from '../../actions/billrun';
 import { computeFees } from '../../actions/billruncandidate';
 
 const headCells = [
-    { id: 'group', numeric: false, disablePadding: true, label: 'Location' },
-    { id: 'paid', numeric: false, disablePadding: false, label: 'Paid' },
-    { id: 'unpaid', numeric: false, disablePadding: false, label: 'Unpaid' },
-    { id: 'total', numeric: true, disablePadding: false, label: 'Grand Total' }
+    { id: 'location', numeric: false, disablePadding: true, label: 'LOCATION' },
+    { id: 'paid', numeric: false, disablePadding: false, label: 'PAID' },
+    { id: 'unpaid', numeric: false, disablePadding: false, label: 'UNPAID' },
+    { id: 'total', numeric: true, disablePadding: false, label: 'GRAND TOTAL' }
   ];
 
 function descendingComparator(a, b, orderBy) {
@@ -54,20 +48,22 @@ function EnhancedTableHead(props) {
       <>
       <TableHead>
           <TableRow>
+
             <TableCell padding="checkbox">
               <Checkbox
                 indeterminate={numSelected > 0 && numSelected < rowCount}
                 checked={rowCount > 0 && numSelected === rowCount}
                 onChange={onSelectAllClick}
-                inputProps={{ 'aria-label': 'select all desserts' }}
               />
             </TableCell>
+
               {headCells.map((headCell) => (
                 <TableCell
                   key={headCell.id}
                   align={headCell.numeric ? 'right' : 'left'}
                   padding={headCell.disablePadding ? 'none' : 'normal'}
                   sortDirection={orderBy === headCell.id ? order : false}
+                  style={{fontSize: '22px', fontWeight: 'bold'}}
                 >
                   <TableSortLabel
                     active={orderBy === headCell.id}
@@ -83,6 +79,7 @@ function EnhancedTableHead(props) {
                   </TableSortLabel>
                 </TableCell>
               ))}
+
           </TableRow>
       </TableHead>
       </>
@@ -98,26 +95,6 @@ EnhancedTableHead.propTypes = {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
-
-const useToolbarStyles = makeStyles((theme) => ({
-    root: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1),
-    },
-    highlight:
-      theme.palette.type === 'light'
-        ? {
-            color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          }
-        : {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark,
-          },
-    title: {
-      flex: '1 1 100%',
-    },
-}));
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -146,42 +123,33 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
 
   const dispatch = useDispatch();
-  const [handBRC, setHandBRC] = useState([{}]);
-  const [selectedBr, setSelectedBr] = useState('');
-  const [selectedGroupname, setSelectedGroupname] = useState([]);
+  const [handBRC, setHandBRC] = useState([]);
 
-  const [total, setTotal] = useState(0);  
-  const [paid, setPaid] = useState(0);
-  const [unpaid, setUnpaid] = useState(0);
-  
-
+  const computedFees = useSelector(state => state.brccomputedfees);
 
   useEffect(() => {
     let isCanceled = false;
     
     if(!isCanceled) {
-        dispatch(getBillrun());
         dispatch(computeFees());
         setHandBRC(computedFees);
     }
-
+    console.log('[PARENT] useEffect done dispatch');
     return () => {
       isCanceled = true;
     }
 
-  }, [handBRC]);
+  }, []);
 
-  const computedFees = useSelector(state => state.brccomputedfees);
+
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('calories');
+  const [orderBy, setOrderBy] = useState('location');
   const [selected, setSelected] = useState([]);
   const [selectedIDs, setSelectedIDs] = useState([]);
-  const [selectedMFs, setSelectedMFs] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
-  const [query, setQuery] = useState('');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -233,7 +201,7 @@ export default function Home() {
     // the -1 value means it is checked/selected
     if(selectedIndex === -1) {
       setSelectedIDs(prev => [...prev, id]);
-      setSelectedMFs(prev => [...prev, monthlyFee]);
+
       setStatusPlaceHolder(prev => [...prev, status]);
       console.log('checked: ');
 
@@ -245,7 +213,6 @@ export default function Home() {
       
       if(index > -1) {
         selectedIDs.splice(index, 1);
-        selectedMFs.splice(index, 1);
       }
       if(statusIndex > -1){
         statusPlaceHolder.splice(statusIndex, 1);
@@ -264,51 +231,22 @@ export default function Home() {
     setPage(0);
   };
 
-  const handleDataTable = () => {
-
-    if(query.length != 0) {
-      let lowerCaseQuery = query.toLowerCase();
-      const filtered = handBRC.filter(brc => brc.name.toLowerCase() == lowerCaseQuery);
-
-      if(filtered.length > 0) {
-        return filtered;
-      }
-      return handBRC;
-    } else {
-      return handBRC;
-    }
-
-  }
-  
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
+      <Paper elevation={9} className={classes.paper}>
         <EnhancedTableToolbar 
-          total={total}
-          setTotal={setTotal}
-          paid={paid}
-          setPaid={setPaid}
-          unpaid={unpaid}
-          setUnpaid={setUnpaid}
+          computedFees={computedFees}
           numSelected={selected.length} 
           handBRC={handBRC} 
           selectedIDs={selectedIDs} 
-          selectedMFs={selectedMFs} 
           setHandBRC={setHandBRC} 
           setSelected={setSelected} 
           setSelectedIDs={setSelectedIDs}
-          setSelectedMFs={setSelectedMFs}
-          selectedBr={selectedBr}
-          setSelectedBr={setSelectedBr}
-          selectedGroupname={selectedGroupname}
-          setSelectedGroupname={setSelectedGroupname}
           statusPlaceHolder={statusPlaceHolder}
           setStatusPlaceHolder={setStatusPlaceHolder}
-          query={query}
-          setQuery={setQuery}
          />
 
         <TableContainer>
@@ -328,7 +266,7 @@ export default function Home() {
                 rowCount={handBRC.length}
               />
               <TableBody>
-                { stableSort(handleDataTable(), getComparator(order, orderBy))
+                { stableSort(handBRC, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.billRun);
@@ -386,43 +324,14 @@ export default function Home() {
 }
 
 const EnhancedTableToolbar = props => {
-  const classes = useToolbarStyles();
-  const {numSelected, query, setQuery, total, paid, unpaid, handBRC } = props;
-  
-  const searchOnChange =  value => {
-    setQuery(value);
-  }
+  const {handBRC} = props;
 
   return (
-    <Toolbar
-    className={clsx(classes.root, {
-      [classes.highlight]: numSelected > 0,
-    })}
-    >
-          <Grid container spacing={9}>
-            <Grid style={ { paddingBottom: '99px', paddingTop: '50px' }} item lg={12} sm={12} xs={12}>
-          
-                <Typography style={{paddingBottom: '3px', marginLeft:'10px',  fontWeight: 'bolder', fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
-                 NO. OF GROUP: {handBRC? `${handBRC.length}` : 0}
-                </Typography>
-
-                <Typography style={{paddingBottom: '3px', marginLeft:'16px',  fontFamily: 'Segoe UI', color:'#88562e', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
-                 <b>TOTAL: {`₱ todo`}</b> 
-                </Typography>
-
-                <Typography style={{paddingBottom: '3px', marginLeft:'25px', color:'green',  fontFamily: 'Segoe UI', fontSize: '12px'}} variant="h6" id="tableTitle" component="div">
-                <b>PAID: {`₱ todo`}</b>
-                </Typography>
-
-                <Typography style={{paddingBottom: '3px', marginLeft:'7px', color:'red',  fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="tableTitle" component="div">
-                <b>UNPAID: {`₱ todo`}</b>                              
-                </Typography>
-                
-                <TextField style={{paddingBottom: '9px', marginTop: '36px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)} />
-
-            </Grid>
-          </Grid>
-    </Toolbar>
+      <Paper elevation={9} style={ { display: 'flex', backgroundColor: 'gray'}}>
+          <Typography style={{ padding:'10px, 10px, 10px, 10px',  fontWeight: 'bolder', fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="nogroup">
+            TOTAL LOCATIONS: {handBRC? `${handBRC.length}` : 0}
+          </Typography>
+      </Paper>
   );
 };
 

@@ -182,7 +182,7 @@ const Group = () => {
                       fullWidth value={groupData.name} 
                       onChange={(e) => setGroupData({...groupData, name: e.target.value})}
                     />
-                    <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
+                    <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>ADD CITY</Button>
                 </form>
               </Paper>
             </TabPanel>

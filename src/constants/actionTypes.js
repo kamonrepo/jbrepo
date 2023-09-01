@@ -43,4 +43,8 @@ export const UPDATE_PAYMENT = 'UPDATE_PAYMENT';
 export const FETCH_PAYMENT = 'FETCH_PAYMENT';
 export const FETCH_PAYMENT_BY_ID = 'FETCH_PAYMENT';
 
+//NEW
+export const START_LOADING = 'START_LOADING';
+export const END_LOADING = 'END_LOADING';
+
 

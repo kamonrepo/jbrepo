@@ -24,7 +24,7 @@ const App = () => {
         <NavigationBar />
             <Container style={{ display: 'flex', marginTop: '99px', justifyContent: 'center' }}> 
                 <Switch>
-                    <Route path="/" exact component={Home} /> 
+                    <Route path="/home" exact component={Home} /> 
                     <Route path="/auth" exact component={Auth} />
                     <Route path="/data" exact component={Data} /> 
                     <Route path="/location" exact component={Location} /> 
