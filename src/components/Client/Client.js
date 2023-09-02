@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Typography, Paper, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, InputLabel} from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Slide,DialogTitle, TextField, Button, Typography, Paper, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, InputLabel} from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
 import { getSublocs } from '../../actions/sublocation';
@@ -9,6 +9,10 @@ import { getCategory } from '../../actions/services/category';
 import { getPlan } from '../../actions/services/plan';
 import useStyles from './styles';
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const Client = () => {
 
   const groups = useSelector(state => state.groups);
@@ -16,13 +20,16 @@ const Client = () => {
   const targetlocations = useSelector(state => state.targetlocations);
   const categories = useSelector(state => state.categories);
   const plans = useSelector(state => state.plan);
+
+  const initState = { 
+    targetlocId: '', targloc:'',  name: '', ipaddr: '', contactNumber: '', 
+    category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', 
+    firstPayment:'', address: '' 
+  }
+
+  const [open, setOpen] = useState(false);
   
-  const [clientData, setClientData] = 
-  useState({ 
-      targetlocId: '', targloc:'',  name: '', ipaddr: '', contactNumber: '', 
-      category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', 
-      firstPayment:'', address: '' 
-  });
+  const [clientData, setClientData] = useState(initState);
 
   const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
   const [category, setCategory] = useState('');
@@ -70,10 +77,21 @@ const Client = () => {
      setClientData({ ...clientData, plan: selectedPlan[0]._id, planName: selectedPlan[0].plan, monthlyFee: selectedPlan[0].price});
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('clientData::: ', clientData);
-    dispatch(createClient(clientData));
+    setOpen(true);
+    // dispatch(createClient(clientData));
+    // setClientData(initState);
   };
 
   const categoryOnClick = () => {
@@ -227,7 +245,30 @@ const Client = () => {
             </div>
           </Paper>
         </form>
+        <div>
+          <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+          >
+          <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Let Google help apps determine location. This means sending anonymous
+              location data to Google, even when no apps are running.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Disagree</Button>
+            <Button onClick={handleClose}>Agree</Button>
+          </DialogActions>
+          </Dialog>
+        </div>
     </div>
+
+    
   )
 }
 
