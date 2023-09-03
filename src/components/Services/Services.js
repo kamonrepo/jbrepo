@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, TextField, Paper, Select, MenuItem, Typography, Container } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Button, TextField, Paper, Select, MenuItem, Typography } from '@material-ui/core';
 import { getCategory, createCategory } from '../../actions/services/category';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
@@ -57,7 +57,6 @@ const Services = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
         <Paper className={classes.Paper} elevation={9}>
           <form className={classes.form} autoComplete="off" onSubmit={AddServiceSubmit}>
               <div className={classes.createButton}>
@@ -84,7 +83,6 @@ const Services = () => {
             <Button variant="contained" color="primary" size="large" type="submit"> {`${formData.type == 'create' ? 'CREATE' : 'UPDATE'}`} </Button>
           </form>
         </Paper>
-      </Container>
   );
 };
 

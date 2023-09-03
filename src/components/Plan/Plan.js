@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Paper, Select, MenuItem, Typography, Container } from '@material-ui/core';
+import { Button, TextField, Paper, Select, MenuItem, Typography } from '@material-ui/core';
 import { getCategory } from '../../actions/services/category';
 import { getPlanByCategoryId, createPlan } from '../../actions/services/plan';
 import { useDispatch, useSelector } from 'react-redux';
@@ -89,7 +89,6 @@ const Plan = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
       <Paper className={classes.paper} elevation={6}>
           <form autoComplete="off" className={classes.form} onSubmit={AddPlanSubmit}>
               <Typography>SELECT SERVICE &nbsp;&nbsp;</Typography> 
@@ -150,7 +149,6 @@ const Plan = () => {
               {/* <Button variant="contained" color="primary" size="large" onClick={debugg}>DEBUGG</Button> */}
           </form>
       </Paper>
-    </Container>
   );
 
 

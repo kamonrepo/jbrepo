@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
 paper: {
     display: 'flex',
-     justifyContent: 'center',
+     justifyContent: 'row',
     padding: theme.spacing(3),
     },
     container: {

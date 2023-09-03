@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Paper, Tab, Tabs, Box, FormLabel, Select, MenuItem  } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { createGroup, getGroups, createSubLoc, getSublocs, createTargetLoc } from '../../actions/group';
-import { createBillrun } from '../../actions/billrun';
+import { createGroup, getGroups, createSubLoc, getSublocs, createTargetLoc, getTargetlocs } from '../../actions/group';
 import Tree from '../Group/Tree/Tree.js';
-
 import useStyles from './styles';
 
 function TabPanel(props) {
@@ -26,13 +24,6 @@ function TabPanel(props) {
     </div>
   );
 }
-
-// TabPanel.propTypes = {
-//   children: PropTypes.node,
-//   index: PropTypes.number.isRequired,
-//   value: PropTypes.number.isRequired,
-// };
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -59,19 +50,18 @@ const Group = () => {
     useEffect(() => {
         dispatch(getGroups());
         dispatch(getSublocs());
+        dispatch(getTargetlocs());
     }, [])
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    console.log('group-handleSubmit:, ', groupData);
     dispatch(createGroup(groupData));
   };
 
   const handleSubmitSubLoc = async e => {
 
     e.preventDefault();
-    console.log('handleSubmitSubLoc-sublocData: ', sublocData);
     dispatch(createSubLoc(sublocData));
   };
 
@@ -79,7 +69,6 @@ const Group = () => {
 
     e.preventDefault();
 
-    console.log('handleSubmitTargetLoc-targetlocData: ', targetlocData);
 
      //create tgartget loc first. -> pre req -> targetloc Id on billrun 
     //gawa ng payload req na ang content ay targetloc and billrun
@@ -90,16 +79,11 @@ const Group = () => {
     setValue(newValue);
   };
 
-  const debugg = e => {
-    e.preventDefault();
-    // console.log('targetlocData:: ', targetlocData);
-    // console.log('sublocDataByGid:: ', sublocDataByGid);
-
-    console.log('sublocations:: ', typeof(sublocations));
-    console.log('sublocations:: ', JSON.stringify(sublocations));
-    
-    
-  };
+  // const debugg = e => {
+  //   e.preventDefault();
+  //   // console.log('targetlocData:: ', targetlocData);
+  //   // console.log('sublocDataByGid:: ', sublocDataByGid);
+  // };
 
   if(!user?.result?._id) {
     return (
@@ -112,14 +96,12 @@ const Group = () => {
   }
 
   const sublocTabSelect1= groupId => {
-    console.log('sublocTabSelect1  ', groupId);
      setSublocTabloc(groupId);
      
      setSublocData({ ...sublocData, groupId: groupId});
   };
 
   const targetlocTabSelect1= async groupId => {
-    console.log('FETCH-SUBLOC-USING-THIS-GROUP-ID:  ', groupId);
     let holdSubloc = [];
     setTargetSublocTabLoc(groupId);
 
@@ -129,7 +111,6 @@ const Group = () => {
           holdSubloc.push({ _id:  sublocations[i]._id, name: sublocations[i].name});
         }
       })
-      console.log('holdSubloc-for-select::::  ', holdSubloc);
       setSublocDataByGid(holdSubloc);
 
     }
@@ -137,7 +118,7 @@ const Group = () => {
   };
 
   const targetlocTabSelect2 = sublocId => {
-    console.log('targetloc-Tab-Select-SubLocation-sublocId: ', sublocId);
+
     setHoldTargetLoc(sublocId);
     let holdSublocName = '';
 
@@ -146,8 +127,6 @@ const Group = () => {
         holdSublocName = sublocations[i].name;
       }
     })
-
-   // setTargetSublocTabSubLoc(holdSublocName);
 
     setTargetlocData({ ...targetlocData, sublocId: sublocId});
   };
@@ -162,7 +141,6 @@ const Group = () => {
 
   return (     
     <div>
-
       <Paper elevation={9} style={{ backgroundColor: '#dce8e0', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
           <Box sx={{ width: '150%' }}>
             <Box style={{ display: 'flex', justifyContent: 'center'} } sx={{  width: '100%', borderBottom: 11, borderColor: 'divider' }}>
@@ -172,6 +150,8 @@ const Group = () => {
                 <Tab style={{ fontWeight: 'bolder' }} label="LOCATION" {...a11yProps(2)} />
               </Tabs>
             </Box>
+
+            {/* CITY */}
             <TabPanel value={value} index={0}>
               <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
@@ -187,7 +167,7 @@ const Group = () => {
               </Paper>
             </TabPanel>
 
-            {/* subloc */}
+            {/* MINUCIPALITY */}
             <TabPanel value={value} index={1}>
             <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
@@ -206,7 +186,7 @@ const Group = () => {
               </Paper>
             </TabPanel>
 
-            {/* targetloc */}
+            {/* LOCATION */}
             <TabPanel value={value} index={2}>
             <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
@@ -229,7 +209,6 @@ const Group = () => {
 
                   <TextField required name="tftargetloc" variant="outlined" label={<span style={watermark.italicText}>Add Location</span>} fullWidth value={targetlocData.name} onChange={(e) => setTargetlocData({...targetlocData, name: e.target.value})} />
                   <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-                  {/* <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button> */}
 
                 </form>
               </Paper>
@@ -237,10 +216,7 @@ const Group = () => {
           </Box>
       </Paper>
 
-      <Paper elevation={9} style={{ marginTop: '33px', backgroundColor: '#dce8e0', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <Tree />
-      </Paper>
-
+      <Tree />
     </div>
   )
 }

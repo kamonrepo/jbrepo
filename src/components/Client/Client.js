@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, Slide,DialogTitle, TextField, Button, Typography, Paper, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, InputLabel} from '@material-ui/core';
+import { Warning } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
 import { getSublocs } from '../../actions/sublocation';
@@ -27,7 +28,9 @@ const Client = () => {
     firstPayment:'', address: '' 
   }
 
+  //modal sate
   const [open, setOpen] = useState(false);
+  const [preSubmitOpt, SetPreSubmitOpt] = useState(false); //false=back; true=proceed
   
   const [clientData, setClientData] = useState(initState);
 
@@ -77,21 +80,24 @@ const Client = () => {
      setClientData({ ...clientData, plan: selectedPlan[0]._id, planName: selectedPlan[0].plan, monthlyFee: selectedPlan[0].price});
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpen(prev => prev = false);
+    SetPreSubmitOpt(prev => prev=false);
   };
 
-
+  const handleProceed = (e) => {
+    e.preventDefault();
+    SetPreSubmitOpt(prev => prev=true);
+    setOpen(prev => prev = false);
+    dispatch(createClient(clientData));
+    setClientData(initState);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setOpen(true);
-    // dispatch(createClient(clientData));
-    // setClientData(initState);
+     setOpen(true);
+     SetPreSubmitOpt(prev => prev=true);
   };
 
   const categoryOnClick = () => {
@@ -253,17 +259,23 @@ const Client = () => {
           onClose={handleClose}
           aria-describedby="alert-dialog-slide-description"
           >
-          <DialogTitle>{"Use Google's location service?"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              Let Google help apps determine location. This means sending anonymous
-              location data to Google, even when no apps are running.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Disagree</Button>
-            <Button onClick={handleClose}>Agree</Button>
-          </DialogActions>
+            <DialogTitle>
+              <div style={{ display: 'flex'}}>
+                {"Confirmation"}<Warning style={{ paddingTop: '3px', paddingLeft: '11px'}} />
+              </div>
+            </DialogTitle>
+
+            <DialogContent>
+              <DialogContentText>
+                Please double check your information:
+              </DialogContentText>
+            </DialogContent>
+
+            <DialogActions>
+              <Button onClick={handleClose}>Back</Button>
+              <Button onClick={handleProceed}>Proceed</Button>
+            </DialogActions>
+
           </Dialog>
         </div>
     </div>
