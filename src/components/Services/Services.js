@@ -65,7 +65,7 @@ const Services = () => {
             {(categories.length > 0) 
             ? (
               <div>
-                <Typography>SELECT SERVICE &nbsp;&nbsp;</Typography>      
+                <Typography style={{ fontWeight: 'bold'}}>SELECT SERVICE &nbsp;&nbsp;</Typography>      
                 <Select 
                   style={{paddingBottom: '.3em', width: '333px'}} 
                   className={classes.Select}                   

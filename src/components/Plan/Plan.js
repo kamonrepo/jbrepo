@@ -91,7 +91,7 @@ const Plan = () => {
   return (
       <Paper className={classes.paper} elevation={6}>
           <form autoComplete="off" className={classes.form} onSubmit={AddPlanSubmit}>
-              <Typography>SELECT SERVICE &nbsp;&nbsp;</Typography> 
+              <Typography style={{ fontWeight: 'bold'}}>SELECT SERVICE &nbsp;&nbsp;</Typography> 
               <Select                      
                   style={{paddingBottom: '.3em'}} 
                   labelId="demo-simple-select-standard-label" 
@@ -133,7 +133,7 @@ const Plan = () => {
                   <>
                     {
                       (formData.category != null || formData.category != '') 
-                      ? <Typography>No plan record/s</Typography>
+                      ? <Typography style={{ fontWeight: 'bold', fontStyle: 'italic'}}>No plan record/s</Typography>
                       : <Typography>SELECT PLAN</Typography>
                     }
                   
