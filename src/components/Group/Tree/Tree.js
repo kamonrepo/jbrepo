@@ -44,7 +44,7 @@ const Tree = () => {
                 >
                       {!cities?.length ? <CircularProgress /> : (
                             <>{cities.map((city) => (
-                                <TreeItem key={city._id} nodeId={city._id} label={city.name}>
+                                <TreeItem key={city._id} nodeId={city._id} label={<span style={{ fontWeight: 'bold'}}>{city.name}</span>}>
                                   {municipalities.map((mun) => mun.groupId == city._id && (
                                       <TreeItem key={mun._id} nodeId={mun._id} label={mun.name}>
                                        {

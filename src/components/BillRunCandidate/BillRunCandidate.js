@@ -2,16 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { lighten, makeStyles, Table, 
-        TableBody, TableCell, TableContainer, 
-        TableHead, TablePagination, TableRow, 
-        TableSortLabel, Toolbar, Typography, 
-        Paper, Checkbox, IconButton, 
-        Tooltip, Select, MenuItem, TextField, Button,
-        FormControl, InputLabel
-      } from '@material-ui/core';
+import { lighten, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, Tooltip, Select, MenuItem, TextField, Button, FormControl, InputLabel } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateBRC, getBRCByBRId } from '../../actions/billruncandidate';
+import { getBRCByBRId } from '../../actions/billruncandidate';
 import { updatePayment, getPayments } from '../../actions/payment';
 import { getBillrun } from '../../actions/billrun';
 import { getGroups } from '../../actions/group';
@@ -158,12 +151,22 @@ export default function BillRunCandidate() {
   const [selectedGroupname, setSelectedGroupname] = useState([]);
 
   useEffect(() => {
+
+    let isCanceled = false;
+    
+    if(!isCanceled) {
         dispatch(getBillrun());
         dispatch(getPayments());
         dispatch(getGroups());
         dispatch(getSublocs());
         dispatch(getTargetLocs());
         console.log('[COMPONENT-PARENT]BillRunCandidate top useEffect');
+      }
+
+    return () => {
+      console.log('[COMPONENT-PARENT]BillRunCandidate unmount!!!!');
+      isCanceled = true;
+    }
 
   }, []);
 
