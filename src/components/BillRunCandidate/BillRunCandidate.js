@@ -422,6 +422,8 @@ const EnhancedTableToolbar = props => {
     let payload = [];
 
     let returnMonthPeriod = getCurrentMonthPeriod(new Date());
+
+    console.log('returnMonthPeriodreturnMonthPeriod---: ', returnMonthPeriod);
     Object.keys(brc).forEach(index => {
 
         if(brc[index].monthPeriod == returnMonthPeriod) {
@@ -479,6 +481,7 @@ const EnhancedTableToolbar = props => {
     setSelectedGroupname(grps);
     return grps;
   }
+
   const BrOnChange = async brid => {
       console.log("BrOnChange");
       setBbr(brid);

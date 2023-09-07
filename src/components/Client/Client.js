@@ -24,7 +24,7 @@ const Client = () => {
 
   const initState = { 
     targetlocId: '', targloc:'',  name: '', ipaddr: '', contactNumber: '', 
-    category: '', plan: '', planName: '', dueDate: '', monthlyFee: '', 
+    category: '', plan: '', planName: '', dueDate: '15th', monthlyFee: '', 
     firstPayment:'', address: '' 
   }
 

@@ -47,15 +47,16 @@ const Group = () => {
     const groups = useSelector(state => state.groups);
     const sublocations = useSelector(state => state.sublocations);
     
-    useEffect(() => {
-        dispatch(getGroups());
-        dispatch(getSublocs());
-        dispatch(getTargetlocs());
-    }, [])
+  useEffect(() => {
+
+    dispatch(getGroups());
+    dispatch(getSublocs());
+    dispatch(getTargetlocs());
+  }, [])
 
   const handleSubmit = async e => {
-    e.preventDefault();
 
+    e.preventDefault();
     dispatch(createGroup(groupData));
   };
 
@@ -69,8 +70,7 @@ const Group = () => {
 
     e.preventDefault();
 
-
-     //create tgartget loc first. -> pre req -> targetloc Id on billrun 
+    //create tgartget loc first. -> pre req -> targetloc Id on billrun 
     //gawa ng payload req na ang content ay targetloc and billrun
     dispatch(createTargetLoc(targetlocData));
   };
@@ -142,7 +142,7 @@ const Group = () => {
   return (     
     <div>
       <Paper elevation={9} style={{ backgroundColor: '#dce8e0', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <Box sx={{ width: '150%' }}>
+          <Box style={{ display: 'flex', flexDirection: 'column' } } sx={{ width: '150%' }}>
             <Box style={{ display: 'flex', justifyContent: 'center'} } sx={{  width: '100%', borderBottom: 11, borderColor: 'divider' }}>
               <Tabs value={value} onChange={handleChangeTab} aria-label="basic tabs example">
                 <Tab style={{ fontWeight: 'bolder' }} label="CITY" {...a11yProps(0)} />
@@ -152,7 +152,7 @@ const Group = () => {
             </Box>
 
             {/* CITY */}
-            <TabPanel value={value} index={0}>
+            <TabPanel style={{ display: 'flex', justifyContent: 'center'}} value={value} index={0}>
               <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
                     <TextField required 
@@ -168,7 +168,7 @@ const Group = () => {
             </TabPanel>
 
             {/* MINUCIPALITY */}
-            <TabPanel value={value} index={1}>
+            <TabPanel style={{ display: 'flex', justifyContent: 'center'}} value={value} index={1}>
             <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
                   
@@ -187,7 +187,7 @@ const Group = () => {
             </TabPanel>
 
             {/* LOCATION */}
-            <TabPanel value={value} index={2}>
+            <TabPanel style={{ display: 'flex', justifyContent: 'center'}}  value={value} index={2}>
             <Paper className={classes.addGroupForm} elevation={6}>
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
                   

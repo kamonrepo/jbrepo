@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, Divider, Grow, Paper } from '@material-ui/core';
+import { CircularProgress, Grow, Paper } from '@material-ui/core';
 import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import PlaceIcon from '@mui/icons-material/Place';
 import TreeItem from '@material-ui/lab/TreeItem';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
@@ -49,8 +50,11 @@ const Tree = () => {
                                       <TreeItem key={mun._id} nodeId={mun._id} label={mun.name}>
                                        {
                                           locations.map((loc) => mun._id == loc.sublocId && (
-                                          <TreeItem key={loc._id} nodeId={loc._id} label={loc.name}>
-                                          </TreeItem>
+                                            <div style={{ display: 'flex'}} >                                          
+                                              <PlaceIcon />
+                                              <TreeItem key={loc._id} nodeId={loc._id} label={loc.name}>
+                                              </TreeItem>
+                                            </div>
                                           ))
                                         }
                                       </TreeItem>

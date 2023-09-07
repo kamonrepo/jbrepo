@@ -19,11 +19,12 @@ export default makeStyles((theme) => ({
       padding: theme.spacing(1),
   },
   addGroupForm: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
+    width: '333px',
   },
   form: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexWrap: 'wrap'
   },
 
   buttonSubmit: {

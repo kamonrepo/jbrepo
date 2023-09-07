@@ -10,7 +10,7 @@ const headCells = [
     { id: 'paid', numeric: false, disablePadding: false, label: 'PAID' },
     { id: 'unpaid', numeric: false, disablePadding: false, label: 'UNPAID' },
     { id: 'total', numeric: true, disablePadding: false, label: 'GRAND TOTAL' }
-  ];
+];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
