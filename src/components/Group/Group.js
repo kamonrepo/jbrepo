@@ -158,7 +158,7 @@ const Group = () => {
                     <TextField required 
                       name="name"
                       variant="outlined" 
-                      label={<span style={watermark.italicText}>Eg. Cavite, Batanggas, Laguna ...</span>}
+                      label={<span style={watermark.italicText}>Eg. Cavite </span>}
                       fullWidth value={groupData.name} 
                       onChange={(e) => setGroupData({...groupData, name: e.target.value})}
                     />

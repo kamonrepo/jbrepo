@@ -164,7 +164,7 @@ export default function BillRunCandidate() {
       }
 
     return () => {
-      console.log('[COMPONENT-PARENT]BillRunCandidate unmount!!!!');
+      console.log('[COMPONENT-PARENT]BillRunCandidate UNMOUNT !!!!');
       isCanceled = true;
     }
 
@@ -406,6 +406,23 @@ const EnhancedTableToolbar = props => {
   const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
   const [brDataBySublocId, setBRDataBySublocId] = useState([]);
 
+  function getFirstDayOfMonth(date) {
+    // Create a new Date object with the same year and month
+    const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    
+    const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour12: false, // Use 24-hour format
+    timeZone: 'Asia/Manila',
+   };
+  
+   const formattedDate = firstDayOfMonth.toLocaleString('en-US', options);
+    
+    return formattedDate;
+  } 
+
   function getCurrentMonthPeriod(date) {
 
     let year = date.getFullYear();
@@ -421,11 +438,13 @@ const EnhancedTableToolbar = props => {
 
     let payload = [];
 
-    let returnMonthPeriod = getCurrentMonthPeriod(new Date());
+    // let returnMonthPeriod = getCurrentMonthPeriod(new Date());
+    let returnMonthPeriod = getFirstDayOfMonth(new Date());
 
-    console.log('returnMonthPeriodreturnMonthPeriod---: ', returnMonthPeriod);
+    console.log('returnMonthPeriodreturnMonthPeriod---COMPARE THIS : ', returnMonthPeriod);
+
     Object.keys(brc).forEach(index => {
-
+      console.log('returnMonthPeriodreturnMonthPeriod---INTOOOO : ', brc[index].monthPeriod);
         if(brc[index].monthPeriod == returnMonthPeriod) {
           payload.push(brc[index])
         }
@@ -444,10 +463,11 @@ const EnhancedTableToolbar = props => {
     }
 
     return () => {
+      console.log('[COMPONENT-CHILD]EnhancedTableToolbar UNMOUNT !!!!');
       isCanceled = true;
     }
 
-  },[brc]);
+  }, [brc]);
 
   // let zCompute = brid => {
 
@@ -486,7 +506,7 @@ const EnhancedTableToolbar = props => {
       console.log("BrOnChange");
       setBbr(brid);
       setQuery('');
-      dispatch(getBRCByBRId(brid));
+      await dispatch(getBRCByBRId(brid));
       displayGroupName(brid);
       setSelectedBr(brid);
   };
@@ -540,14 +560,6 @@ const EnhancedTableToolbar = props => {
   const searchOnChange =  value => {
     setQuery(value);
     console.log('searchOnChange-setQuery-value::: ', value)
-    // return new Promise(async (resolve, reject) => {
-    //   try{
-    //     resolve(setQuery(value));
-    //   } catch(e) {
-    //     reject(e);
-    //   }
-
-    // })
   }
 
   const LocationOnChange = groupId => {

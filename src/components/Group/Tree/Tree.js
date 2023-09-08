@@ -42,7 +42,7 @@ const Tree = () => {
                   selected={selected}
                   onNodeToggle={handleToggle}
                   onNodeSelect={handleSelect}
-                >
+            >
                       {!cities?.length ? <CircularProgress /> : (
                             <>{cities.map((city) => (
                                 <TreeItem key={city._id} nodeId={city._id} label={<span style={{ fontWeight: 'bold'}}>{city.name}</span>}>
@@ -50,8 +50,8 @@ const Tree = () => {
                                       <TreeItem key={mun._id} nodeId={mun._id} label={mun.name}>
                                        {
                                           locations.map((loc) => mun._id == loc.sublocId && (
-                                            <div style={{ display: 'flex'}} >                                          
-                                              <PlaceIcon />
+                                            <div key={loc._id + 'divUnique' } style={{ display: 'flex'}} >                                          
+                                              <PlaceIcon key={loc._id + 'iconUnique'} />
                                               <TreeItem key={loc._id} nodeId={loc._id} label={loc.name}>
                                               </TreeItem>
                                             </div>
