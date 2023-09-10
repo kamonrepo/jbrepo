@@ -51,4 +51,16 @@ export const createPayment = newPayment => API.post('/payment', newPayment);
 export const updatePayment = id => API.patch('/payment/updatePayment', id);
 export const fetchPayment = () => API.get('/payment');
 
+//posts
+export const fetchPost = (id) => API.get(`/posts/${id}`);
+export const fetchPosts = (page) => API.get(`/posts?page=${page}`);
+
+export const fetchPostsBySearch = (searchQuery) => API.get(`/posts/search?searchQuery=${searchQuery.search || 'none'}&tags=${searchQuery.tags}`) // query params starts with question mark
+
+export const createPost = (newPost) => API.post('/posts', newPost);
+export const likePost = (id) => API.patch(`/posts/${id}/likePost`);
+export const comment = (value, id) => API.post(`/posts/${id}/commentPost`, { value });
+export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
+export const deletePost = (id) => API.delete(`/posts/${id}`);
+
 

@@ -10,6 +10,7 @@ import brcComputedFeesReducer from './brccomputedfees.js';
 import categoryReducer from '././services/category';
 import planReducer from '././services/plan';
 import paymentReducer from './payment.js';
+import postsReducer from './posts.js';
 
 export default combineReducers({ 
     auth: authReducer,
@@ -22,5 +23,6 @@ export default combineReducers({
     billruncandidates: billRunCanReducer,
     brccomputedfees: brcComputedFeesReducer,
     plan: planReducer,
-    payments: paymentReducer
+    payments: paymentReducer,
+    posts: postsReducer
 });

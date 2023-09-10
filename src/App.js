@@ -13,6 +13,7 @@ import BillRunCandidate from './components/BillRunCandidate/BillRunCandidate';
 import Services from './components/Services/Services';
 import Plan from './components/Plan/Plan';
 import Report from './components/Report/Report';
+import PostDetails from './components/Report/PostDetails/PostDetails';
 
 const App = () => {
 
@@ -35,6 +36,10 @@ const App = () => {
                     <Route path="/services" exact component={Services} /> 
                     <Route path="/plan" exact component={Plan} /> 
                     <Route path="/report" exact component={Report} /> 
+
+                    <Route path="/posts" exact component={Report}/>
+                    <Route path="/posts/search" exact component={Report}/>
+                    <Route path="/posts/:id"  component={PostDetails}/>
                 </Switch>
             </Container>
         </BrowserRouter>
