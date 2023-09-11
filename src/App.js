@@ -35,8 +35,8 @@ const App = () => {
                     <Route path="/billruncandidate" exact component={BillRunCandidate} /> 
                     <Route path="/services" exact component={Services} /> 
                     <Route path="/plan" exact component={Plan} /> 
-                    <Route path="/report" exact component={Report} /> 
 
+                    <Route path="/report" exact component={Report} /> 
                     <Route path="/posts" exact component={Report}/>
                     <Route path="/posts/search" exact component={Report}/>
                     <Route path="/posts/:id"  component={PostDetails}/>
