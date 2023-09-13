@@ -148,7 +148,7 @@ export default function Home() {
   const [selected, setSelected] = useState([]);
   const [selectedIDs, setSelectedIDs] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
 
   const handleRequestSort = (event, property) => {

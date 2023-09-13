@@ -406,6 +406,8 @@ const EnhancedTableToolbar = props => {
   const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
   const [brDataBySublocId, setBRDataBySublocId] = useState([]);
 
+  const user = JSON.parse(localStorage.getItem('profile'));
+
   function getFirstDayOfMonth(date) {
     // Create a new Date object with the same year and month
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -516,7 +518,9 @@ const EnhancedTableToolbar = props => {
 
     let isPaid = isAllPaid(statusPlaceHolder);
 
-    await dispatch(updatePayment({selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
+    let userFullname = user.result.firstname + ' ' + user.result.lastname;
+
+    await dispatch(updatePayment({userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
     await dispatch(getBRCByBRId(selectedBr));
     // await setHandBRC(filterBRCbyMonthPeriod(brc));
 

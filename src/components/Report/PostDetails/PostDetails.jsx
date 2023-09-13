@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Paper, Typography, CircularProgress, Divider } from '@material-ui/core';
+import { Paper, Typography, CircularProgress, Divider, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useParams, useHistory } from 'react-router-dom';
@@ -45,14 +45,12 @@ const PostDetails = () => {
                 <Typography variant="h3" component="h2">{post.title}</Typography>
                 <Typography gutterBottom variant="h6" color="textSecondary" component="h2">{post.tags.map((tag) => `#${tag} `)}</Typography>
                 <Typography gutterBottom variant="body1" component="p">{post.message}</Typography>
-                <Typography variant="h6">Created by: {post.name}</Typography>
+                {/* <Typography variant="h6">Created by: {post.name}</Typography> */}
                 <Typography variant="body1">{moment(post.createdAt).fromNow()}</Typography>
                 <Divider style={{ margin: '20px 0' }} />
-                <Typography variant="body1"><strong>Add details here</strong></Typography>
-                <Divider style={{ margin: '20px 0' }} />
+                <Typography variant="body1"><Button variant='contained'>Generate SOA</Button></Typography>
 
-                <CommentSection post={post}/>
-
+                {/* <CommentSection post={post}/> */}
 
                 <Divider style={{ margin: '20px 0' }} />
                 </div>

@@ -1,4 +1,4 @@
-import {  CREATE_PAYMENT, FETCH_PAYMENT_BY_ID, FETCH_PAYMENT } from '../constants/actionTypes';
+import {  CREATE_PAYMENT, FETCH_PAYMENT } from '../constants/actionTypes';
 import * as api from '../api/index';
 
 export const createPayment = group => async dispatch => {
