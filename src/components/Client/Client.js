@@ -163,6 +163,19 @@ const Client = () => {
     setClientData({ ...clientData, targetlocId: data, targetloc: tlName });
   };
 
+  const ipAddrHandleChange = (e) => {
+    const inputValue = e.target.value;
+    const ipRegex = /^([0-9]{1,3}\.){0,3}[0-9]{0,3}$/;
+
+    if (ipRegex.test(inputValue) || inputValue === '') {
+      setClientData({ ...clientData, ipaddr: inputValue });
+    }
+  };
+
+  const dontTypeHere = (e) => {
+    e.preventDefault(); // Prevent typing
+  };
+
   return (     
     <div>  
         <form onSubmit={handleSubmit}>
@@ -244,8 +257,23 @@ const Client = () => {
             </div>
 
             <div style={{ margin: '33px 33px 33px 33px', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
-              <TextField required className={classes.textFields} name="ipaddr" variant="outlined" label="IP Address" fullWidth value={clientData.ipaddr} onChange={(e) => setClientData({ ...clientData, ipaddr: e.target.value})}/>
-              <TextField required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
+              {/* <TextField required className={classes.textFields} name="ipaddr" variant="outlined" label="IP Address" fullWidth value={clientData.ipaddr} onChange={(e) => IPADDR_handleInputChange(e)}/> */}
+              <TextField
+                  required
+                  className={classes.textFields}
+                  name="ipaddr"
+                  variant="outlined"
+                  label="IP Address"
+                  fullWidth
+                  value={clientData.ipaddr}
+                  onChange={ipAddrHandleChange}
+                  InputProps={{
+                    inputProps: {
+                      pattern: '^([0-9]{1,3}\\.){0,3}[0-9]{0,3}$',
+                    },
+                  }}
+              />
+              <TextField onKeyDown={dontTypeHere} required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
               <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth> Submit </Button>
               <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
             </div>
