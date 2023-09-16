@@ -425,28 +425,23 @@ const EnhancedTableToolbar = props => {
     return formattedDate;
   } 
 
-  function getCurrentMonthPeriod(date) {
+  // function getCurrentMonthPeriod(date) {
 
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+  //   let year = date.getFullYear();
+  //   let month = (date.getMonth() + 1).toString().padStart(2, '0');
     
-    let formattedDate = `${year}-${month}`;
+  //   let formattedDate = `${year}-${month}`;
 
-    //console.log('getCurrentMonthPeriod:::::: ', formattedDate);
-    return formattedDate;
-  }
+  //   return formattedDate;
+  // }
 
   const filterBRCbyMonthPeriod =  brc => {
 
     let payload = [];
 
-    // let returnMonthPeriod = getCurrentMonthPeriod(new Date());
     let returnMonthPeriod = getFirstDayOfMonth(new Date());
 
-    console.log('returnMonthPeriodreturnMonthPeriod---COMPARE THIS : ', returnMonthPeriod);
-
     Object.keys(brc).forEach(index => {
-      console.log('returnMonthPeriodreturnMonthPeriod---INTOOOO : ', brc[index].monthPeriod);
         if(brc[index].monthPeriod == returnMonthPeriod) {
           payload.push(brc[index])
         }
@@ -470,25 +465,6 @@ const EnhancedTableToolbar = props => {
     }
 
   }, [brc]);
-
-  // let zCompute = brid => {
-
-  //   let total = 0;
-  //   let paidSum = 0;
-  //   let unpaindSum = 0;
-
-  //   Object.keys(billruns).forEach(brKey => {
-  //     if(billruns[brKey]._id == brid) {
-  //       total =  billruns[brKey].total;
-  //       paidSum = billruns[brKey].paid;
-  //       unpaindSum = billruns[brKey].unpaid;
-  //     }
-  //   })
-
-  //   setTotal(total);
-  //   setPaid(paidSum);
-  //   setUnpaid(unpaindSum);
-  // }
 
   const displayGroupName = brid => {
 

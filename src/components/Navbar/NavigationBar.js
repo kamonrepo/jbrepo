@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Container, Toolbar, Typography, Box, AppBar, IconButton, Drawer, Button, Avatar, Divider } from '@material-ui/core'; 
 import MenuIcon   from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
-import AcUnitIcon from '@material-ui/icons/AcUnit';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import decode from 'jwt-decode';
 import * as actionType from '../../constants/actionTypes';
+import GSTLogo from './gst.png';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -188,8 +188,7 @@ export default function NavigationBar() {
     return (
       <Toolbar className={classes.toolbar}>
            <Box className={classes.menuBox}>
-            <AcUnitIcon style={{ fontSize: '33px'}}/>
-            <Button component={Link} to="/home" className={classes.heading}>HOME</Button> 
+            <Button component={Link} to="/home" className={classes.heading}>{<img src={GSTLogo} alt="GST Logo"></img>}</Button> 
             {(user?.result)  && (        
               <>   
                 <div style={{ display: 'flex', marginLeft: '99px', justifyContent: 'flex-start' }}>
