@@ -6,7 +6,6 @@ import { getPostsBySearch } from '../../actions/posts';
 import Posts from '../Report/Posts/Posts';
 import Pagination from '../Report/Pagination';
 import { useHistory, useLocation } from 'react-router-dom';
-// import ChipInput from 'material-ui-chip-input';
 import useStyles from './styles';
 
 function useQuery() {
@@ -25,15 +24,12 @@ const Report = () => {
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);
 
-  // useEffect(() => {
-  //   dispatch(getPosts());
-  
-  // }, [currentId, dispatch]);
-
     const searchPost = () => {
+
       if(search.trim() || tags) {
-        //dispatch -> fetch search posts
+
         dispatch(getPostsBySearch({search, tags:  tags.join(',')  }));
+
         history.push(`/posts/search?searchQuery=${search || 'none'} &tags=${tags.join(',')}`);
       } else {
         history.push('/')
@@ -45,9 +41,6 @@ const Report = () => {
         searchPost();
       }
     }
-
-    const handleAdd = (tag) => setTags([... tags, tag]);
-    const handleDelete = (tagToDelete) => setTags(tags.filter((tag) => tag !== tagToDelete));
 
   return (
     <Grow in>
@@ -67,20 +60,10 @@ const Report = () => {
               onChange={(e) => setSearch(e.target.value)} 
               onKeyPress={handleKeyPress}
             />
-            {/* <ChipInput 
-              style={{ margin: '10px 0'}}
-              value={tags}
-              onAdd={handleAdd}
-              onDelete={handleDelete}
-              label="Search Hash Tags"
-              variant="outlined"
-            /> */}
 
             <Button onClick={searchPost} className={classes.searchButton} variant="contained" color="primary">Search</Button>
 
           </AppBar>
-            {/* <Form currentId={currentId} setCurrentId={setCurrentId} /> */}
-
             {(!searchQuery && !tags.length) && (
             <Paper elevation={6} className={classes.pagination}>
               <Pagination page={page} />
