@@ -25,10 +25,11 @@ const Report = () => {
   const [tags, setTags] = useState([]);
 
     const searchPost = () => {
-
+      console.log('[REPORT] searchPost');
       if(search.trim() || tags) {
 
         dispatch(getPostsBySearch({search, tags:  tags.join(',')  }));
+        console.log('dispatch getPostsBySearch DONE');
 
         history.push(`/posts/search?searchQuery=${search || 'none'} &tags=${tags.join(',')}`);
       } else {
@@ -54,15 +55,13 @@ const Report = () => {
             <TextField 
               name="search" 
               variant="outlined" 
-              label="Search Posts" 
+              label="Search here" 
               fullWidth
               value={search} 
               onChange={(e) => setSearch(e.target.value)} 
               onKeyPress={handleKeyPress}
             />
-
             <Button onClick={searchPost} className={classes.searchButton} variant="contained" color="primary">Search</Button>
-
           </AppBar>
             {(!searchQuery && !tags.length) && (
             <Paper elevation={6} className={classes.pagination}>

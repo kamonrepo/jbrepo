@@ -27,18 +27,18 @@ export const getPosts = (page) => async (dispatch) => {
   }
 };
 
-export const getPostsBySearch = (searchquery) => async (dispatch) => {
+export const getPostsBySearch = (searchQuery) => async (dispatch) => {
 
   try {
     dispatch({ type: START_LOADING_POSTS });
-    console.log('getPostsBySearch done-dispatch-START_LOADING: ');
+    console.log('getPostsBySearch-dispatch-START_LOADING-searchQuery: ', searchQuery);
 
-    const { data: { data } } = await api.fetchPostsBySearch(searchquery);
+    const { data: { data } } = await api.fetchPostsBySearch(searchQuery);
 
         dispatch({ type: FETCH_BY_SEARCH, payload: data });
         dispatch({ type: END_LOADING_POSTS });
         
-        console.log('getPostsBySearch done-dispatch-END_LOADING: ');
+        console.log('getPostsBySearch-dispatch-END_LOADING: ');
 
   } catch(error) {
 

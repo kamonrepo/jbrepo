@@ -16,7 +16,8 @@ const PostDetails = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        dispatch(getPost(id))
+        dispatch(getPost(id));
+        console.log('PostDetails component useEffect mount - done  dispatch(getPost(id)) ', id);
     },[id])
 
     useEffect(() => {
