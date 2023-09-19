@@ -60,6 +60,9 @@ export const LIKE = 'LIKE';
 export const FETCH_BY_SEARCH = 'FETCH_BY_SEARCH';
 export const START_LOADING_POSTS = 'START_LOADING_POSTS';
 export const END_LOADING_POSTS = 'END_LOADING_POSTS';
-export const COMMENT = 'COMMENT'
+export const COMMENT = 'COMMENT';
+
+//SOA
+export const FETCH_SOA_BY_ID = 'FETCH_SOA_BY_ID';
 
 

@@ -11,6 +11,7 @@ import categoryReducer from '././services/category';
 import planReducer from '././services/plan';
 import paymentReducer from './payment.js';
 import postsReducer from './posts.js';
+import soaReducer from './soa.js';
 
 export default combineReducers({ 
     auth: authReducer,
@@ -24,5 +25,6 @@ export default combineReducers({
     brccomputedfees: brcComputedFeesReducer,
     plan: planReducer,
     payments: paymentReducer,
-    posts: postsReducer
+    posts: postsReducer,
+    soas: soaReducer
 });
