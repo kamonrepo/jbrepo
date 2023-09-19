@@ -5,18 +5,19 @@ import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import useStyles from './styles';
 import { getPost, getPostsBySearch } from '../../../actions/posts';
-// import { getSoa } from '../../../actions/'
 
 const PostDetails = () => {
 
     const { post, posts, isLoading } = useSelector((state) => state.posts);
-    
+    const soa = useSelector((state) => state.soas);
+
     const dispatch = useDispatch();
     const classes = useStyles();
     const { id } = useParams();
 
     useEffect(() => {
         dispatch(getPost(id));
+        //dispatch(getSoaByBRCId(id));
         console.log('[POSTDETAILS] component useEffect 1 mount - done  dispatch(getPost(id)) ', id);
     },[id])
 
@@ -38,7 +39,7 @@ const PostDetails = () => {
     // }
 
     const sendNotif = async () => {
-        alert('woop');
+        console.log('woop::: ', soa[0].b64Jpeg);
     }
 
     return (
@@ -56,7 +57,7 @@ const PostDetails = () => {
                     </div>
 
                     <div className={classes.imageSection}>
-                        <img className={classes.media} alt={post.title} />
+                        <img className={classes.media} alt={post.title} src={soa && soa[0].b64Jpeg}/>
                     </div>
 
                 </div>

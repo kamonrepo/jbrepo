@@ -1,12 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Grow, Grid , Paper, AppBar, TextField, Button } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-import { getPostsBySearch } from '../../actions/posts';
 import Posts from '../Report/Posts/Posts';
 import Pagination from '../Report/Pagination';
 import { useHistory, useLocation } from 'react-router-dom';
 import useStyles from './styles';
+import { getPostsBySearch } from '../../actions/posts';
+import { getSoas } from '../../actions/soa';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -20,6 +21,11 @@ const Report = () => {
   const history = useHistory();
   const page = query.get('page') || 1;
   const searchQuery = query.get('searchQuery');
+
+  useEffect(() => {
+    dispatch(getSoas());
+    console.log('[REPORT] dispatch getSoas DONE');
+  }, [])
 
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);

@@ -63,4 +63,5 @@ export const comment = (value, id) => API.post(`/posts/${id}/commentPost`, { val
 export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
 export const deletePost = (id) => API.delete(`/posts/${id}`);
 
-
+export const fetchSoas = () => API.get('/soa');
+export const fetchSoaByBRCID = brcid => API.get(`/soa/${brcid}`);

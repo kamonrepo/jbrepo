@@ -63,6 +63,6 @@ export const END_LOADING_POSTS = 'END_LOADING_POSTS';
 export const COMMENT = 'COMMENT';
 
 //SOA
-export const FETCH_SOA_BY_ID = 'FETCH_SOA_BY_ID';
-
+export const FETCH_SOA_BY_BRCID = 'FETCH_SOA_BY_BRCID';
+export const FETCH_SOAS = 'FETCH_SOAS';
 

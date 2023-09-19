@@ -5,6 +5,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import {  deletePost } from '../../../../actions/posts';
+import { getSoaByBRCId } from '../../../../actions/soa';
 import useStyles from './styles';
 import { useHistory } from 'react-router-dom';
 
