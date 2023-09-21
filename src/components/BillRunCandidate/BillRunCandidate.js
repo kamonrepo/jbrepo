@@ -81,7 +81,7 @@ function EnhancedTableHead(props) {
                 >
                   {headCell.label}
                   {orderBy === headCell.id ? (
-                    <span className={classes.visuallyHidden}>
+                     <span className={classes.visuallyHidden}>
                       {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                     </span>
                   ) : null}
@@ -115,6 +115,7 @@ const useToolbarStyles = makeStyles((theme) => ({
           color: theme.palette.text.primary,
           backgroundColor: theme.palette.secondary.dark,
         }
+
 }));
 
 const useStyles = makeStyles((theme) => ({
@@ -140,6 +141,7 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
+
 }));
 
 
@@ -181,8 +183,6 @@ export default function BillRunCandidate() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
   const [query, setQuery] = useState(''); // this is for search
-
-
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -290,6 +290,7 @@ export default function BillRunCandidate() {
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar 
+          cssClass = {classes}
           numSelected={selected.length} 
           handBRC={handBRC} 
           selectedIDs={selectedIDs} 
@@ -391,7 +392,7 @@ const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
-        setSelected, selectedGroupname, setSelectedGroupname, query, setQuery } = props;
+        setSelected, selectedGroupname, setSelectedGroupname, query, setQuery, cssClass } = props;
 
 
   const billruns = useSelector(state => state.billruns);
