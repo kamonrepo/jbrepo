@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { FETCH_POSTS, FETCH, CREATE, UPDATE, DELETE, LIKE , LOGOUT, FETCH_BY_SEARCH, START_LOADING_POSTS, END_LOADING_POSTS, COMMENT } from '../constants/actionTypes';
 
 export default (state = { isLoading: true, posts: []}, action) => {
-  //console.log('client/src/reducers/chat/posts/action.payload: ', action.payload,'\n','client/src/reducers/chat/posts/posts: ', posts);
+
   switch (action.type) {
 
     case START_LOADING_POSTS: 
