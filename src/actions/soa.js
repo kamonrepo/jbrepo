@@ -1,12 +1,16 @@
-import { FETCH_SOA_BY_BRCID, FETCH_SOAS } from '../constants/actionTypes';
+import { FETCH_SOA_BY_PMSGID, FETCH_SOAS, START_LOADING_SOAS, END_LOADING_SOAS } from '../constants/actionTypes';
 import * as api from '../api/index';
 
 
-export const getSoaByBRCId = brcid => async dispatch => {
+export const getSoaByPMSGID = pmsgid => async dispatch => {
     try {
 
-      const { data } = await api.fetchSoaByBRCID(brcid);
-      dispatch({ type: FETCH_SOA_BY_BRCID, payload: data});
+      dispatch({ type: START_LOADING_SOAS });
+      const { data } = await api.fetchSoaByPMSGID(pmsgid);
+
+
+      dispatch({ type: FETCH_SOA_BY_PMSGID, payload: data});
+      dispatch({ type: END_LOADING_SOAS });
 
     } catch (error) {
       console.log(error);

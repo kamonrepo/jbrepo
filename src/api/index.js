@@ -64,4 +64,4 @@ export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updated
 export const deletePost = (id) => API.delete(`/posts/${id}`);
 
 export const fetchSoas = () => API.get('/soa');
-export const fetchSoaByBRCID = brcid => API.get(`/soa/${brcid}`);
+export const fetchSoaByPMSGID = id => API.get(`/soa/${id}`);
