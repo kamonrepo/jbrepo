@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Typography, Divider, Button, Grow, CircularProgress } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -11,6 +11,8 @@ const PostDetails = () => {
 
     const { post, posts, isLoading } = useSelector((state) => state.posts);
     const { soa, isSOALoading } = useSelector((state) => state.soas);
+
+    const [b64, setB64] = useState(null);
 
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -40,12 +42,32 @@ const PostDetails = () => {
     //             </Paper>
     // }
 
-    const debugg = () => {
-        console.log('[debugg] ', soa);
+    const jpegBinaryToBase64 = soa => {
+        // Assuming imageData is the binary string you provided
+        const blob = new Blob([new Uint8Array(soa)], { type: 'image/jpeg' });
+        const reader = new FileReader();
+        
+        let imgSrc = null
+        reader.onload = () => {
+
+            const base64ImageData = reader.result.split(',')[1];
+            console.log('reader.onload::: ', base64ImageData);
+             imgSrc = `data:image/jpeg;base64,${base64ImageData}`;
+           
+            // Now you can use imgSrc as the src attribute in your <img> tag
+        };
+
+        reader.readAsDataURL(blob);
+
+        console.log('imgSrc::: ', reader);
+        return imgSrc;
+    }
+
+    const debugg =  () => {
+        setB64(jpegBinaryToBase64(soa));
     }
 
     return (
-        isSOALoading ? <CircularProgress /> : (
         <Grow in>
             <Paper style={{ padding: '20px', borderRadius: '15px' }} elevation={6}>
                 <div className={classes.card}>
@@ -59,13 +81,14 @@ const PostDetails = () => {
                         <Divider style={{ margin: '20px 0' }} />
                     </div>
 
-                    <div className={classes.imageSection}>
-                        <img className={classes.media} src={soa} alt={post.title}/>
-                    </div>
+                    {isSOALoading ? <CircularProgress /> : (
+                        <div className={classes.imageSection}>
+                            <img className={classes.media} alt={post.title}/>
+                        </div>
+                    )}
                 </div>
             </Paper>
-        </Grow>
-        )
+        </Grow>       
     )
 }
 
