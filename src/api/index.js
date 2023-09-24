@@ -64,12 +64,12 @@ export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updated
 export const deletePost = (id) => API.delete(`/posts/${id}`);
 
 export const fetchSoas = () => API.get('/soa');
-// export const fetchSoaByPMSGID = id => API.get(`/soa/${id}`);
+export const fetchSoaByPMSGID = id => API.get(`/soa/${id}`);
 
-export const fetchSoaByPMSGID = id => API.get(`/soa/${id}`, {
-  responseType: 'arraybuffer', 
-  headers: {
-    'Accept': 'image/jpeg', 
-  },
-});
+// export const fetchSoaByPMSGID = id => API.get(`/soa/${id}`, {
+//   responseType: 'arraybuffer', 
+//   headers: {
+//     'Accept': 'image/jpeg', 
+//   },
+// });
 
