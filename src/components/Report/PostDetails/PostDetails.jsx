@@ -64,7 +64,7 @@ const PostDetails = () => {
 
                     {isSOALoading ? <CircularProgress /> : (
                         <div className={classes.imageSection}>
-                            <img className={classes.media} src={'http://localhost:4444/images/1.jpg'} alt={post.title}/>
+                            <img className={classes.media} src={`http://localhost:4444/images/${imageSrc}`} alt={post.title}/>
                         </div>
                     )}
                 </div>
