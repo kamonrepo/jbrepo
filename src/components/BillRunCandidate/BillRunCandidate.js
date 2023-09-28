@@ -496,7 +496,7 @@ const EnhancedTableToolbar = props => {
     let isPaid = isAllPaid(statusPlaceHolder);
 
     let userFullname = user.result.firstname + ' ' + user.result.lastname;
-
+    //console.log('updatePayment::: ', {userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient});
     await dispatch(updatePayment({userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
     await dispatch(getBRCByBRId(selectedBr));
     // await setHandBRC(filterBRCbyMonthPeriod(brc));
