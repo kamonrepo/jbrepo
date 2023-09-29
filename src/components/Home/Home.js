@@ -294,8 +294,8 @@ export default function Home() {
                               {row.billRun}
                             </TableCell>
 
-                            <TableCell align="left">{row.totalPaidSum}</TableCell>
-                            <TableCell align="left">{row.totalNotPaidSum}</TableCell>
+                            <TableCell align="left" style={{ color: 'green' }}> P {row.totalPaidSum}</TableCell>
+                            <TableCell align="left" style={{ color: 'red' }}> P {row.totalNotPaidSum}</TableCell>
                             <TableCell align="left">{row.total}</TableCell>
 
                       </TableRow>

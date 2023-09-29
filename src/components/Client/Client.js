@@ -88,10 +88,17 @@ const Client = () => {
 
   const handleProceed = (e) => {
     e.preventDefault();
-    SetPreSubmitOpt(prev => prev=true);
+    SetPreSubmitOpt(prev => prev = true);
     setOpen(prev => prev = false);
     dispatch(createClient(clientData));
     setClientData(initState);
+
+    setGgroup('');
+    setSsubloc('');
+    setTtargloc('');
+    setCategory('');
+    setPlan('');
+
   };
 
   const handleSubmit = async (e) => {
@@ -273,7 +280,17 @@ const Client = () => {
                     },
                   }}
               />
-              <TextField onKeyDown={dontTypeHere} required className={classes.textFields} name="monthlyFee" variant="outlined" label="Monthly Fee" fullWidth value={clientData.monthlyFee} onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}/>
+              <TextField 
+                onKeyDown={dontTypeHere} 
+                required 
+                className={classes.mfee} 
+                name="monthlyFee" 
+                variant="outlined" 
+                label="Monthly Fee" 
+                fullWidth 
+                value={clientData.monthlyFee} 
+                onChange={(e) => setClientData({ ...clientData, monthlyFee: e.target.value})}
+              />
               <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth> Submit </Button>
               <Button variant="contained" color="secondary" size="small" fullWidth onClick={debugg}> Clear </Button>
             </div>

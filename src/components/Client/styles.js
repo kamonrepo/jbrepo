@@ -7,6 +7,13 @@ export default makeStyles((theme) => ({
     marginBottom: '12px',
     width: '300px'
   },
+
+  mfee: {
+    width: '300px',
+    marginBottom: '12px',
+    color: 'red'
+  },
+
   buttonSubmit: {
     marginBottom: 10,
   },
