@@ -60,12 +60,12 @@ const Services = () => {
         <Paper className={classes.Paper} elevation={9}>
           <form className={classes.form} autoComplete="off" onSubmit={AddServiceSubmit}>
               <div className={classes.createButton}>
-                <Button variant="text" onClick={(e) => NewPlanSubmit(e)}><b style={{color:'green' }}>* create new service</b></Button>
+                <Button variant="text" onClick={(e) => NewPlanSubmit(e)}><b>* create new service</b></Button>
               </div>
             {(categories.length > 0) 
             ? (
               <div>
-                <Typography style={{ fontWeight: 'bold'}}>SELECT SERVICE &nbsp;&nbsp;</Typography>      
+                <Typography style={{ fontStyle: 'italic', fontWeight: 'bold'}}>SELECT SERVICE &nbsp;&nbsp;</Typography>      
                 <Select 
                   style={{paddingBottom: '.3em', width: '333px'}} 
                   className={classes.Select}                   

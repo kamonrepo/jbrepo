@@ -41,6 +41,7 @@ const Group = () => {
     const [holdTargetLoc, setHoldTargetLoc] = useState('');
     const [sublocDataByGid, setSublocDataByGid] = useState([]);
     const [value, setValue] = useState(0);
+    const [isFormSubmitted, setIsFormSubmitted] = useState({ flag: false, opt: null});
     const dispatch = useDispatch();
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('profile'));
@@ -54,36 +55,9 @@ const Group = () => {
     dispatch(getTargetlocs());
   }, [])
 
-  const handleSubmit = async e => {
-
-    e.preventDefault();
-    dispatch(createGroup(groupData));
-  };
-
-  const handleSubmitSubLoc = async e => {
-
-    e.preventDefault();
-    dispatch(createSubLoc(sublocData));
-  };
-
-  const handleSubmitTargetLoc = async e => {
-
-    e.preventDefault();
-
-    //create tgartget loc first. -> pre req -> targetloc Id on billrun 
-    //gawa ng payload req na ang content ay targetloc and billrun
-    dispatch(createTargetLoc(targetlocData));
-  };
-
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
-
-  // const debugg = e => {
-  //   e.preventDefault();
-  //   // console.log('targetlocData:: ', targetlocData);
-  //   // console.log('sublocDataByGid:: ', sublocDataByGid);
-  // };
 
   if(!user?.result?._id) {
     return (
@@ -139,6 +113,34 @@ const Group = () => {
     }
   };
 
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    dispatch(createGroup(groupData));
+    setIsFormSubmitted({...isFormSubmitted, flag: true, opt: 'getGroups'});
+    setGroupData({ name: '' });
+  };
+
+  const handleSubmitSubLoc = async e => {
+    e.preventDefault();
+
+    dispatch(createSubLoc(sublocData));
+    setIsFormSubmitted({...isFormSubmitted, flag: true, opt: 'getSublocs'});
+    setSublocData({ name: '', groupId: '' });
+    setSublocTabloc('');
+
+  };
+
+  const handleSubmitTargetLoc = async e => {
+    e.preventDefault();
+
+    dispatch(createTargetLoc(targetlocData));
+    setIsFormSubmitted({...isFormSubmitted, flag: true, opt: 'getTargetlocs'});
+    setTargetlocData({ name: '', sublocId: '' });
+    setTargetSublocTabLoc('');
+    setHoldTargetLoc('');
+  };
+
   return (     
     <div>
       <Paper elevation={9} style={{ backgroundColor: '#dce8e0', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
@@ -173,7 +175,7 @@ const Group = () => {
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitSubLoc}>
                   
                   <FormLabel style={{ fontWeight: 'bold'}}>City</FormLabel>
-                  <Select className={classes.Select} fullWidth value={sublocTabloc} onChange={e => sublocTabSelect1(e.target.value)}>
+                  <Select required className={classes.Select} fullWidth value={sublocTabloc} onChange={e => sublocTabSelect1(e.target.value)}>
                     {groups.map((data) => (
                       <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                     ))}
@@ -192,14 +194,14 @@ const Group = () => {
                 <form autoComplete="off" className={`${classes.root} ${classes.form}`} onSubmit={handleSubmitTargetLoc}>
                   
                   <FormLabel style={{ fontWeight: 'bold' }}>City</FormLabel>
-                  <Select className={classes.Select} fullWidth value={targetlocTabLoc} onChange={e => targetlocTabSelect1(e.target.value)}>
+                  <Select required className={classes.Select} fullWidth value={targetlocTabLoc} onChange={e => targetlocTabSelect1(e.target.value)}>
                     {groups.map((data) => (
                       <MenuItem key={data._id} value={data._id}>{data.name}</MenuItem>
                     ))}
                   </Select>
 
                   <FormLabel style={{ fontWeight: 'bold', paddingTop: '20px'}}>Municipality</FormLabel>
-                  <Select className={classes.Select} fullWidth value={holdTargetLoc} onChange={e => targetlocTabSelect2(e.target.value)}>
+                  <Select required className={classes.Select} fullWidth value={holdTargetLoc} onChange={e => targetlocTabSelect2(e.target.value)}>
                     
                     {/* dapat dito na ung filtered sublocations */}
                     {sublocDataByGid.map((data) => (
@@ -216,7 +218,7 @@ const Group = () => {
           </Box>
       </Paper>
 
-      <Tree />
+      <Tree isFormSubmitted={isFormSubmitted}/>
     </div>
   )
 }

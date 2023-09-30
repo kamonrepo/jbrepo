@@ -6,13 +6,14 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import PlaceIcon from '@mui/icons-material/Place';
 import TreeItem from '@material-ui/lab/TreeItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { getGroups, getSublocs, getTargetlocs } from '../../../actions/group';
 import useStyles from './styles';
 
-const Tree = () => {
+const Tree = ({ isFormSubmitted }) => {
+    console.log('Tree init ', isFormSubmitted);
 
-    const classes = useStyles();
     const dispatch = useDispatch();
+    const classes = useStyles();
     const [expanded, setExpanded] = useState([]);
     const [selected, setSelected] = useState([]);
 
@@ -21,7 +22,20 @@ const Tree = () => {
     const locations = useSelector(state => state.targetlocations);
 
     useEffect(() => {
-    },[])
+      if(isFormSubmitted.flag === true && isFormSubmitted.opt == 'getGroups') {
+        dispatch(getGroups());
+        console.log('Tree useEffect dispatch - getGroups');
+      }
+      if(isFormSubmitted.flag === true && isFormSubmitted.opt == 'getSublocs') {
+        dispatch(getSublocs());
+        console.log('Tree useEffect dispatch - getSublocs');
+      }
+      if(isFormSubmitted.flag === true && isFormSubmitted.opt == 'getTargetlocs') {
+        dispatch(getTargetlocs());
+        console.log('Tree useEffect dispatch - getTargetlocs');
+      }
+
+    }, [isFormSubmitted]); 
 
     const handleToggle = (event, nodeIds) => {
         setExpanded(nodeIds);

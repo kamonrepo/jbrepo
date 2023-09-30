@@ -107,7 +107,7 @@ const Plan = () => {
               </Select>     
 
               <div className={classes.createButton}>
-                <Button variant="text" onClick={newPlanOnClick}><b style={{color:'green' }}>* create new plan</b></Button>
+                <Button variant="text" onClick={newPlanOnClick}><b>CREATE PLAN FOR <i><u>{`${category}`}</u></i></b></Button>
               </div>
 
               {
