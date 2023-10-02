@@ -231,6 +231,10 @@ export default function Home() {
     setPage(0);
   };
 
+  function formatToPhilippinePeso(number) {
+    return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+  }
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
 
@@ -294,8 +298,8 @@ export default function Home() {
                               {row.billRun}
                             </TableCell>
 
-                            <TableCell align="left" style={{ color: 'green' }}> P {row.totalPaidSum}</TableCell>
-                            <TableCell align="left" style={{ color: 'red' }}> P {row.totalNotPaidSum}</TableCell>
+                            <TableCell align="left" style={{ color: 'green' }}>{formatToPhilippinePeso(row.totalPaidSum)}</TableCell>
+                            <TableCell align="left" style={{ color: 'red' }}>{formatToPhilippinePeso(row.totalNotPaidSum)}</TableCell>
                             <TableCell align="left">{row.total}</TableCell>
 
                       </TableRow>

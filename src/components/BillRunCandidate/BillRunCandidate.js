@@ -59,14 +59,15 @@ function EnhancedTableHead(props) {
     <>
     <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
-            <Checkbox
+          <TableCell>
+            {/* <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
               onChange={onSelectAllClick}
-              inputProps={{ 'aria-label': 'select all desserts' }}
-            />
+            /> */}
+            {null}
           </TableCell>
+
             {headCells.map((headCell) => (
               <TableCell
                 key={headCell.id}
@@ -201,7 +202,7 @@ export default function BillRunCandidate() {
   };
 
   const handleClick = (event, name, id, status, monthlyFee, clientId) => {
-    
+
     const selectedIndex = selected.indexOf(name);
     
     let newSelected = [];
@@ -232,7 +233,7 @@ export default function BillRunCandidate() {
 
     }
 
-    // the -1 value means it is checked/selected
+    // the -1 value means it is CHECKED/SELECTED
     if(selectedIndex === -1) {
       setSelectedIDs(prev => [...prev, id]);
       setSelectedMFs(prev => [...prev, monthlyFee]);
@@ -240,9 +241,12 @@ export default function BillRunCandidate() {
       setStatusPlaceHolder(prev => [...prev, status]);
       console.log('checked: ');
 
-    } else {
+    } 
+
+    //UNCHECKED
+    else {
       console.log('unchecked: ');
-      //uncheck
+
       let index = selectedIDs.indexOf(id);
       let statusIndex = statusPlaceHolder.indexOf(status);
       
@@ -289,7 +293,16 @@ export default function BillRunCandidate() {
 
   const searchOnChange =  value => {
     setQuery(value);
-    console.log('searchOnChange-setQuery-value::: ', value)
+  }
+
+  const debugg = () => {
+    console.log('selected::: ', selected);
+  }
+
+  function formatToPhilippinePeso(number) {
+    console.log('formatToPhilippinePeso::: ', number);
+    if(number)
+    return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
   }
 
   return (
@@ -316,8 +329,8 @@ export default function BillRunCandidate() {
         setQuery={setQuery}
       />
 
-      <TextField style={{paddingBottom: '9px', marginTop: '9px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)} />
-
+      <TextField style={{paddingBottom: '9px', marginTop: '9px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)}/>
+      <button key='123' onClick={debugg}></button>
       <Paper className={classes.paper}>
         <TableContainer>
             <Table className={classes.table} aria-labelledby="tableTitle" size={'medium'} aria-label="enhanced table">
@@ -338,32 +351,24 @@ export default function BillRunCandidate() {
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
-                      <TableRow
-                        hover
-                        onClick={(e) => handleClick(e, row.name, row._id, row.status, row.monthlyFee, row.client)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={index}
-                        selected={isItemSelected}
-                      >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={isItemSelected}
-                                inputProps={{ 'aria-labelledby': labelId }}
-                              />
-                            </TableCell>
+                   
+                    <TableRow
+                    hover
+                    onClick={(e) => handleClick(e, row.name, row._id, row.status, row.monthlyFee, row.client)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={index}
+                    selected={isItemSelected}>
 
-                            <TableCell align="left" id={labelId} scope="row" padding="none">
-                              {row.name}
-                            </TableCell>
-
-                            <TableCell align="left">{row.planName}</TableCell>
-                            <TableCell align="left">{row.monthlyFee}</TableCell>
-                            <TableCell align="left">{row.dueDate}</TableCell>
-                            <TableCell align="left">{row.status}</TableCell>
-
-                      </TableRow>
+                      <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
+                      <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
+                      <TableCell align="left">{row.planName}</TableCell>
+                      <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell>
+                      <TableCell align="left">{row.dueDate}</TableCell>
+                      <TableCell align="left">{row.status}</TableCell>
+                          
+                      </TableRow>                                                   
                     );
                   })}
                 {emptyRows > 0 && (
@@ -395,7 +400,7 @@ const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
-        setSelected, selectedGroupname, setSelectedGroupname, query, setQuery } = props;
+        setSelected, setSelectedGroupname, setQuery } = props;
 
 
   const billruns = useSelector(state => state.billruns);
@@ -428,13 +433,6 @@ const EnhancedTableToolbar = props => {
     
    return formattedDate;
   } 
-
-  // function getCurrentMonthPeriod(date) {
-  //   let year = date.getFullYear();
-  //   let month = (date.getMonth() + 1).toString().padStart(2, '0');
-  //   let formattedDate = `${year}-${month}`;
-  //   return formattedDate;
-  // }
 
   const filterBRCbyMonthPeriod =  brc => {
 
