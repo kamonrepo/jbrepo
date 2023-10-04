@@ -296,6 +296,7 @@ const Client = () => {
             </div>
           </Paper>
         </form>
+        
         <div>
           <Dialog
           open={open}

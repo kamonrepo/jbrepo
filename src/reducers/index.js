@@ -28,5 +28,5 @@ export default combineReducers({
     payments: paymentReducer,
     posts: postsReducer,
     soas: soaReducer,
-    reportReducer: reportReducer
+    reports: reportReducer
 });

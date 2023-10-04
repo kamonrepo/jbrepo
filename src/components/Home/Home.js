@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { CircularProgress, Button, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography, Paper, Checkbox
+import { Dialog, DialogActions, DialogContent, DialogContentText, Slide, DialogTitle, CircularProgress, Button, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography, Paper, Checkbox
        } from '@material-ui/core';
+import { Warning } from '@material-ui/icons';       
 import { useDispatch, useSelector } from 'react-redux';
 import { computeFees } from '../../actions/billruncandidate';
 import { getDataLocation } from '../../actions/report';
@@ -116,6 +117,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 export default function Home() {
 
   const dispatch = useDispatch();
@@ -127,7 +132,6 @@ export default function Home() {
     
     if(!isCanceled) {
         dispatch(computeFees());
-        dispatch(getDataLocation());
     }
 
     console.log('[PARENT] useEffect done dispatch');
@@ -145,6 +149,9 @@ export default function Home() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
+  const [pdfData, setPdfData] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [preSubmitOpt, SetPreSubmitOpt] = useState(false); //false=back; true=proceed
 
 //   const componentRef = useRef();
 //   const handlePrint = useReactToPrint({
@@ -244,14 +251,29 @@ export default function Home() {
     return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
   }
 
+  const handleProceed = (e) => {
+    e.preventDefault();
+    SetPreSubmitOpt(prev => prev = true);
+    setOpen(prev => prev = false);
+  };
+
+  const handleClose = () => {
+    setOpen(prev => prev = false);
+    SetPreSubmitOpt(prev => prev=false);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
 
   return (
     isLoading ? <CircularProgress /> 
-    :<div className={classes.root}>
+    :
+    <>    
+    <div className={classes.root}>
 
       <EnhancedTableToolbar 
+        setOpen={setOpen}
+        SetPreSubmitOpt={SetPreSubmitOpt}
         computedFees={data}
         numSelected={selected.length} 
         handBRC={handBRC} 
@@ -261,6 +283,9 @@ export default function Home() {
         setSelectedIDs={setSelectedIDs}
         statusPlaceHolder={statusPlaceHolder}
         setStatusPlaceHolder={setStatusPlaceHolder}
+        dispatch={dispatch}
+        setPdfData={setPdfData}
+        pdfData={pdfData}
       />
 
       <Paper elevation={9} className={classes.paper}>
@@ -336,22 +361,57 @@ export default function Home() {
       </Paper>
     
     </div>
+
+    <div>
+          <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle>
+              <div style={{ display: 'flex'}}>
+                {"Confirmation"}<Warning style={{ paddingTop: '3px', paddingLeft: '11px'}} />
+              </div>
+            </DialogTitle>
+
+            <DialogContent>
+              <DialogContentText>
+              <iframe
+                    title="PDF Viewer"
+                    src={pdfData}
+                    width="100%"
+                    height="500px"
+              />
+              </DialogContentText>
+            </DialogContent>
+
+            <DialogActions>
+              <Button onClick={handleClose}>Back</Button>
+              <Button onClick={handleProceed}>Proceed</Button>
+            </DialogActions>
+
+          </Dialog>
+    </div>
+    </>
+    
   );
 }
 
-const print = () => {
-  console.log('wooop-peint')
-}
 
 
 const EnhancedTableToolbar = props => {
-  const { handBRC, setHandBRC , computedFees } = props;
+  const { handBRC, setHandBRC , computedFees, setPdfData, pdfData, dispatch, setOpen, SetPreSubmitOpt } = props;
+
+  const { data, isLoading } = useSelector((state) => state.reports);
 
   useEffect(() => {
     let isCanceled = false;
     
     if(!isCanceled) {
       setHandBRC(computedFees);
+
       console.log('[CHILD] useEffect done setHandBRC(computedFees)');
     }
 
@@ -362,6 +422,17 @@ const EnhancedTableToolbar = props => {
   }, []);
 
 
+
+  const handlePrint =  async () => {
+
+    setOpen(true);
+    SetPreSubmitOpt(prev => prev=true);
+    //add isloading here
+    await dispatch(getDataLocation());
+    setPdfData(data);
+
+  };
+
   return (
     <div>
     <Paper style={{ marginBottom: '33px', backgroundColor: '#dce8e0', display: 'flex', justifyContent: 'space-between' }}>
@@ -369,7 +440,7 @@ const EnhancedTableToolbar = props => {
       <Typography style={{ margin: '3px 3px 3px 3px'}} variant="h6" id="nogroup">
         TOTAL LOCATIONS: {handBRC? `${handBRC.length}` : 0}
       </Typography>    
-      <Button onClick={print} style={{ margin: '3px 3px 3px 3px' }} variant='contained'><b>print</b></Button>
+      <Button onClick={handlePrint} style={{ margin: '3px 3px 3px 3px' }} variant='contained'><b>print</b></Button>
 
     </Paper>
     </div>
