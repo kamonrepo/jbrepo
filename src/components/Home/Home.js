@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { CircularProgress, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography, Paper, Checkbox
+import { CircularProgress, Button, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography, Paper, Checkbox
        } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { computeFees } from '../../actions/billruncandidate';
+import { getDataLocation } from '../../actions/report';
+// import { useReactToPrint } from "react-to-print";
 
 const headCells = [
     { id: 'location', numeric: false, disablePadding: true, label: 'LOCATION' },
@@ -11,7 +13,6 @@ const headCells = [
     { id: 'unpaid', numeric: false, disablePadding: false, label: 'UNPAID' },
     { id: 'total', numeric: true, disablePadding: false, label: 'GRAND TOTAL' }
 ];
-
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -21,13 +22,11 @@ function descendingComparator(a, b, orderBy) {
     }
     return 0;
 }
-
 function getComparator(order, orderBy) {
     return order === 'desc'
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
 }
-
 function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -37,7 +36,6 @@ function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
-
 function EnhancedTableHead(props) {
     const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
@@ -85,7 +83,6 @@ function EnhancedTableHead(props) {
       </>
     );
 }
-
 EnhancedTableHead.propTypes = {
     classes: PropTypes.object.isRequired,
     numSelected: PropTypes.number.isRequired,
@@ -95,7 +92,6 @@ EnhancedTableHead.propTypes = {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
-
 const useStyles = makeStyles((theme) => ({
     root: {
       width: '100%',
@@ -124,8 +120,6 @@ export default function Home() {
 
   const dispatch = useDispatch();
   const [handBRC, setHandBRC] = useState([]);
-
-  //const computedFees  = useSelector(state => state.brccomputedfees);
   const { data, isLoading } = useSelector((state) => state.brccomputedfees);
 
   useEffect(() => {
@@ -148,8 +142,22 @@ export default function Home() {
   const [selected, setSelected] = useState([]);
   const [selectedIDs, setSelectedIDs] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
+
+//   const componentRef = useRef();
+//   const handlePrint = useReactToPrint({
+//     content: () => componentRef.current,
+//   });
+//   const Content = React.forwardRef((props, ref) => {
+
+//     console.log('forwardRef-props::: ', props);
+//     return (
+//       <div ref={ref}>
+//        Lets go Marvin !
+//       </div>
+//     );
+// })
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -241,19 +249,20 @@ export default function Home() {
   return (
     isLoading ? <CircularProgress /> 
     :<div className={classes.root}>
-      <Paper elevation={9} className={classes.paper}>
-        <EnhancedTableToolbar 
-          computedFees={data}
-          numSelected={selected.length} 
-          handBRC={handBRC} 
-          selectedIDs={selectedIDs} 
-          setHandBRC={setHandBRC} 
-          setSelected={setSelected} 
-          setSelectedIDs={setSelectedIDs}
-          statusPlaceHolder={statusPlaceHolder}
-          setStatusPlaceHolder={setStatusPlaceHolder}
-         />
 
+      <EnhancedTableToolbar 
+        computedFees={data}
+        numSelected={selected.length} 
+        handBRC={handBRC} 
+        selectedIDs={selectedIDs} 
+        setHandBRC={setHandBRC} 
+        setSelected={setSelected} 
+        setSelectedIDs={setSelectedIDs}
+        statusPlaceHolder={statusPlaceHolder}
+        setStatusPlaceHolder={setStatusPlaceHolder}
+      />
+
+      <Paper elevation={9} className={classes.paper}>
         <TableContainer>
             <Table
               className={classes.table}
@@ -324,12 +333,18 @@ export default function Home() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+    
     </div>
   );
 }
 
+const print = () => {
+  console.log('wooop-peint')
+}
+
+
 const EnhancedTableToolbar = props => {
-  const { handBRC, setHandBRC , computedFees} = props;
+  const { handBRC, setHandBRC , computedFees } = props;
 
   useEffect(() => {
     let isCanceled = false;
@@ -345,12 +360,18 @@ const EnhancedTableToolbar = props => {
 
   }, []);
 
+
   return (
-      <Paper elevation={9} style={ { display: 'flex', backgroundColor: 'gray'}}>
-          <Typography style={{ padding:'10px, 10px, 10px, 10px',  fontWeight: 'bolder', fontFamily: 'Segoe UI', fontSize: '12px' }} variant="h6" id="nogroup">
-            TOTAL LOCATIONS: {handBRC? `${handBRC.length}` : 0}
-          </Typography>
-      </Paper>
+    <div>
+    <Paper style={{ marginBottom: '33px', backgroundColor: '#dce8e0', display: 'flex', justifyContent: 'space-between' }}>
+
+      <Typography style={{ margin: '3px 3px 3px 3px'}} variant="h6" id="nogroup">
+        TOTAL LOCATIONS: {handBRC? `${handBRC.length}` : 0}
+      </Typography>    
+      <Button onClick={print} style={{ margin: '3px 3px 3px 3px' }} variant='contained'><b>print</b></Button>
+
+    </Paper>
+    </div>
   );
 };
 

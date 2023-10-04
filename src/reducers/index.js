@@ -12,6 +12,7 @@ import planReducer from '././services/plan';
 import paymentReducer from './payment.js';
 import postsReducer from './posts.js';
 import soaReducer from './soa.js';
+import reportReducer from './report.js';
 
 export default combineReducers({ 
     auth: authReducer,
@@ -26,5 +27,6 @@ export default combineReducers({
     plan: planReducer,
     payments: paymentReducer,
     posts: postsReducer,
-    soas: soaReducer
+    soas: soaReducer,
+    reportReducer: reportReducer
 });

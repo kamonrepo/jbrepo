@@ -66,6 +66,8 @@ export const deletePost = (id) => API.delete(`/posts/${id}`);
 export const fetchSoas = () => API.get('/soa');
 export const fetchSoaByPMSGID = id => API.get(`/soa/${id}`);
 
+export const getDataLocation = data => API.get('/report/getDataLocation', data);
+
 // export const fetchSoaByPMSGID = id => API.get(`/soa/${id}`, {
 //   responseType: 'arraybuffer', 
 //   headers: {

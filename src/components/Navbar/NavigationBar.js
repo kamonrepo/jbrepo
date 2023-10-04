@@ -165,7 +165,7 @@ export default function NavigationBar() {
                   {/* <Button component={Link} to="/billrun" className={classes.mobileHeading}>MERGE GROUP</Button>  */}
                   <Button component={Link} to="/report" className={classes.mobileHeading}>REPORT</Button> 
                   <Divider style={{ marginBottom: '11px'}}/>
-                  <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
+                  <Button component={Link} to="/group" className={classes.mobileHeading}>LOCATIONS</Button> 
                   <Button component={Link} to="/services" className={classes.mobileHeading}>SERVICES</Button> 
                   <Button component={Link} to="/plan" className={classes.mobileHeading}>PLAN</Button> 
                   <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
@@ -194,7 +194,7 @@ export default function NavigationBar() {
                 <div style={{ display: 'flex', marginLeft: '99px', justifyContent: 'flex-start' }}>
                   <Button component={Link} to="/services" className={classes.mobileHeading}>SERVICES</Button> 
                   <Button component={Link} to="/plan" className={classes.mobileHeading}>PLAN</Button> 
-                  <Button component={Link} to="/group" className={classes.mobileHeading}>GROUP</Button> 
+                  <Button component={Link} to="/group" className={classes.mobileHeading}>LOCATIONS</Button> 
                   <Button component={Link} to="/client" className={classes.mobileHeading}>CLIENT</Button> 
                 </div>
 
