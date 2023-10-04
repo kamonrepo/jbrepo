@@ -127,14 +127,15 @@ export default function Home() {
     
     if(!isCanceled) {
         dispatch(computeFees());
+        dispatch(getDataLocation());
     }
+
     console.log('[PARENT] useEffect done dispatch');
     return () => {
       isCanceled = true;
     }
 
   }, []);
-
 
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
