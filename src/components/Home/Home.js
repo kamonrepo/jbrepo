@@ -6,7 +6,6 @@ import { Warning } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { computeFees } from '../../actions/billruncandidate';
 import { getDataLocation } from '../../actions/report';
-// import { useReactToPrint } from "react-to-print";
 
 const headCells = [
     { id: 'location', numeric: false, disablePadding: true, label: 'LOCATION' },
@@ -121,6 +120,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
 export default function Home() {
 
   const dispatch = useDispatch();
@@ -152,6 +152,7 @@ export default function Home() {
   const [pdfData, setPdfData] = useState(null);
   const [open, setOpen] = useState(false);
   const [preSubmitOpt, SetPreSubmitOpt] = useState(false); //false=back; true=proceed
+  const [urlll, setUrlll] = useState(false);
 
 //   const componentRef = useRef();
 //   const handlePrint = useReactToPrint({
@@ -251,16 +252,6 @@ export default function Home() {
     return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
   }
 
-  const handleProceed = (e) => {
-    e.preventDefault();
-    SetPreSubmitOpt(prev => prev = true);
-    setOpen(prev => prev = false);
-  };
-
-  const handleClose = () => {
-    setOpen(prev => prev = false);
-    SetPreSubmitOpt(prev => prev=false);
-  };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, handBRC.length - page * rowsPerPage);
@@ -268,7 +259,6 @@ export default function Home() {
   return (
     isLoading ? <CircularProgress /> 
     :
-    <>    
     <div className={classes.root}>
 
       <EnhancedTableToolbar 
@@ -286,6 +276,7 @@ export default function Home() {
         dispatch={dispatch}
         setPdfData={setPdfData}
         pdfData={pdfData}
+        setUrlll={setUrlll}
       />
 
       <Paper elevation={9} className={classes.paper}>
@@ -359,50 +350,13 @@ export default function Home() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-    
     </div>
-
-    <div>
-          <Dialog
-          open={open}
-          TransitionComponent={Transition}
-          keepMounted
-          onClose={handleClose}
-          aria-describedby="alert-dialog-slide-description"
-          >
-            <DialogTitle>
-              <div style={{ display: 'flex'}}>
-                {"Confirmation"}<Warning style={{ paddingTop: '3px', paddingLeft: '11px'}} />
-              </div>
-            </DialogTitle>
-
-            <DialogContent>
-              <DialogContentText>
-              <iframe
-                    title="PDF Viewer"
-                    src={pdfData}
-                    width="100%"
-                    height="500px"
-              />
-              </DialogContentText>
-            </DialogContent>
-
-            <DialogActions>
-              <Button onClick={handleClose}>Back</Button>
-              <Button onClick={handleProceed}>Proceed</Button>
-            </DialogActions>
-
-          </Dialog>
-    </div>
-    </>
-    
   );
 }
 
 
-
 const EnhancedTableToolbar = props => {
-  const { handBRC, setHandBRC , computedFees, setPdfData, pdfData, dispatch, setOpen, SetPreSubmitOpt } = props;
+  const { handBRC, setHandBRC , computedFees, dispatch } = props;
 
   const { data, isLoading } = useSelector((state) => state.reports);
 
@@ -421,15 +375,38 @@ const EnhancedTableToolbar = props => {
 
   }, []);
 
+  const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
+  async function base64ToPDF(base64Data) {
+    // Decode the base64 data
+    const binaryData = atob(base64Data);
+  
+    // Create a Uint8Array from the binary data
+    const arrayBuffer = new ArrayBuffer(binaryData.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+  
+    for (let i = 0; i < binaryData.length; i++) {
+      uint8Array[i] = binaryData.charCodeAt(i);
+    }
+  
+    // Create a Blob from the Uint8Array
+    const blob = new Blob([uint8Array], { type: 'application/pdf' });
+  
+    // Create a link element to trigger the download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'output.pdf';
+    link.click();
+  }
 
   const handlePrint =  async () => {
 
-    setOpen(true);
-    SetPreSubmitOpt(prev => prev=true);
     //add isloading here
     await dispatch(getDataLocation());
-    setPdfData(data);
+    await delay(111);
+
+    await base64ToPDF(data);
+    await delay(111);
 
   };
 
@@ -440,7 +417,7 @@ const EnhancedTableToolbar = props => {
       <Typography style={{ margin: '3px 3px 3px 3px'}} variant="h6" id="nogroup">
         TOTAL LOCATIONS: {handBRC? `${handBRC.length}` : 0}
       </Typography>    
-      <Button onClick={handlePrint} style={{ margin: '3px 3px 3px 3px' }} variant='contained'><b>print</b></Button>
+      <Button onClick={handlePrint} style={{ margin: '3px 3px 3px 3px' }} variant='contained'><b>EXPORT PDF</b></Button>
 
     </Paper>
     </div>
