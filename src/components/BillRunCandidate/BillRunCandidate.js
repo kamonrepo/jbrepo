@@ -167,7 +167,7 @@ export default function BillRunCandidate() {
         console.log('[COMPONENT-PARENT]BillRunCandidate top useEffect');
       }
 
-    return () => {
+    return async () => {
       console.log('[COMPONENT-PARENT]BillRunCandidate UNMOUNT !!!!');
       isCanceled = true;
     }
@@ -273,18 +273,21 @@ export default function BillRunCandidate() {
   };
 
   const handleDataTable = () => {
+   
+    
+      if(query.length != 0) {
+        console.log('handleDataTable-2');
+        let lowerCaseQuery = query.toLowerCase();
+        const filtered = handBRC.filter(brc => brc.name.toLowerCase() == lowerCaseQuery);
 
-    if(query.length != 0) {
-      let lowerCaseQuery = query.toLowerCase();
-      const filtered = handBRC.filter(brc => brc.name.toLowerCase() == lowerCaseQuery);
-
-      if(filtered.length > 0) {
-        return filtered;
+        if(filtered.length > 0) {
+          return filtered;
+        }
+        return handBRC;
+      } else {
+        return handBRC;
       }
-      return handBRC;
-    } else {
-      return handBRC;
-    }
+  
 
   }
 
@@ -295,14 +298,14 @@ export default function BillRunCandidate() {
     setQuery(value);
   }
 
-  const debugg = () => {
-    console.log('selected::: ', selected);
+  function formatToPhilippinePeso(number) {
+    if(number){
+    return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+    }
   }
 
-  function formatToPhilippinePeso(number) {
-    console.log('formatToPhilippinePeso::: ', number);
-    if(number)
-    return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+  const debugg = () => {
+    console.log('handBRC-debugg::: ', handBRC);
   }
 
   return (
@@ -330,7 +333,7 @@ export default function BillRunCandidate() {
       />
 
       <TextField style={{paddingBottom: '9px', marginTop: '9px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)}/>
-      <button key='123' onClick={debugg}></button>
+      <button id='temp123' onClick={debugg}></button>
       <Paper className={classes.paper}>
         <TableContainer>
             <Table className={classes.table} aria-labelledby="tableTitle" size={'medium'} aria-label="enhanced table">
@@ -343,40 +346,43 @@ export default function BillRunCandidate() {
                 onRequestSort={handleRequestSort}
                 rowCount={handBRC.length}
               />
-              <TableBody>
-                { stableSort(handleDataTable(), getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
-
-                    return (
-                   
-                    <TableRow
-                    hover
-                    onClick={(e) => handleClick(e, row.name, row._id, row.status, row.monthlyFee, row.client)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={index}
-                    selected={isItemSelected}>
-
-                      <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
-                      <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
-                      <TableCell align="left">{row.planName}</TableCell>
-                      <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell>
-                      <TableCell align="left">{row.dueDate}</TableCell>
-                      <TableCell align="left">{row.status}</TableCell>
-                          
-                      </TableRow>                                                   
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: (66) * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>             
+                 
+                <TableBody>
+                  { stableSort(handleDataTable(), getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.name);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+  
+                      return (
+                      
+                      <TableRow
+                      hover
+                      onClick={(e) => handleClick(e, row.name, row._id, row.status, row.monthlyFee, row.client)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={index}
+                      selected={isItemSelected}>
+  
+                        <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
+                        <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
+                        <TableCell align="left">{row.planName}</TableCell>
+                        <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell>
+                        <TableCell align="left">{row.dueDate}</TableCell>
+                        <TableCell align="left">{row.status}</TableCell>
+                            
+                        </TableRow>                                                   
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: (66) * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>    
+         
+         
             </Table>
         </TableContainer>
         
@@ -458,7 +464,7 @@ const EnhancedTableToolbar = props => {
       console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
     }
 
-    return () => {
+    return async () => {
       console.log('[COMPONENT-CHILD]EnhancedTableToolbar UNMOUNT !!!!');
       isCanceled = true;
     }
@@ -483,7 +489,7 @@ const EnhancedTableToolbar = props => {
       console.log("BrOnChange");
       setBbr(brid);
       setQuery('');
-      await dispatch(getBRCByBRId(brid));
+      dispatch(getBRCByBRId(brid));
       displayGroupName(brid);
       setSelectedBr(brid);
   };

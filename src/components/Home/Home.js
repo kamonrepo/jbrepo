@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogActions, DialogContent, DialogContentText, Slide, DialogTitle, CircularProgress, Button, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography, Paper, Checkbox
-       } from '@material-ui/core';
-import { Warning } from '@material-ui/icons';       
+import { CircularProgress, Button, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography, Paper, Checkbox
+       } from '@material-ui/core';     
 import { useDispatch, useSelector } from 'react-redux';
 import { computeFees } from '../../actions/billruncandidate';
 import { getDataLocation } from '../../actions/report';
@@ -11,7 +10,7 @@ const headCells = [
     { id: 'location', numeric: false, disablePadding: true, label: 'LOCATION' },
     { id: 'paid', numeric: false, disablePadding: false, label: 'PAID' },
     { id: 'unpaid', numeric: false, disablePadding: false, label: 'UNPAID' },
-    { id: 'total', numeric: true, disablePadding: false, label: 'GRAND TOTAL' }
+    { id: 'total', numeric: true, disablePadding: false, label: 'CLIENT' }
 ];
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -58,7 +57,7 @@ function EnhancedTableHead(props) {
               {headCells.map((headCell) => (
                 <TableCell
                   key={headCell.id}
-                  align={headCell.numeric ? 'right' : 'left'}
+                  align={headCell.label === 'CLIENT'? 'center' : 'left'}
                   padding={headCell.disablePadding ? 'none' : 'normal'}
                   sortDirection={orderBy === headCell.id ? order : false}
                   style={{fontSize: '16px', fontWeight: 'bold'}}
@@ -68,7 +67,11 @@ function EnhancedTableHead(props) {
                     direction={orderBy === headCell.id ? order : 'asc'}
                     onClick={createSortHandler(headCell.id)}
                   >
-                    {headCell.label}
+                    {
+                      headCell.label === 'CLIENT' ? headCell.label + '\nPAID/UNPAID'
+                      : headCell.label
+                    } 
+
                     {orderBy === headCell.id ? (
                       <span className={classes.visuallyHidden}>
                         {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -116,11 +119,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-
 export default function Home() {
 
   const dispatch = useDispatch();
@@ -150,23 +148,6 @@ export default function Home() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
   const [pdfData, setPdfData] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [preSubmitOpt, SetPreSubmitOpt] = useState(false); //false=back; true=proceed
-  const [urlll, setUrlll] = useState(false);
-
-//   const componentRef = useRef();
-//   const handlePrint = useReactToPrint({
-//     content: () => componentRef.current,
-//   });
-//   const Content = React.forwardRef((props, ref) => {
-
-//     console.log('forwardRef-props::: ', props);
-//     return (
-//       <div ref={ref}>
-//        Lets go Marvin !
-//       </div>
-//     );
-// })
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -262,8 +243,6 @@ export default function Home() {
     <div className={classes.root}>
 
       <EnhancedTableToolbar 
-        setOpen={setOpen}
-        SetPreSubmitOpt={SetPreSubmitOpt}
         computedFees={data}
         numSelected={selected.length} 
         handBRC={handBRC} 
@@ -276,7 +255,6 @@ export default function Home() {
         dispatch={dispatch}
         setPdfData={setPdfData}
         pdfData={pdfData}
-        setUrlll={setUrlll}
       />
 
       <Paper elevation={9} className={classes.paper}>
@@ -324,10 +302,14 @@ export default function Home() {
                               {row.billRun}
                             </TableCell>
 
-                            <TableCell align="left" style={{ color: 'green' }}>{formatToPhilippinePeso(row.totalPaidSum)}</TableCell>
+                            <TableCell align="left" style={{ color: 'green' }}>{formatToPhilippinePeso(row.totalPaidSum)} </TableCell>
                             <TableCell align="left" style={{ color: 'red' }}>{formatToPhilippinePeso(row.totalNotPaidSum)}</TableCell>
-                            <TableCell align="left">{row.total}</TableCell>
-
+                            {/* <TableCell align="center">{`[${row.totalPaidClients} / ${row.totalUnpaidClients}]`}</TableCell> */}
+                            <TableCell align="center">
+                              <span style={{ fontWeight: 'bold', color: 'green' }}>{row.totalPaidClients}</span>
+                              {' / '}
+                              <span style={{ fontWeight: 'bold', color: 'red' }}>{row.totalUnpaidClients}</span>
+                            </TableCell>
                       </TableRow>
                     );
                   })}
