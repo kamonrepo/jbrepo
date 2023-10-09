@@ -67,10 +67,7 @@ function EnhancedTableHead(props) {
                     direction={orderBy === headCell.id ? order : 'asc'}
                     onClick={createSortHandler(headCell.id)}
                   >
-                    {
-                      headCell.label === 'CLIENT' ? headCell.label + '\nPAID/UNPAID'
-                      : headCell.label
-                    } 
+                    { headCell.label} 
 
                     {orderBy === headCell.id ? (
                       <span className={classes.visuallyHidden}>
@@ -302,9 +299,8 @@ export default function Home() {
                               {row.billRun}
                             </TableCell>
 
-                            <TableCell align="left" style={{ color: 'green' }}>{formatToPhilippinePeso(row.totalPaidSum)} </TableCell>
+                            <TableCell align="left" style={{ color: 'green' }}>{formatToPhilippinePeso(row.totalPaidSum)}</TableCell>
                             <TableCell align="left" style={{ color: 'red' }}>{formatToPhilippinePeso(row.totalNotPaidSum)}</TableCell>
-                            {/* <TableCell align="center">{`[${row.totalPaidClients} / ${row.totalUnpaidClients}]`}</TableCell> */}
                             <TableCell align="center">
                               <span style={{ fontWeight: 'bold', color: 'green' }}>{row.totalPaidClients}</span>
                               {' / '}
@@ -385,8 +381,6 @@ const EnhancedTableToolbar = props => {
 
     //add isloading here
     await dispatch(getDataLocation());
-    await delay(111);
-
     await base64ToPDF(data);
     await delay(111);
 
