@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, Slide,DialogTitle, TextField, Button, Typography, Paper, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, InputLabel} from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Slide, DialogTitle, TextField, Button, Typography, Paper, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, InputLabel } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
@@ -43,6 +43,7 @@ const Client = () => {
   const [selectedCategId, setSelectedCategId] = useState('');
   const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
   const [targetlocDataBySublocId, setTargetlocDataBySublocId] = useState([]);
+  const [nextMonth, setNextMonth] = useState(null);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -53,6 +54,12 @@ const Client = () => {
     dispatch(getSublocs());
     dispatch(getTargetLocs());
     dispatch(getCategory());
+
+    const currentDate = new Date();
+    const nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    const options = { month: 'long' }; // Specify the format of the month
+
+    setNextMonth(nextMonthDate.toLocaleDateString(undefined, options));
 
   }, [])
 
@@ -256,10 +263,10 @@ const Client = () => {
               </Select>    
             </FormControl>
 
-            <p>Due Date</p>
+            <Typography style={{ marginTop: '12px', fontWeight: 'bold'}}>{`${nextMonth}`}</Typography>
             <RadioGroup defaultValue="15th" name="radio-buttons-group">
-              <FormControlLabel value="15th" control={<Radio />} label="15th of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})} />
-              <FormControlLabel value="Endth" control={<Radio />} label="End of month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
+              <FormControlLabel value="15th" control={<Radio />} label="15th" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})} />
+              <FormControlLabel value="Endth" control={<Radio />} label="End month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
             </RadioGroup>
             </div>
 
