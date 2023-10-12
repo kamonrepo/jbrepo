@@ -80,7 +80,8 @@ function EnhancedTableHead(props) {
                   direction={orderBy === headCell.id ? order : 'asc'}
                   onClick={createSortHandler(headCell.id)}
                 >
-                  {headCell.label}
+                  <span style={{ fontWeight: 'bold' }}>{headCell.label}</span>
+
                   {orderBy === headCell.id ? (
                      <span className={classes.visuallyHidden}>
                       {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -381,8 +382,7 @@ export default function BillRunCandidate() {
                     </TableRow>
                   )}
                 </TableBody>    
-         
-         
+                
             </Table>
         </TableContainer>
         
@@ -436,11 +436,16 @@ const EnhancedTableToolbar = props => {
    };
   
    const formattedDate = firstDayOfMonth.toLocaleString('en-US', options);
-    
+
    return formattedDate;
   } 
 
   const filterBRCbyMonthPeriod =  brc => {
+
+    console.log('filterBRCbyMonthPeriod-BRC-TOP: ', brc);
+
+    //todo:: create a function that will collect all Overdue BRC -> params: clientId, previous BRC where status is UNPAID
+    //kapag nakuha ko na ung separated object na mga unpaid brc, apply ko na sya sa current BRC and display ung accumulated balances
 
     let payload = [];
 
@@ -452,6 +457,8 @@ const EnhancedTableToolbar = props => {
         }
     })
 
+    console.log('filterBRCbyMonthPeriod-BRC-BOTTOM: ', payload);
+
     return payload;
   }
 
@@ -460,7 +467,7 @@ const EnhancedTableToolbar = props => {
     let isCanceled = false;
     
     if(!isCanceled) {
-      setHandBRC(filterBRCbyMonthPeriod(brc)); 
+       setHandBRC(filterBRCbyMonthPeriod(brc)); 
       console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
     }
 
