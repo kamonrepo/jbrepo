@@ -440,10 +440,28 @@ const EnhancedTableToolbar = props => {
    return formattedDate;
   } 
 
+
+
+  function overdueFilter(data) {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // Month is 0-indexed in JavaScript
+
+    const filteredData = data.filter(item => {
+        const clientCount = data.filter(clientItem => clientItem.client === item.client).length;
+        const itemMonth = parseInt(item.monthPeriod.split('/')[0]);
+
+        return clientCount >= 2 && item.status === "NOTPAID" && itemMonth <= currentMonth;
+    });
+
+    return filteredData;
+  }
+
   const filterBRCbyMonthPeriod =  brc => {
 
-    console.log('filterBRCbyMonthPeriod-BRC-TOP: ', brc);
+    //console.log('filterBRCbyMonthPeriod-BRC-TOP: ', brc);
 
+    let overDueClient = overdueFilter(brc);
+        console.log('filterBRCbyMonthPeriod-BRC-overDueClient: ', overDueClient);
     //todo:: create a function that will collect all Overdue BRC -> params: clientId, previous BRC where status is UNPAID
     //kapag nakuha ko na ung separated object na mga unpaid brc, apply ko na sya sa current BRC and display ung accumulated balances
 
@@ -457,7 +475,7 @@ const EnhancedTableToolbar = props => {
         }
     })
 
-    console.log('filterBRCbyMonthPeriod-BRC-BOTTOM: ', payload);
+    //console.log('filterBRCbyMonthPeriod-BRC-BOTTOM: ', payload);
 
     return payload;
   }
