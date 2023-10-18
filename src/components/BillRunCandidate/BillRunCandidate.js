@@ -369,7 +369,7 @@ export default function BillRunCandidate() {
                         <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
                         <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
                         <TableCell align="left">{row.planName}</TableCell>
-                        <TableCell align="left">{ row && row.monthlyFee.length > 1 ? 'implement overdue here' : row.monthlyFee[0].amount}</TableCell>
+
                         {/* <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell> */}
                         <TableCell align="left">{row.dueDate}</TableCell>
                         <TableCell align="left">{row.status}</TableCell>
@@ -460,7 +460,7 @@ const EnhancedTableToolbar = props => {
     console.log('brc-raw: ', brc);
 
     let overDueClient = overdueFilter(brc);
-    console.log('overDueClient:: ', JSON.stringify(overDueClient));
+    console.log('overDueClient:: ', overDueClient);
     
     let payload = [];
 
@@ -515,13 +515,12 @@ const EnhancedTableToolbar = props => {
       setSelectedBr(brid);
   };
 
-  //PAID BUTTON
+  //PAID BUTTON SUBMIT
   const doneClick = async () => {
 
     let isPaid = isAllPaid(statusPlaceHolder);
 
     let userFullname = user.result.firstname + ' ' + user.result.lastname;
-    //console.log('updatePayment::: ', {userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient});
     await dispatch(updatePayment({userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
     await dispatch(getBRCByBRId(selectedBr));
     // await setHandBRC(filterBRCbyMonthPeriod(brc));

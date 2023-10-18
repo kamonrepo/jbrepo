@@ -382,7 +382,6 @@ const EnhancedTableToolbar = props => {
     //add isloading here
     await dispatch(getDataLocation());
     await base64ToPDF(data);
-    await delay(111);
 
   };
 
