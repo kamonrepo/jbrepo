@@ -165,11 +165,11 @@ export default function BillRunCandidate() {
         dispatch(getGroups());
         dispatch(getSublocs());
         dispatch(getTargetLocs());
-        console.log('[COMPONENT-PARENT]BillRunCandidate top useEffect');
+        //console.log('[COMPONENT-PARENT]BillRunCandidate top useEffect');
       }
 
     return async () => {
-      console.log('[COMPONENT-PARENT]BillRunCandidate UNMOUNT !!!!');
+      //console.log('[COMPONENT-PARENT]BillRunCandidate UNMOUNT !!!!');
       isCanceled = true;
     }
 
@@ -273,11 +273,10 @@ export default function BillRunCandidate() {
     setPage(0);
   };
 
-  const handleDataTable = () => {
+  const handleDataTable = handBRC => {
    
-    
       if(query.length != 0) {
-        console.log('handleDataTable-2');
+
         let lowerCaseQuery = query.toLowerCase();
         const filtered = handBRC.filter(brc => brc.name.toLowerCase() == lowerCaseQuery);
 
@@ -286,6 +285,7 @@ export default function BillRunCandidate() {
         }
         return handBRC;
       } else {
+
         return handBRC;
       }
   
@@ -349,7 +349,7 @@ export default function BillRunCandidate() {
               />
                  
                 <TableBody>
-                  { stableSort(handleDataTable(), getComparator(order, orderBy))
+                  { stableSort(handleDataTable(handBRC), getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       const isItemSelected = isSelected(row.name);
@@ -369,7 +369,8 @@ export default function BillRunCandidate() {
                         <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
                         <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
                         <TableCell align="left">{row.planName}</TableCell>
-                        <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell>
+                        <TableCell align="left">{ row && row.monthlyFee.length > 1 ? 'implement overdue here' : row.monthlyFee[0].amount}</TableCell>
+                        {/* <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell> */}
                         <TableCell align="left">{row.dueDate}</TableCell>
                         <TableCell align="left">{row.status}</TableCell>
                             
@@ -459,11 +460,8 @@ const EnhancedTableToolbar = props => {
     console.log('brc-raw: ', brc);
 
     let overDueClient = overdueFilter(brc);
-    console.log('overDueClient: ', overDueClient);
-
-    //todo:: create a function that will collect all Overdue BRC -> params: clientId, previous BRC where status is UNPAID
-    //kapag nakuha ko na ung separated object na mga unpaid brc, apply ko na sya sa current BRC and display ung accumulated balances
-
+    console.log('overDueClient:: ', JSON.stringify(overDueClient));
+    
     let payload = [];
 
     let returnMonthPeriod = getFirstDayOfMonth(new Date());
@@ -474,26 +472,7 @@ const EnhancedTableToolbar = props => {
         }
     })
 
-    console.log('no array::: ', payload);
-
-
-    //
-    // Create a map of clients from overDueClientArray for faster lookup
-    let overDueClientsMap = new Map(overDueClient.map(client => [client.client, client.monthlyFee]));
-
-    // Iterate through clientArray and update monthlyFee if client exists in overDueClientsMap
-    payload.forEach(client => {
-        if (overDueClientsMap.has(client.client)) {
-            const existingMonthlyFee = client.monthlyFee;
-            const overDueMonthlyFee = overDueClientsMap.get(client.client);
-            client.monthlyFee = [existingMonthlyFee, overDueMonthlyFee];
-        }
-    });
-
-    console.log('array::: ', payload);
-
-    //
-
+    console.log('payload::: ', JSON.stringify(payload));
     return payload;
   }
 
@@ -502,12 +481,12 @@ const EnhancedTableToolbar = props => {
     let isCanceled = false;
     
     if(!isCanceled) {
-       setHandBRC(filterBRCbyMonthPeriod(brc)); 
-      console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
+      setHandBRC(filterBRCbyMonthPeriod(brc)); 
+      //console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
     }
 
     return async () => {
-      console.log('[COMPONENT-CHILD]EnhancedTableToolbar UNMOUNT !!!!');
+      //console.log('[COMPONENT-CHILD]EnhancedTableToolbar UNMOUNT !!!!');
       isCanceled = true;
     }
 
@@ -531,7 +510,7 @@ const EnhancedTableToolbar = props => {
       console.log("BrOnChange");
       setBbr(brid);
       setQuery('');
-      dispatch(getBRCByBRId(brid));
+      await dispatch(getBRCByBRId(brid));
       displayGroupName(brid);
       setSelectedBr(brid);
   };

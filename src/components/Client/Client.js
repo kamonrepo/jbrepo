@@ -87,7 +87,6 @@ const Client = () => {
      setClientData({ ...clientData, plan: selectedPlan[0]._id, planName: selectedPlan[0].plan, monthlyFee: selectedPlan[0].price});
   };
 
-
   const handleClose = () => {
     setOpen(prev => prev = false);
     SetPreSubmitOpt(prev => prev=false);
