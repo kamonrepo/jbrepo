@@ -369,7 +369,7 @@ export default function BillRunCandidate() {
                         <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
                         <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
                         <TableCell align="left">{row.planName}</TableCell>
-
+                        <TableCell align="left">{row.monthlyFee && Object.keys(row.monthlyFee).length > 1 ? 'overdue' : row.monthlyFee[0].amount}</TableCell>
                         {/* <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell> */}
                         <TableCell align="left">{row.dueDate}</TableCell>
                         <TableCell align="left">{row.status}</TableCell>
@@ -518,18 +518,23 @@ const EnhancedTableToolbar = props => {
   //PAID BUTTON SUBMIT
   const doneClick = async () => {
 
-    let isPaid = isAllPaid(statusPlaceHolder);
 
-    let userFullname = user.result.firstname + ' ' + user.result.lastname;
-    await dispatch(updatePayment({userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
-    await dispatch(getBRCByBRId(selectedBr));
-    // await setHandBRC(filterBRCbyMonthPeriod(brc));
 
-    setSelected([]);
-    setSelectedIDs([]);
-    setSelectedMFs([]);
-    setSelectedBRCClient([]);
-    setStatusPlaceHolder([]);
+     let isPaid = isAllPaid(statusPlaceHolder);
+
+     let userFullname = user.result.firstname + ' ' + user.result.lastname;
+
+     console.log('---------updatePayment::: ', {userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient})
+    
+    // await dispatch(updatePayment({userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
+    // await dispatch(getBRCByBRId(selectedBr));
+    // // await setHandBRC(filterBRCbyMonthPeriod(brc));
+
+    // setSelected([]);
+    // setSelectedIDs([]);
+    // setSelectedMFs([]);
+    // setSelectedBRCClient([]);
+    // setStatusPlaceHolder([]);
   }
 
   const backButton = () => {
