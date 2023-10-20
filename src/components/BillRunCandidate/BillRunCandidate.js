@@ -369,7 +369,7 @@ export default function BillRunCandidate() {
                         <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
                         <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
                         <TableCell align="left">{row.planName}</TableCell>
-                        <TableCell align="left">{row.monthlyFee && Object.keys(row.monthlyFee).length > 1 ? 'overdue' : row.monthlyFee[0].amount}</TableCell>
+                        <TableCell align="left">{row.monthlyFee && Object.keys(row.monthlyFee).length > 1 ? Object.keys(row.monthlyFee).length : row && row.monthlyFee && row.monthlyFee[0].amount}</TableCell>
                         {/* <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell> */}
                         <TableCell align="left">{row.dueDate}</TableCell>
                         <TableCell align="left">{row.status}</TableCell>
@@ -424,6 +424,29 @@ const EnhancedTableToolbar = props => {
 
   const user = JSON.parse(localStorage.getItem('profile'));
 
+  function updateMonthlyFees(payload, overDueClient) {
+    const updatedPayload = payload.map((item) => {
+      const clientID = item.client;
+      const monthPeriod = item.monthPeriod;
+      
+      const matchingClients = overDueClient.filter((client) => client.client === clientID);
+  
+      if (matchingClients.length > 0) {
+        const previousMonthsFees = matchingClients
+          .filter((client) => client.status === "NOTPAID" && client.monthPeriod < monthPeriod)
+          .flatMap((client) => client.monthlyFee);
+  
+        if (previousMonthsFees.length > 0) {
+          item.monthlyFee = [...item.monthlyFee, ...previousMonthsFees];
+        }
+      }
+  
+      return item;
+    });
+  
+    return updatedPayload;
+  }
+
   function getFirstDayOfMonth(date) {
     // Create a new Date object with the same year and month
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -460,9 +483,11 @@ const EnhancedTableToolbar = props => {
     console.log('brc-raw: ', brc);
 
     let overDueClient = overdueFilter(brc);
-    console.log('overDueClient:: ', overDueClient);
+    console.log('overDueClient:: ',  JSON.stringify(overDueClient));
     
     let payload = [];
+
+    let withOverdue = null;
 
     let returnMonthPeriod = getFirstDayOfMonth(new Date());
 
@@ -472,7 +497,13 @@ const EnhancedTableToolbar = props => {
         }
     })
 
-    console.log('payload::: ', JSON.stringify(payload));
+    withOverdue = payload;
+
+    //les-go-here:::
+    let temp = updateMonthlyFees(withOverdue, overDueClient);
+
+    // console.log('payload-return-temp::: ', JSON.stringify(temp));
+    console.log('payload-return-temp::: ', temp);
     return payload;
   }
 
@@ -517,8 +548,6 @@ const EnhancedTableToolbar = props => {
 
   //PAID BUTTON SUBMIT
   const doneClick = async () => {
-
-
 
      let isPaid = isAllPaid(statusPlaceHolder);
 
