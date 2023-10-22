@@ -130,6 +130,13 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
   },
+  paperMiddle: {
+    display: 'flex',
+    justifyContent: 'row',
+    alignContent: 'center',
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
   table: {
     minWidth: 750,
   },
@@ -150,6 +157,28 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BillRunCandidate() {
 
+  let marvsCurrentDate = new Date();
+  const marvsCurrentYear = marvsCurrentDate.getFullYear();
+  const marvsCurrentMonth = marvsCurrentDate.getMonth() + 1; //0 index ung January
+
+  const marvs12MOS = 
+  [
+    { id: 1, code: 'JAN'},
+    { id: 2, code: 'FEB'},
+    { id: 3, code: 'MAR'},
+    { id: 4, code: 'APR'},
+    { id: 5, code: 'MAY'},
+    { id: 6, code: 'JUN'},
+    { id: 7, code: 'JUL'},
+    { id: 8, code: 'AUG'},
+    { id: 9, code: 'SEP'},
+    { id: 10, code: 'OCT'},
+    { id: 11, code: 'NOV'},
+    { id: 12, code: 'DEC'},
+  ];
+
+  let findCurrentMOS = marvs12MOS.find((mos) => mos.id === marvsCurrentMonth);
+  console.log('findCurrentMOS::: ', findCurrentMOS);
   const dispatch = useDispatch();
   const [handBRC, setHandBRC] = useState([{}]);
   const [selectedBr, setSelectedBr] = useState('');
@@ -168,7 +197,7 @@ export default function BillRunCandidate() {
         //console.log('[COMPONENT-PARENT]BillRunCandidate top useEffect');
       }
 
-    return async () => {
+    return () => {
       //console.log('[COMPONENT-PARENT]BillRunCandidate UNMOUNT !!!!');
       isCanceled = true;
     }
@@ -187,6 +216,9 @@ export default function BillRunCandidate() {
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
   const [query, setQuery] = useState(''); // this is for search
 
+  const [selectedMonthPeriodYEAR, setSelectedMonthPeriodYEAR] = useState(marvsCurrentYear);
+  const [selectedMonthPeriodMOS, setSelectedMonthPeriodMOS] = useState(findCurrentMOS.code);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -203,7 +235,7 @@ export default function BillRunCandidate() {
   };
 
   const handleClick = (event, name, id, status, monthlyFee, clientId) => {
-
+    console.log('handleClick init: ');
     const selectedIndex = selected.indexOf(name);
     
     let newSelected = [];
@@ -288,8 +320,6 @@ export default function BillRunCandidate() {
 
         return handBRC;
       }
-  
-
   }
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -306,7 +336,31 @@ export default function BillRunCandidate() {
   }
 
   const debugg = () => {
-    console.log('handBRC-debugg::: ', handBRC);
+    console.log('selectedMonthPeriod-debugg-typeof:: ', typeof(selectedMonthPeriodYEAR));
+    console.log('selectedMonthPeriod-debugg::: ', selectedMonthPeriodYEAR);
+  }
+
+  function getPreviousThreeYears() {
+    let currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const previousYears = [];
+  
+    for (let i = 0; i < 3; i++) {
+      const year = currentYear - i;
+      previousYears.push(year);
+    }
+
+    console.log('getPreviousThreeYears-returnnnn::: ', previousYears);
+  
+    return previousYears;
+  }
+
+  const monthPeriodYEAROnChange = data => {
+    setSelectedMonthPeriodYEAR(data)
+  }
+
+  const monthPeriodMOSOnChange = data => {
+    setSelectedMonthPeriodMOS(data)
   }
 
   return (
@@ -332,9 +386,38 @@ export default function BillRunCandidate() {
         query={query}
         setQuery={setQuery}
       />
+     
+      <Paper className={classes.paperMiddle}>
 
-      <TextField style={{paddingBottom: '9px', marginTop: '9px'}} fullWidth name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)}/>
-      <button id='temp123' onClick={debugg}></button>
+
+          <div style={{ display: 'flex'}}>
+            <FormControl>
+                <InputLabel style={{ paddingTop: '9px' }}><b>MOS</b></InputLabel>
+                <Select style={{ fontWeight: 'bold', width: '66px'}}  onChange={e => monthPeriodMOSOnChange(e.target.value)} id="damos" value={selectedMonthPeriodMOS}>
+                  {marvs12MOS.map((data, index) => (
+                    <MenuItem id={index} key={index} value={data.code}>{data.code}</MenuItem>
+                  ))}
+                </Select>       
+            </FormControl>
+
+            <FormControl>
+                <InputLabel style={{ paddingTop: '9px' }} ><b>YR</b></InputLabel>
+                <Select style={{ fontWeight: 'bold', width: '66px'}}  onChange={e => monthPeriodYEAROnChange(e.target.value)} id="dayear" value={selectedMonthPeriodYEAR}>
+                  {getPreviousThreeYears().map((data, index) => (
+                    <MenuItem key={index} value={data}>{data}</MenuItem>
+                  ))}
+                </Select>       
+            </FormControl>
+          </div>
+
+          <div style={{ display: 'flex'}}>
+            <TextField style={{ paddingBottom: '9px', marginTop: '9px'}} name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)}/>        
+              
+            <button onClick={debugg}>debugg</button>
+          </div>
+
+      </Paper>
+      
       <Paper className={classes.paper}>
         <TableContainer>
             <Table className={classes.table} aria-labelledby="tableTitle" size={'medium'} aria-label="enhanced table">
@@ -369,7 +452,8 @@ export default function BillRunCandidate() {
                         <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
                         <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
                         <TableCell align="left">{row.planName}</TableCell>
-                        <TableCell align="left">{row.monthlyFee && Object.keys(row.monthlyFee).length > 1 ? Object.keys(row.monthlyFee).length : row && row.monthlyFee && row.monthlyFee[0].amount}</TableCell>
+                        <TableCell align="left">{''}</TableCell>
+                        {/* <TableCell align="left">{row.monthlyFee && Object.keys(row.monthlyFee).length > 1 ? Object.keys(row.monthlyFee).length : row && row.monthlyFee && row.monthlyFee[0].amount}</TableCell> */}
                         {/* <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell> */}
                         <TableCell align="left">{row.dueDate}</TableCell>
                         <TableCell align="left">{row.status}</TableCell>
@@ -483,7 +567,7 @@ const EnhancedTableToolbar = props => {
     console.log('brc-raw: ', brc);
 
     let overDueClient = overdueFilter(brc);
-    console.log('overDueClient:: ',  JSON.stringify(overDueClient));
+    console.log('overDueClient:: ',  overDueClient);
     
     let payload = [];
 
@@ -500,10 +584,10 @@ const EnhancedTableToolbar = props => {
     withOverdue = payload;
 
     //les-go-here:::
-    let temp = updateMonthlyFees(withOverdue, overDueClient);
+    //let temp = updateMonthlyFees(withOverdue, overDueClient);
 
-    // console.log('payload-return-temp::: ', JSON.stringify(temp));
-    console.log('payload-return-temp::: ', temp);
+   // console.log('payload-return-temp::: ', JSON.stringify(temp));
+   // console.log('payload-return-temp::: ', JSON.stringify(temp));
     return payload;
   }
 
@@ -512,12 +596,15 @@ const EnhancedTableToolbar = props => {
     let isCanceled = false;
     
     if(!isCanceled) {
-      setHandBRC(filterBRCbyMonthPeriod(brc)); 
-      //console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
+
+      let holdBRC = brc ? brc : null;
+      setHandBRC(filterBRCbyMonthPeriod(holdBRC)); 
+
+      console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
     }
 
-    return async () => {
-      //console.log('[COMPONENT-CHILD]EnhancedTableToolbar UNMOUNT !!!!');
+    return () => {
+      console.log('[COMPONENT-CHILD]EnhancedTableToolbar UNMOUNT !!!!');
       isCanceled = true;
     }
 

@@ -126,7 +126,7 @@ export default function Home() {
     let isCanceled = false;
     
     if(!isCanceled) {
-        dispatch(computeFees());
+        //dispatch(computeFees());
     }
 
     console.log('[PARENT] useEffect done dispatch');
