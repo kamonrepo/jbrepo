@@ -168,21 +168,21 @@ export default function BillRunCandidate() {
   const marvsCurrentMonth = marvsCurrentDate.getMonth() + 1; //0 index ung January
 
   const marvs12MOS = [
-    { id: 1, code: 'JAN'},
-    { id: 2, code: 'FEB'},
-    { id: 3, code: 'MAR'},
-    { id: 4, code: 'APR'},
-    { id: 5, code: 'MAY'},
-    { id: 6, code: 'JUN'},
-    { id: 7, code: 'JUL'},
-    { id: 8, code: 'AUG'},
-    { id: 9, code: 'SEP'},
-    { id: 10, code: 'OCT'},
-    { id: 11, code: 'NOV'},
-    { id: 12, code: 'DEC'},
+    { id: '01', code: 'JAN'},
+    { id: '02', code: 'FEB'},
+    { id: '03', code: 'MAR'},
+    { id: '04', code: 'APR'},
+    { id: '05', code: 'MAY'},
+    { id: '06', code: 'JUN'},
+    { id: '07', code: 'JUL'},
+    { id: '08', code: 'AUG'},
+    { id: '09', code: 'SEP'},
+    { id: '10', code: 'OCT'},
+    { id: '11', code: 'NOV'},
+    { id: '12', code: 'DEC'},
   ];
-
-  let findCurrentMOS = marvs12MOS.find((mos) => mos.id === marvsCurrentMonth);
+  console.log('marvsCurrentMonth.toString()-CHECK TO LATER BKA PAG SINGLE DIGIT LIKE JANUARY ay 1 or 01::: ', marvsCurrentMonth.toString());
+  let findCurrentMOS = marvs12MOS.find((mos) => mos.id === marvsCurrentMonth.toString());
 
   const dispatch = useDispatch();
   const [handBRC, setHandBRC] = useState([{}]);
@@ -221,6 +221,7 @@ export default function BillRunCandidate() {
   const [statusPlaceHolder, setStatusPlaceHolder] = useState([]);
   const [query, setQuery] = useState(''); // this is for search
 
+  const [monthPeriodData, setMonthPeriodData] = useState('');
   const [selectedMonthPeriodYEAR, setSelectedMonthPeriodYEAR] = useState(marvsCurrentYear);
   const [selectedMonthPeriodMOS, setSelectedMonthPeriodMOS] = useState(findCurrentMOS.code);
 
@@ -368,6 +369,15 @@ export default function BillRunCandidate() {
     setSelectedMonthPeriodMOS(data)
   }
 
+  const generateBRC = () => {
+
+    let findMOSID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
+    let monthPeriod = `${findMOSID.id}/01/${selectedMonthPeriodYEAR}`;
+    
+
+    setMonthPeriodData(monthPeriod);
+  }
+
   return (
     <div className={classes.root}>
 
@@ -425,7 +435,7 @@ export default function BillRunCandidate() {
 
       </Paper>
 
-      <Button className={classes.marvsMarginBottom} variant="contained">GENERATE</Button>
+      <Button className={classes.marvsMarginBottom} onClick={generateBRC} variant="contained">GENERATE</Button>
       
       <Paper className={classes.paper}>
         <TableContainer>
