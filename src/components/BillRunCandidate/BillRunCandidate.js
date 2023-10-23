@@ -126,13 +126,19 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     width: '100%'
   },
+  marvsMarginRight: {
+    marginRight: '33px'
+  },
+  marvsMarginBottom: {
+    marginBottom: '11px'
+  },
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
   },
   paperMiddle: {
     display: 'flex',
-    justifyContent: 'row',
+    justifyContent: 'space-between',
     alignContent: 'center',
     width: '100%',
     marginBottom: theme.spacing(2),
@@ -161,8 +167,7 @@ export default function BillRunCandidate() {
   const marvsCurrentYear = marvsCurrentDate.getFullYear();
   const marvsCurrentMonth = marvsCurrentDate.getMonth() + 1; //0 index ung January
 
-  const marvs12MOS = 
-  [
+  const marvs12MOS = [
     { id: 1, code: 'JAN'},
     { id: 2, code: 'FEB'},
     { id: 3, code: 'MAR'},
@@ -178,7 +183,7 @@ export default function BillRunCandidate() {
   ];
 
   let findCurrentMOS = marvs12MOS.find((mos) => mos.id === marvsCurrentMonth);
-  console.log('findCurrentMOS::: ', findCurrentMOS);
+
   const dispatch = useDispatch();
   const [handBRC, setHandBRC] = useState([{}]);
   const [selectedBr, setSelectedBr] = useState('');
@@ -390,8 +395,8 @@ export default function BillRunCandidate() {
       <Paper className={classes.paperMiddle}>
 
 
-          <div style={{ display: 'flex'}}>
-            <FormControl>
+          <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>
+            <FormControl className={classes.marvsMarginRight}>
                 <InputLabel style={{ paddingTop: '9px' }}><b>MOS</b></InputLabel>
                 <Select style={{ fontWeight: 'bold', width: '66px'}}  onChange={e => monthPeriodMOSOnChange(e.target.value)} id="damos" value={selectedMonthPeriodMOS}>
                   {marvs12MOS.map((data, index) => (
@@ -400,7 +405,7 @@ export default function BillRunCandidate() {
                 </Select>       
             </FormControl>
 
-            <FormControl>
+            <FormControl  className={classes.marvsMarginRight}>
                 <InputLabel style={{ paddingTop: '9px' }} ><b>YR</b></InputLabel>
                 <Select style={{ fontWeight: 'bold', width: '66px'}}  onChange={e => monthPeriodYEAROnChange(e.target.value)} id="dayear" value={selectedMonthPeriodYEAR}>
                   {getPreviousThreeYears().map((data, index) => (
@@ -408,15 +413,19 @@ export default function BillRunCandidate() {
                   ))}
                 </Select>       
             </FormControl>
+
+            <Button className={classes.marvsMargin} variant="contained">FILTER</Button>
           </div>
 
-          <div style={{ display: 'flex'}}>
-            <TextField style={{ paddingBottom: '9px', marginTop: '9px'}} name="search" variant="outlined" label="search..." value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)}/>        
+          <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>
+            <TextField className={classes.marvsMarginRight} name="search" variant="outlined" label="search name" value={query.length !== 0 ? query : ''} onChange={e => searchOnChange(e.target.value)}/>        
               
-            <button onClick={debugg}>debugg</button>
+            {/* <button onClick={debugg}>debugg</button> */}
           </div>
 
       </Paper>
+
+      <Button className={classes.marvsMarginBottom} variant="contained">GENERATE</Button>
       
       <Paper className={classes.paper}>
         <TableContainer>
@@ -791,7 +800,7 @@ const EnhancedTableToolbar = props => {
                           
                           {brDataBySublocId.map((data) => (
                               <MenuItem key={data._id} value={data._id}>{data.billRun}</MenuItem>
-                            ))}
+                          ))}
                           </Select>
                       </FormControl>             
                   </div>
