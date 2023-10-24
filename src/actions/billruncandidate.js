@@ -1,4 +1,4 @@
-import {  START_LOADING, END_LOADING, FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID, FETCH_COMPUTED_FEES } from '../constants/actionTypes';
+import {  START_LOADING, END_LOADING, FETCH_BILLRUN_CAN_BY_MP, FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID, FETCH_COMPUTED_FEES } from '../constants/actionTypes';
 import * as api from '../api/index';
 
 export const computeFees = (req) => async dispatch => {
@@ -31,7 +31,6 @@ export const getBillrunCandidate = () => async dispatch => {
 export const getBRCByBRId = id => async dispatch => {
   try {
 
-
     //dispatch start/end loading here...
     const { data } = await api.fetchBRCByBRId(id);
 
@@ -39,6 +38,22 @@ export const getBRCByBRId = id => async dispatch => {
   }
   catch (error) {
     console.log('err: ', error);
+
+  }
+};
+
+export const getBRCByMonthPeriod = req => async dispatch => {
+  try {
+
+    //dispatch start/end loading here...
+    console.log('getBRCByMonthPeriod-reqreqreq: ', req);
+
+    const { data } = await api.fetchBRCByMonthPeriod(req);
+    console.log('getBRCByMonthPeriod-RESPPPPPP: ', data);
+    dispatch({ type: FETCH_BILLRUN_CAN_BY_MP, payload: data});
+  }
+  catch (error) {
+    console.log('getBRCByMonthPeriod-err: ', error);
 
   }
 };

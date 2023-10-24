@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { lighten, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, Tooltip, Select, MenuItem, TextField, Button, FormControl, InputLabel } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBRCByBRId } from '../../actions/billruncandidate';
+import { getBRCByBRId, getBRCByMonthPeriod } from '../../actions/billruncandidate';
 import { updatePayment, getPayments } from '../../actions/payment';
 import { getBillrun } from '../../actions/billrun';
 import { getGroups } from '../../actions/group';
@@ -342,8 +342,6 @@ export default function BillRunCandidate() {
   }
 
   const debugg = () => {
-    console.log('selectedMonthPeriod-debugg-typeof:: ', typeof(selectedMonthPeriodYEAR));
-    console.log('selectedMonthPeriod-debugg::: ', selectedMonthPeriodYEAR);
   }
 
   function getPreviousThreeYears() {
@@ -371,11 +369,26 @@ export default function BillRunCandidate() {
 
   const generateBRC = () => {
 
+
+  }
+
+  const filterBRCbyMPBRID = () => {
+
     let findMOSID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
     let monthPeriod = `${findMOSID.id}/01/${selectedMonthPeriodYEAR}`;
-    
+
+
+    if(monthPeriod.length !== 0 && selectedBr.length !== 0) {
 
     setMonthPeriodData(monthPeriod);
+    let payload = { monthPeriod, host: selectedBr };
+
+    console.log('payload::: ', payload);
+    dispatch(getBRCByMonthPeriod(payload));
+
+    }
+
+
   }
 
   return (
@@ -407,7 +420,7 @@ export default function BillRunCandidate() {
 
           <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>
             <FormControl className={classes.marvsMarginRight}>
-                <InputLabel style={{ paddingTop: '9px' }}><b>MOS</b></InputLabel>
+                <InputLabel style={{ paddingTop: '9px' }}><b>MONTH</b></InputLabel>
                 <Select style={{ fontWeight: 'bold', width: '66px'}}  onChange={e => monthPeriodMOSOnChange(e.target.value)} id="damos" value={selectedMonthPeriodMOS}>
                   {marvs12MOS.map((data, index) => (
                     <MenuItem id={index} key={index} value={data.code}>{data.code}</MenuItem>
@@ -416,7 +429,7 @@ export default function BillRunCandidate() {
             </FormControl>
 
             <FormControl  className={classes.marvsMarginRight}>
-                <InputLabel style={{ paddingTop: '9px' }} ><b>YR</b></InputLabel>
+                <InputLabel style={{ paddingTop: '9px' }} ><b>YEAR</b></InputLabel>
                 <Select style={{ fontWeight: 'bold', width: '66px'}}  onChange={e => monthPeriodYEAROnChange(e.target.value)} id="dayear" value={selectedMonthPeriodYEAR}>
                   {getPreviousThreeYears().map((data, index) => (
                     <MenuItem key={index} value={data}>{data}</MenuItem>
@@ -424,7 +437,7 @@ export default function BillRunCandidate() {
                 </Select>       
             </FormControl>
 
-            <Button className={classes.marvsMargin} variant="contained">FILTER</Button>
+            <Button onClick={filterBRCbyMPBRID} className={classes.marvsMargin} variant="contained">FILTER</Button>
           </div>
 
           <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>
