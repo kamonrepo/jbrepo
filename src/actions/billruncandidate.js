@@ -46,14 +46,14 @@ export const getBRCByMonthPeriod = req => async dispatch => {
   try {
 
     //dispatch start/end loading here...
-    console.log('getBRCByMonthPeriod-reqreqreq: ', req);
+    console.log('[REDUX_ACTION] getBRCByMonthPeriod-reqreqreq: ', req);
 
     const { data } = await api.fetchBRCByMonthPeriod(req);
-    console.log('getBRCByMonthPeriod-RESPPPPPP: ', data);
+    console.log('[REDUX_ACTION] getBRCByMonthPeriod-RESPPPPPP: ', data);
     dispatch({ type: FETCH_BILLRUN_CAN_BY_MP, payload: data});
   }
   catch (error) {
-    console.log('getBRCByMonthPeriod-err: ', error);
+    console.log('[REDUX_ACTION] getBRCByMonthPeriod-err: ', error);
 
   }
 };

@@ -181,7 +181,7 @@ export default function BillRunCandidate() {
     { id: '11', code: 'NOV'},
     { id: '12', code: 'DEC'},
   ];
-  console.log('marvsCurrentMonth.toString()-CHECK TO LATER BKA PAG SINGLE DIGIT LIKE JANUARY ay 1 or 01::: ', marvsCurrentMonth.toString());
+  //console.log('marvsCurrentMonth.toString()-CHECK TO LATER BKA PAG SINGLE DIGIT LIKE JANUARY ay 1 or 01::: ', marvsCurrentMonth.toString());
   let findCurrentMOS = marvs12MOS.find((mos) => mos.id === marvsCurrentMonth.toString());
 
   const dispatch = useDispatch();
@@ -354,8 +354,6 @@ export default function BillRunCandidate() {
       previousYears.push(year);
     }
 
-    console.log('getPreviousThreeYears-returnnnn::: ', previousYears);
-  
     return previousYears;
   }
 
@@ -368,7 +366,8 @@ export default function BillRunCandidate() {
   }
 
   const generateBRC = () => {
-
+    console.log('generateBRC---monthPeriodData::: ', monthPeriodData);
+    console.log('generateBRC---handBRC ', handBRC);
 
   }
 
@@ -383,8 +382,9 @@ export default function BillRunCandidate() {
     setMonthPeriodData(monthPeriod);
     let payload = { monthPeriod, host: selectedBr };
 
-    console.log('payload::: ', payload);
+    console.log('filterBRCbyMPBRID-RETURN::: ', payload);
     dispatch(getBRCByMonthPeriod(payload));
+
 
     }
 
@@ -395,6 +395,12 @@ export default function BillRunCandidate() {
     <div className={classes.root}>
 
       <EnhancedTableToolbar 
+        marvs12MOS={marvs12MOS}
+        findCurrentMOS={findCurrentMOS}
+        marvsCurrentMonth={marvsCurrentMonth}
+        marvsCurrentYear={marvsCurrentYear}
+        selectedMonthPeriodYEAR={selectedMonthPeriodYEAR}
+        selectedMonthPeriodMOS={selectedMonthPeriodMOS}
         numSelected={selected.length} 
         handBRC={handBRC} 
         selectedIDs={selectedIDs} 
@@ -523,14 +529,14 @@ const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
-        setSelected, setSelectedGroupname, setQuery } = props;
-
+        setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
 
   const billruns = useSelector(state => state.billruns);
   const groups = useSelector(state => state.groups);
   const sublocations = useSelector(state => state.sublocations);
   const targetlocations = useSelector(state => state.targetlocations);
   const brc = useSelector(state => state.billruncandidates);
+
   const [ggroup, setGgroup] = useState('');
   const [ssubloc, setSsubloc] = useState('');
   const [bbr, setBbr] = useState('');
@@ -596,22 +602,40 @@ const EnhancedTableToolbar = props => {
 
   const filterBRCbyMonthPeriod =  brc => {
 
-    console.log('brc-raw: ', brc);
+    console.log('[filterBRCbyMonthPeriod] brc-raw: ', brc);
 
     let overDueClient = overdueFilter(brc);
-    console.log('overDueClient:: ',  overDueClient);
+    console.log('[filterBRCbyMonthPeriod] overDueClient:: ',  overDueClient);
     
     let payload = [];
 
     let withOverdue = null;
 
-    let returnMonthPeriod = getFirstDayOfMonth(new Date());
+    if((selectedMonthPeriodYEAR == marvsCurrentYear) && (selectedMonthPeriodMOS ==  findCurrentMOS.code)) {
 
-    Object.keys(brc).forEach(index => {
-        if(brc[index].monthPeriod == returnMonthPeriod) {
+      let returnMonthPeriod = getFirstDayOfMonth(new Date());
+      //if current monthPeriod/present month
+      Object.keys(brc).forEach(index => {
+          if(brc[index].monthPeriod == returnMonthPeriod) {
+            payload.push(brc[index])
+          }
+       })
+
+    } else {
+
+      //if NOT current monthPeriod/present month
+      let findCurrentMOS_ID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
+
+      let buildMPData = `${findCurrentMOS_ID.id}/01/${selectedMonthPeriodYEAR}`;
+      console.log('[NOT-PRESENT-MONTH] buildData: ', buildMPData);
+
+      Object.keys(brc).forEach(index => {
+        if(brc[index].monthPeriod == buildMPData) {
           payload.push(brc[index])
         }
-    })
+     })
+
+    }
 
     withOverdue = payload;
 
@@ -620,6 +644,8 @@ const EnhancedTableToolbar = props => {
 
    // console.log('payload-return-temp::: ', JSON.stringify(temp));
    // console.log('payload-return-temp::: ', JSON.stringify(temp));
+
+    console.log('[filterBRCbyMonthPeriod] return-payload: ', payload);
     return payload;
   }
 
@@ -628,9 +654,8 @@ const EnhancedTableToolbar = props => {
     let isCanceled = false;
     
     if(!isCanceled) {
-
-      let holdBRC = brc ? brc : null;
-      setHandBRC(filterBRCbyMonthPeriod(holdBRC)); 
+  
+      setHandBRC(filterBRCbyMonthPeriod(brc)); 
 
       console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
     }
