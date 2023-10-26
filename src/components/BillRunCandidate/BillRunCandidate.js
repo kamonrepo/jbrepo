@@ -438,12 +438,12 @@ export default function BillRunCandidate() {
                 <InputLabel style={{ paddingTop: '9px' }} ><b>YEAR</b></InputLabel>
                 <Select style={{ fontWeight: 'bold', width: '66px'}}  onChange={e => monthPeriodYEAROnChange(e.target.value)} id="dayear" value={selectedMonthPeriodYEAR}>
                   {getPreviousThreeYears().map((data, index) => (
-                    <MenuItem key={index} value={data}>{data}</MenuItem>
+                    <MenuItem id={index} key={index} value={data}>{data}</MenuItem>
                   ))}
                 </Select>       
             </FormControl>
 
-            <Button onClick={filterBRCbyMPBRID} className={classes.marvsMargin} variant="contained">FILTER</Button>
+            <Button onClick={filterBRCbyMPBRID} className={classes.marvsMargin} variant="contained">FILTER PERIOD</Button>
           </div>
 
           <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>
@@ -490,8 +490,8 @@ export default function BillRunCandidate() {
                         <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
                         <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
                         <TableCell align="left">{row.planName}</TableCell>
-                        <TableCell align="left">{''}</TableCell>
-                        {/* <TableCell align="left">{row.monthlyFee && Object.keys(row.monthlyFee).length > 1 ? Object.keys(row.monthlyFee).length : row && row.monthlyFee && row.monthlyFee[0].amount}</TableCell> */}
+                        {/* <TableCell align="left">{''}</TableCell> */}
+                        <TableCell align="left">{row.monthlyFee && Object.keys(row.monthlyFee).length > 1 ? Object.keys(row.monthlyFee).length : row && row.monthlyFee && row.monthlyFee[0].amount}</TableCell>
                         {/* <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell> */}
                         <TableCell align="left">{row.dueDate}</TableCell>
                         <TableCell align="left">{row.status}</TableCell>
@@ -602,10 +602,10 @@ const EnhancedTableToolbar = props => {
 
   const filterBRCbyMonthPeriod =  brc => {
 
-    console.log('[filterBRCbyMonthPeriod] brc-raw: ', brc);
+    console.log('[COMPONENT-CHILD] [filterBRCbyMonthPeriod] brc-raw: ', brc);
 
     let overDueClient = overdueFilter(brc);
-    console.log('[filterBRCbyMonthPeriod] overDueClient:: ',  overDueClient);
+    console.log('[COMPONENT-CHILD] [filterBRCbyMonthPeriod] overDueClient:: ',  overDueClient);
     
     let payload = [];
 
@@ -627,7 +627,7 @@ const EnhancedTableToolbar = props => {
       let findCurrentMOS_ID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
 
       let buildMPData = `${findCurrentMOS_ID.id}/01/${selectedMonthPeriodYEAR}`;
-      console.log('[NOT-PRESENT-MONTH] buildData: ', buildMPData);
+      console.log('[COMPONENT-CHILD] [NOT-PRESENT-MONTH] buildData: ', buildMPData);
 
       Object.keys(brc).forEach(index => {
         if(brc[index].monthPeriod == buildMPData) {
@@ -645,7 +645,7 @@ const EnhancedTableToolbar = props => {
    // console.log('payload-return-temp::: ', JSON.stringify(temp));
    // console.log('payload-return-temp::: ', JSON.stringify(temp));
 
-    console.log('[filterBRCbyMonthPeriod] return-payload: ', payload);
+    console.log('[COMPONENT-CHILD] [filterBRCbyMonthPeriod] return-payload-TableBoy: ', payload);
     return payload;
   }
 
