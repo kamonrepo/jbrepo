@@ -4,24 +4,25 @@ import clsx from 'clsx';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { lighten, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, Tooltip, Select, MenuItem, TextField, Button, FormControl, InputLabel } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBRCByBRId, getBRCByMonthPeriod } from '../../actions/billruncandidate';
+import { getBRCByBRId, getBRCByMonthPeriod, checkLatestBRC } from '../../actions/billruncandidate';
 import { updatePayment, getPayments } from '../../actions/payment';
 import { getBillrun } from '../../actions/billrun';
 import { getGroups } from '../../actions/group';
 import { getSublocs } from '../../actions/sublocation';
 import { getTargetLocs } from '../../actions/targetlocation';
+import Alert from '@mui/material/Alert';
 
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'NAME' },
   { id: 'plan', numeric: false, disablePadding: false, label: 'PLAN' },
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'MONTHLY FEE' },
-  { id: 'dueDate', numeric: false, disablePadding: false, label: `DUE DATE (${getMonthNameFromDate(new Date())})` },
+  { id: 'dueDate', numeric: false, disablePadding: false, label: `${getMonthNameFromDate(new Date())}` },
   { id: 'status', numeric: true, disablePadding: false, label: 'STATUS' },
 ];
 
 function getMonthNameFromDate(date) {
   const monthOptions = { month: 'long' };
-  return date.toLocaleString('en-US', monthOptions);
+  return date.toLocaleString('en-US', monthOptions).toUpperCase();
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -71,7 +72,6 @@ function EnhancedTableHead(props) {
             {headCells.map((headCell) => (
               <TableCell
                 key={headCell.id}
-                align={headCell.numeric ? 'right' : 'left'}
                 padding={headCell.disablePadding ? 'none' : 'normal'}
                 sortDirection={orderBy === headCell.id ? order : false}
               >
@@ -133,6 +133,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '11px'
   },
   paper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
+  paperTableBody: {
     width: '100%',
     marginBottom: theme.spacing(2),
   },
@@ -224,6 +228,7 @@ export default function BillRunCandidate() {
   const [monthPeriodData, setMonthPeriodData] = useState('');
   const [selectedMonthPeriodYEAR, setSelectedMonthPeriodYEAR] = useState(marvsCurrentYear);
   const [selectedMonthPeriodMOS, setSelectedMonthPeriodMOS] = useState(findCurrentMOS.code);
+  const [mpDataVisible, setMpDataVisible] = useState('hidden');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -376,7 +381,6 @@ export default function BillRunCandidate() {
     let findMOSID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
     let monthPeriod = `${findMOSID.id}/01/${selectedMonthPeriodYEAR}`;
 
-
     if(monthPeriod.length !== 0 && selectedBr.length !== 0) {
 
     setMonthPeriodData(monthPeriod);
@@ -385,16 +389,16 @@ export default function BillRunCandidate() {
     console.log('filterBRCbyMPBRID-RETURN::: ', payload);
     dispatch(getBRCByMonthPeriod(payload));
 
-
     }
-
-
   }
 
   return (
     <div className={classes.root}>
 
       <EnhancedTableToolbar 
+        setSelectedMonthPeriodMOS={setSelectedMonthPeriodMOS}
+        setSelectedMonthPeriodYEAR={setSelectedMonthPeriodYEAR}
+        setMpDataVisible={setMpDataVisible}
         marvs12MOS={marvs12MOS}
         findCurrentMOS={findCurrentMOS}
         marvsCurrentMonth={marvsCurrentMonth}
@@ -421,9 +425,7 @@ export default function BillRunCandidate() {
         setQuery={setQuery}
       />
      
-      <Paper className={classes.paperMiddle}>
-
-
+      <Paper style={{ visibility:'hidden' }} className={classes.paperMiddle}>
           <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>
             <FormControl className={classes.marvsMarginRight}>
                 <InputLabel style={{ paddingTop: '9px' }}><b>MONTH</b></InputLabel>
@@ -454,20 +456,16 @@ export default function BillRunCandidate() {
 
       </Paper>
 
-      <Button className={classes.marvsMarginBottom} onClick={generateBRC} variant="contained">GENERATE</Button>
       
-      <Paper className={classes.paper}>
+      <Alert style={{ visibility: 'hidden',  marginBottom: '33px', display: 'flex', justifyContent: 'center' }} severity="warning">
+        <Typography>Generate table for the month of</Typography>
+        <Button fullWidth onClick={generateBRC} variant="text">{`${findCurrentMOS.code}`}</Button>
+      </Alert>
+
+      <Paper style={{visibility: 'hidden'}} className={classes.paperTableBody}>
         <TableContainer>
             <Table className={classes.table} aria-labelledby="tableTitle" size={'medium'} aria-label="enhanced table">
-              <EnhancedTableHead
-                classes={classes}
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={handBRC.length}
-              />
+              <EnhancedTableHead classes={classes} numSelected={selected.length} order={order} orderBy={orderBy} onSelectAllClick={handleSelectAllClick} onRequestSort={handleRequestSort} rowCount={handBRC.length}/>
                  
                 <TableBody>
                   { stableSort(handleDataTable(handBRC), getComparator(order, orderBy))
@@ -496,7 +494,7 @@ export default function BillRunCandidate() {
                         <TableCell align="left">{row.dueDate}</TableCell>
                         <TableCell align="left">{row.status}</TableCell>
                             
-                        </TableRow>                                                   
+                      </TableRow>                                                   
                       );
                     })}
                   {emptyRows > 0 && (
@@ -529,7 +527,7 @@ const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
-        setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
+          setSelectedMonthPeriodYEAR, setSelectedMonthPeriodMOS,setMpDataVisible, setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
 
   const billruns = useSelector(state => state.billruns);
   const groups = useSelector(state => state.groups);
@@ -543,6 +541,8 @@ const EnhancedTableToolbar = props => {
   const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
   const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
   const [brDataBySublocId, setBRDataBySublocId] = useState([]);
+
+  const [brcCount, setBrcCount] = useState(0);
 
   const user = JSON.parse(localStorage.getItem('profile'));
 
@@ -685,9 +685,18 @@ const EnhancedTableToolbar = props => {
       console.log("BrOnChange");
       setBbr(brid);
       setQuery('');
-      await dispatch(getBRCByBRId(brid));
+
+      dispatch(getBRCByBRId(brid));
+
+      let buildReq = { host: brid, monthPeriod: '' };
+
+      dispatch(checkLatestBRC(buildReq));
       displayGroupName(brid);
       setSelectedBr(brid);
+
+      setMpDataVisible('visible');
+      setSelectedMonthPeriodYEAR(marvsCurrentYear);
+      setSelectedMonthPeriodMOS(findCurrentMOS.code);
   };
 
   //PAID BUTTON SUBMIT
@@ -755,6 +764,8 @@ const EnhancedTableToolbar = props => {
 
       setSublocDataByGroupId(holdSubloc);
     }
+
+    setMpDataVisible('hidden');
   };
 
   const SubLocationOnChange = sublocId => {
@@ -791,6 +802,7 @@ const EnhancedTableToolbar = props => {
     }
 
     setBRDataBySublocId(holdBR);
+    setMpDataVisible('hidden');
   };
 
   return (

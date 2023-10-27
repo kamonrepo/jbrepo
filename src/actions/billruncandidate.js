@@ -1,5 +1,17 @@
-import {  START_LOADING, END_LOADING, FETCH_BILLRUN_CAN_BY_MP, FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID, FETCH_COMPUTED_FEES } from '../constants/actionTypes';
+import {  CHECK_LATEST_BRC, START_LOADING, END_LOADING, FETCH_BILLRUN_CAN_BY_MP, FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID, FETCH_COMPUTED_FEES } from '../constants/actionTypes';
 import * as api from '../api/index';
+
+export const checkLatestBRC = (req) => async dispatch => {
+  try {
+
+    const { data } = await api.checkLatestBRC(req);
+
+    dispatch({ type: CHECK_LATEST_BRC, payload: data});
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const computeFees = (req) => async dispatch => {
   try {
