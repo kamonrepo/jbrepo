@@ -229,6 +229,8 @@ export default function BillRunCandidate() {
   const [selectedMonthPeriodYEAR, setSelectedMonthPeriodYEAR] = useState(marvsCurrentYear);
   const [selectedMonthPeriodMOS, setSelectedMonthPeriodMOS] = useState(findCurrentMOS.code);
   const [mpDataVisible, setMpDataVisible] = useState('hidden');
+  const [tableBodyVisible, setTableBodyVisible] = useState('hidden');
+  const [generateMPVisible, setGenerateMPVisible] = useState('hidden');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -395,7 +397,14 @@ export default function BillRunCandidate() {
   return (
     <div className={classes.root}>
 
+      <Button style={{  visibility: generateMPVisible, display: 'flex', marginBottom: '9px' }} fullWidth onClick={generateBRC} variant="contained">
+        <Alert style={{ display: 'flex', marginTop: '3px', marginBottom: '3px' }} severity="warning">         
+             {`Generate ${findCurrentMOS.code}`}
+        </Alert>
+      </Button>
+
       <EnhancedTableToolbar 
+        setTableBodyVisible={setTableBodyVisible}
         setSelectedMonthPeriodMOS={setSelectedMonthPeriodMOS}
         setSelectedMonthPeriodYEAR={setSelectedMonthPeriodYEAR}
         setMpDataVisible={setMpDataVisible}
@@ -425,7 +434,7 @@ export default function BillRunCandidate() {
         setQuery={setQuery}
       />
      
-      <Paper style={{ visibility:'hidden' }} className={classes.paperMiddle}>
+      <Paper style={{ visibility: mpDataVisible }} className={classes.paperMiddle}>
           <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>
             <FormControl className={classes.marvsMarginRight}>
                 <InputLabel style={{ paddingTop: '9px' }}><b>MONTH</b></InputLabel>
@@ -456,13 +465,7 @@ export default function BillRunCandidate() {
 
       </Paper>
 
-      
-      <Alert style={{ visibility: 'hidden',  marginBottom: '33px', display: 'flex', justifyContent: 'center' }} severity="warning">
-        <Typography>Generate table for the month of</Typography>
-        <Button fullWidth onClick={generateBRC} variant="text">{`${findCurrentMOS.code}`}</Button>
-      </Alert>
-
-      <Paper style={{visibility: 'hidden'}} className={classes.paperTableBody}>
+      <Paper style={{visibility: tableBodyVisible}} className={classes.paperTableBody}>
         <TableContainer>
             <Table className={classes.table} aria-labelledby="tableTitle" size={'medium'} aria-label="enhanced table">
               <EnhancedTableHead classes={classes} numSelected={selected.length} order={order} orderBy={orderBy} onSelectAllClick={handleSelectAllClick} onRequestSort={handleRequestSort} rowCount={handBRC.length}/>
@@ -488,7 +491,6 @@ export default function BillRunCandidate() {
                         <TableCell padding="checkbox"><Checkbox checked={isItemSelected}/></TableCell>
                         <TableCell align="left" id={labelId} scope="row" padding="none">{row.name}</TableCell>
                         <TableCell align="left">{row.planName}</TableCell>
-                        {/* <TableCell align="left">{''}</TableCell> */}
                         <TableCell align="left">{row.monthlyFee && Object.keys(row.monthlyFee).length > 1 ? Object.keys(row.monthlyFee).length : row && row.monthlyFee && row.monthlyFee[0].amount}</TableCell>
                         {/* <TableCell align="left">{formatToPhilippinePeso(parseFloat(row.monthlyFee))}</TableCell> */}
                         <TableCell align="left">{row.dueDate}</TableCell>
@@ -523,11 +525,10 @@ export default function BillRunCandidate() {
 
 const EnhancedTableToolbar = props => {
 
-
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
-          setSelectedMonthPeriodYEAR, setSelectedMonthPeriodMOS,setMpDataVisible, setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
+          setTableBodyVisible, setSelectedMonthPeriodYEAR, setSelectedMonthPeriodMOS,setMpDataVisible, setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
 
   const billruns = useSelector(state => state.billruns);
   const groups = useSelector(state => state.groups);
@@ -624,9 +625,11 @@ const EnhancedTableToolbar = props => {
     } else {
 
       //if NOT current monthPeriod/present month
+      console.log('selectedMonthPeriodMOS ', selectedMonthPeriodMOS);
       let findCurrentMOS_ID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
-
+      console.log('heyya ', findCurrentMOS_ID);
       let buildMPData = `${findCurrentMOS_ID.id}/01/${selectedMonthPeriodYEAR}`;
+      console.log('heyya????????????');
       console.log('[COMPONENT-CHILD] [NOT-PRESENT-MONTH] buildData: ', buildMPData);
 
       Object.keys(brc).forEach(index => {
@@ -683,20 +686,23 @@ const EnhancedTableToolbar = props => {
 
   const BrOnChange = async brid => {
       console.log("BrOnChange");
+      
       setBbr(brid);
       setQuery('');
 
       dispatch(getBRCByBRId(brid));
 
-      let buildReq = { host: brid, monthPeriod: '' };
-
-      dispatch(checkLatestBRC(buildReq));
       displayGroupName(brid);
       setSelectedBr(brid);
-
       setMpDataVisible('visible');
+      setTableBodyVisible('visible');
       setSelectedMonthPeriodYEAR(marvsCurrentYear);
       setSelectedMonthPeriodMOS(findCurrentMOS.code);
+
+      let mp = `${marvsCurrentMonth.toString()}/01/${marvsCurrentYear}`;
+      let buildReq = { host: brid, monthPeriod: mp };
+      console.log("checkLatestBRC-buildReq::: ", buildReq);
+      dispatch(checkLatestBRC(buildReq));
   };
 
   //PAID BUTTON SUBMIT
@@ -766,6 +772,7 @@ const EnhancedTableToolbar = props => {
     }
 
     setMpDataVisible('hidden');
+    setTableBodyVisible('hidden');
   };
 
   const SubLocationOnChange = sublocId => {
@@ -803,11 +810,12 @@ const EnhancedTableToolbar = props => {
 
     setBRDataBySublocId(holdBR);
     setMpDataVisible('hidden');
+    setTableBodyVisible('hidden');
   };
 
   return (
     <div>
-      <Toolbar className={clsx(classes.root, {[classes.highlight]: numSelected > 0,})}></Toolbar>
+      {/* <Toolbar className={clsx(classes.root, {[classes.highlight]: numSelected > 0,})}></Toolbar> */}
 
       <div>
         {numSelected > 0 ? (      

@@ -13,6 +13,7 @@ import paymentReducer from './payment.js';
 import postsReducer from './posts.js';
 import soaReducer from './soa.js';
 import reportReducer from './report.js';
+import latestBrcReducer from './checklatestbrc.js';
 
 export default combineReducers({ 
     auth: authReducer,
@@ -28,5 +29,6 @@ export default combineReducers({
     payments: paymentReducer,
     posts: postsReducer,
     soas: soaReducer,
-    reports: reportReducer
+    reports: reportReducer,
+    latestbrc: latestBrcReducer
 });
