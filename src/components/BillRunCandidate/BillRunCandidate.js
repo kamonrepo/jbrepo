@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { lighten, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, Tooltip, Select, MenuItem, TextField, Button, FormControl, InputLabel } from '@material-ui/core';
+import { makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, Tooltip, Select, MenuItem, TextField, Button, FormControl, InputLabel } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBRCByBRId, getBRCByMonthPeriod, checkLatestBRC } from '../../actions/billruncandidate';
 import { updatePayment, getPayments } from '../../actions/payment';
@@ -10,7 +9,7 @@ import { getBillrun } from '../../actions/billrun';
 import { getGroups } from '../../actions/group';
 import { getSublocs } from '../../actions/sublocation';
 import { getTargetLocs } from '../../actions/targetlocation';
-import Alert from '@mui/material/Alert';
+import BRAlert from '../BillRunCandidate/BRAlert';
 
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'NAME' },
@@ -106,19 +105,19 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles((theme) => ({
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        }
+// const useToolbarStyles = makeStyles((theme) => ({
+//   highlight:
+//     theme.palette.type === 'light'
+//       ? {
+//           color: theme.palette.secondary.main,
+//           backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+//         }
+//       : {
+//           color: theme.palette.text.primary,
+//           backgroundColor: theme.palette.secondary.dark,
+//         }
 
-}));
+// }));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -192,6 +191,7 @@ export default function BillRunCandidate() {
   const [handBRC, setHandBRC] = useState([{}]);
   const [selectedBr, setSelectedBr] = useState('');
   const [selectedGroupname, setSelectedGroupname] = useState([]);
+  const [bbr, setBbr] = useState('');
 
   useEffect(() => {
 
@@ -213,6 +213,8 @@ export default function BillRunCandidate() {
 
   }, []);
 
+  const { data, isBRCLoading } = useSelector((state) => state.latestbrc);
+
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
@@ -231,6 +233,7 @@ export default function BillRunCandidate() {
   const [mpDataVisible, setMpDataVisible] = useState('hidden');
   const [tableBodyVisible, setTableBodyVisible] = useState('hidden');
   const [generateMPVisible, setGenerateMPVisible] = useState('hidden');
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -349,6 +352,8 @@ export default function BillRunCandidate() {
   }
 
   const debugg = () => {
+    console.log('latestBRC-data::: ', data);
+    console.log('latestBRC-isBRCLoading::: ', isBRCLoading);
   }
 
   function getPreviousThreeYears() {
@@ -372,12 +377,6 @@ export default function BillRunCandidate() {
     setSelectedMonthPeriodMOS(data)
   }
 
-  const generateBRC = () => {
-    console.log('generateBRC---monthPeriodData::: ', monthPeriodData);
-    console.log('generateBRC---handBRC ', handBRC);
-
-  }
-
   const filterBRCbyMPBRID = () => {
 
     let findMOSID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
@@ -397,13 +396,11 @@ export default function BillRunCandidate() {
   return (
     <div className={classes.root}>
 
-      <Button style={{  visibility: generateMPVisible, display: 'flex', marginBottom: '9px' }} fullWidth onClick={generateBRC} variant="contained">
-        <Alert style={{ display: 'flex', marginTop: '3px', marginBottom: '3px' }} severity="warning">         
-             {`Generate ${findCurrentMOS.code}`}
-        </Alert>
-      </Button>
-
+      {!isBRCLoading && data && data.length === 0 && bbr.length !== 0 ? <BRAlert isBRCLoading={isBRCLoading} brcData={data} /> : null }
+    
       <EnhancedTableToolbar 
+        bbr={bbr}
+        setBbr={setBbr}
         setTableBodyVisible={setTableBodyVisible}
         setSelectedMonthPeriodMOS={setSelectedMonthPeriodMOS}
         setSelectedMonthPeriodYEAR={setSelectedMonthPeriodYEAR}
@@ -455,6 +452,7 @@ export default function BillRunCandidate() {
             </FormControl>
 
             <Button onClick={filterBRCbyMPBRID} className={classes.marvsMargin} variant="contained">FILTER PERIOD</Button>
+            <Button onClick={debugg} className={classes.marvsMargin} variant="contained">DEBUGG</Button>
           </div>
 
           <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>
@@ -525,25 +523,22 @@ export default function BillRunCandidate() {
 
 const EnhancedTableToolbar = props => {
 
-  const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
-          setTableBodyVisible, setSelectedMonthPeriodYEAR, setSelectedMonthPeriodMOS,setMpDataVisible, setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
+    bbr, setBbr, setTableBodyVisible, setSelectedMonthPeriodYEAR, setSelectedMonthPeriodMOS, setMpDataVisible, setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
 
   const billruns = useSelector(state => state.billruns);
   const groups = useSelector(state => state.groups);
   const sublocations = useSelector(state => state.sublocations);
   const targetlocations = useSelector(state => state.targetlocations);
   const brc = useSelector(state => state.billruncandidates);
-
   const [ggroup, setGgroup] = useState('');
   const [ssubloc, setSsubloc] = useState('');
-  const [bbr, setBbr] = useState('');
+  // const [bbr, setBbr] = useState('');
   const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
   const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
   const [brDataBySublocId, setBRDataBySublocId] = useState([]);
-
-  const [brcCount, setBrcCount] = useState(0);
+  const { data, isBRCLoading } = useSelector((state) => state.latestbrc);
 
   const user = JSON.parse(localStorage.getItem('profile'));
 
@@ -603,10 +598,10 @@ const EnhancedTableToolbar = props => {
 
   const filterBRCbyMonthPeriod =  brc => {
 
-    console.log('[COMPONENT-CHILD] [filterBRCbyMonthPeriod] brc-raw: ', brc);
+    console.log('[1]---[COMPONENT-CHILD] [filterBRCbyMonthPeriod] brc-raw: ', brc);
 
     let overDueClient = overdueFilter(brc);
-    console.log('[COMPONENT-CHILD] [filterBRCbyMonthPeriod] overDueClient:: ',  overDueClient);
+    console.log('[1]---[COMPONENT-CHILD] [filterBRCbyMonthPeriod] overDueClient:: ',  overDueClient);
     
     let payload = [];
 
@@ -648,7 +643,7 @@ const EnhancedTableToolbar = props => {
    // console.log('payload-return-temp::: ', JSON.stringify(temp));
    // console.log('payload-return-temp::: ', JSON.stringify(temp));
 
-    console.log('[COMPONENT-CHILD] [filterBRCbyMonthPeriod] return-payload-TableBoy: ', payload);
+    console.log('[1]---[COMPONENT-CHILD] [filterBRCbyMonthPeriod] return-payload-TableBoy: ', payload);
     return payload;
   }
 
@@ -660,7 +655,7 @@ const EnhancedTableToolbar = props => {
   
       setHandBRC(filterBRCbyMonthPeriod(brc)); 
 
-      console.log('[COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
+      console.log('[2][COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
     }
 
     return () => {
@@ -685,7 +680,7 @@ const EnhancedTableToolbar = props => {
   }
 
   const BrOnChange = async brid => {
-      console.log("BrOnChange");
+      console.log("---BrOnChange");
       
       setBbr(brid);
       setQuery('');
@@ -701,7 +696,7 @@ const EnhancedTableToolbar = props => {
 
       let mp = `${marvsCurrentMonth.toString()}/01/${marvsCurrentYear}`;
       let buildReq = { host: brid, monthPeriod: mp };
-      console.log("checkLatestBRC-buildReq::: ", buildReq);
+
       dispatch(checkLatestBRC(buildReq));
   };
 
@@ -815,8 +810,6 @@ const EnhancedTableToolbar = props => {
 
   return (
     <div>
-      {/* <Toolbar className={clsx(classes.root, {[classes.highlight]: numSelected > 0,})}></Toolbar> */}
-
       <div>
         {numSelected > 0 ? (      
               <div>
