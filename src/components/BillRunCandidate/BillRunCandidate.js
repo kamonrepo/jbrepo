@@ -394,9 +394,16 @@ export default function BillRunCandidate() {
   }
 
   return (
-    <div className={classes.root}>
 
-      {!isBRCLoading && data && data.length === 0 && bbr.length !== 0 ? <BRAlert isBRCLoading={isBRCLoading} brcData={data} /> : null }
+    <div className={classes.root}>
+      {!isBRCLoading && data && data.length === 0 && bbr.length !== 0 
+        ? <BRAlert 
+            isBRCLoading={isBRCLoading} 
+            brcData={data} 
+            generateMPVisible={generateMPVisible}
+          /> 
+        : null 
+      }
     
       <EnhancedTableToolbar 
         bbr={bbr}
@@ -525,7 +532,7 @@ const EnhancedTableToolbar = props => {
 
   const dispatch = useDispatch();
   const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
-    bbr, setBbr, setTableBodyVisible, setSelectedMonthPeriodYEAR, setSelectedMonthPeriodMOS, setMpDataVisible, setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
+          bbr, setBbr, setTableBodyVisible, setSelectedMonthPeriodYEAR, setSelectedMonthPeriodMOS, setMpDataVisible, setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
 
   const billruns = useSelector(state => state.billruns);
   const groups = useSelector(state => state.groups);
