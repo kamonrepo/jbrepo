@@ -398,6 +398,7 @@ export default function BillRunCandidate() {
     <div className={classes.root}>
       {!isBRCLoading && data && data.length === 0 && bbr.length !== 0 
         ? <BRAlert 
+            findCurrentMOS={findCurrentMOS}
             isBRCLoading={isBRCLoading} 
             brcData={data} 
             generateMPVisible={generateMPVisible}
@@ -459,7 +460,7 @@ export default function BillRunCandidate() {
             </FormControl>
 
             <Button onClick={filterBRCbyMPBRID} className={classes.marvsMargin} variant="contained">FILTER PERIOD</Button>
-            <Button onClick={debugg} className={classes.marvsMargin} variant="contained">DEBUGG</Button>
+            {/* <Button onClick={debugg} className={classes.marvsMargin} variant="contained">DEBUGG</Button> */}
           </div>
 
           <div style={{ display: 'flex', margin: '33px 33px 33px 33px'}}>

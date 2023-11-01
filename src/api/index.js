@@ -41,6 +41,7 @@ export const fetchBRCByBRId = id => API.get(`/billruncandidate/${id}`);
 export const fetchBRCByMonthPeriod = req => API.post('/billruncandidate/monthPeriod', req);
 export const updateBRC = id => API.patch('/billruncandidate/updateBRC', id);
 export const checkLatestBRC = req => API.post('/billruncandidate/checklatestbrc', req);
+export const generateBRCviaAlert = req => API.post('/billruncandidate/generatebrcviaalert', req);
 
 export const createCategory = newCategory => API.post('/category', newCategory);
 export const fetchCategory = () => API.get('/category');

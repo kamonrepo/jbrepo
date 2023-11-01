@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Button, Grow } from '@material-ui/core';
 import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
+import { generateBRCviaAlert } from '../../actions/billruncandidate';
+export default function BRAlert({ findCurrentMOS, isBRCLoading, brcData }) {
 
-export default function BRAlert( { isBRCLoading, brcData}) {
-
+    const dispatch = useDispatch();
     const [alertGenVisible, setAlertGenVisible] = useState('visible');
 
     useEffect(() => {
+
         let isCanceled = false;
     
         if(!isCanceled) {
@@ -16,17 +18,16 @@ export default function BRAlert( { isBRCLoading, brcData}) {
             if(brcData.length !== 0) {
                 setAlertGenVisible('hidden');
             }
-          }
+        }
     
         return () => {
+
             console.log('[COMPONENT-CHILD] UNMOUNT!!! BRAlert useEffect');
-          isCanceled = true;
+            isCanceled = true;
         }      
                 
     }, [brcData]);
     
-
-
     const generateBRC = () => {
         console.log('generateBRC');
     }
@@ -36,10 +37,10 @@ export default function BRAlert( { isBRCLoading, brcData}) {
     return (
         <Grow in>
             <div>
-                <Button style={{ visibility: alertGenVisible, display: 'flex', marginBottom: '9px' }} fullWidth onClick={generateBRC} variant="contained">
-                    <Alert style={{ display: 'flex', marginTop: '33px', marginBottom: '3px' }} severity="warning">         
-                        {/* {`Generate ${findCurrentMOS.code}`} */}
-                        {'Generate.findCurrentMOS.code'}
+                <Button style={{ visibility: alertGenVisible, display: 'flex', marginBottom: '9px' }} fullWidth onClick={generateBRC} variant="text">
+                    <Alert style={{ display: 'flex', marginBottom: '3px' }} severity="warning">         
+                        {`GENERATE ${findCurrentMOS.code}`}
+
                     </Alert>
                 </Button>            
             </div>

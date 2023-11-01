@@ -1,5 +1,20 @@
-import {  START_LOADING_CLBRC, END_LOADING_CLBRC, FETCH_CHECK_LATEST_BRC, START_LOADING, END_LOADING, FETCH_BILLRUN_CAN_BY_MP, FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID, FETCH_COMPUTED_FEES } from '../constants/actionTypes';
+import {  GENERATE_BRC_VIA_ALERT, START_LOADING_CLBRC, END_LOADING_CLBRC, FETCH_CHECK_LATEST_BRC, START_LOADING, END_LOADING, FETCH_BILLRUN_CAN_BY_MP, FETCH_BILLRUN_CAN, UPDATE_BILLRUN_CAN, FETCH_BILLRUN_CAN_BY_ID, FETCH_COMPUTED_FEES } from '../constants/actionTypes';
 import * as api from '../api/index';
+
+export const generateBRCviaAlert = (req) => async dispatch => {
+  
+  try {
+
+    const { data } = await api.generateBRCviaAlert(req);
+
+    dispatch({ type: GENERATE_BRC_VIA_ALERT, payload: data});
+    console.log('backend-api-response-generateBRCviaAlert::: ', data);
+
+  } catch (error) {
+    console.log(error);
+  }
+
+}
 
 export const checkLatestBRC = (req) => async dispatch => {
   try {
@@ -61,10 +76,7 @@ export const getBRCByMonthPeriod = req => async dispatch => {
   try {
 
     //dispatch start/end loading here...
-    console.log('[REDUX_ACTION] getBRCByMonthPeriod-reqreqreq: ', req);
-
     const { data } = await api.fetchBRCByMonthPeriod(req);
-    console.log('[REDUX_ACTION] getBRCByMonthPeriod-RESPPPPPP: ', data);
     dispatch({ type: FETCH_BILLRUN_CAN_BY_MP, payload: data});
   }
   catch (error) {

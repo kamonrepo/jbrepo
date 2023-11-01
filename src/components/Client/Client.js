@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, Slide, DialogTitle, TextField, Button, Typography, Paper, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, InputLabel } from '@material-ui/core';
+import { Tooltip, Dialog, DialogActions, DialogContent, DialogContentText, Slide, DialogTitle, TextField, Button, Typography, Paper, Select, MenuItem, Radio, RadioGroup, FormControlLabel, FormControl, InputLabel } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroups } from '../../actions/group';
@@ -262,7 +262,9 @@ const Client = () => {
               </Select>    
             </FormControl>
 
+            <Tooltip title="*payment starts on">
             <Typography style={{ marginTop: '12px', fontWeight: 'bold'}}>{`${nextMonth}`}</Typography>
+            </Tooltip>
             <RadioGroup defaultValue="15th" name="radio-buttons-group">
               <FormControlLabel value="15th" control={<Radio />} label="15th" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})} />
               <FormControlLabel value="Endth" control={<Radio />} label="End month" onClick={(e) => setClientData({ ...clientData, dueDate: e.target.value})}/>
