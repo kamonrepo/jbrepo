@@ -3,7 +3,8 @@ import { Button, Grow } from '@material-ui/core';
 import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateBRCviaAlert } from '../../actions/billruncandidate';
-export default function BRAlert({ findCurrentMOS, isBRCLoading, brcData }) {
+
+export default function BRAlert({ bbr, findCurrentMOS, isBRCLoading, brcData }) {
 
     const dispatch = useDispatch();
     const [alertGenVisible, setAlertGenVisible] = useState('visible');
@@ -29,7 +30,9 @@ export default function BRAlert({ findCurrentMOS, isBRCLoading, brcData }) {
     }, [brcData]);
     
     const generateBRC = () => {
-        console.log('generateBRC');
+         dispatch(generateBRCviaAlert(bbr))
+         //after the dispatch execute another dispatch for generateBRCviaAlert
+         //invoke getBRCByBRId -> update handBRC -> data table
     }
 
     console.log('[BRAlert] brcData.length: ', brcData.length);

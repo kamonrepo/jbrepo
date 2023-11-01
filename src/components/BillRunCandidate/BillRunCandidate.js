@@ -398,6 +398,7 @@ export default function BillRunCandidate() {
     <div className={classes.root}>
       {!isBRCLoading && data && data.length === 0 && bbr.length !== 0 
         ? <BRAlert 
+            bbr={bbr}
             findCurrentMOS={findCurrentMOS}
             isBRCLoading={isBRCLoading} 
             brcData={data} 
