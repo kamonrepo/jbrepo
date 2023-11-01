@@ -759,6 +759,9 @@ const EnhancedTableToolbar = props => {
 
   const LocationOnChange = groupId => {
 
+    //reset ung state value ng MUNICIPALITY (yung select/cbx sa below nya)
+    setBbr('');
+    setSsubloc('');
     setGgroup(groupId);
     setSublocData({ ...sublocData, groupId: groupId});
     let holdSubloc = [];
@@ -779,6 +782,8 @@ const EnhancedTableToolbar = props => {
 
   const SubLocationOnChange = sublocId => {
 
+    //reset ung state value ng LOCATION (yung select/cbx sa below nya)
+    setBbr('');
     setSsubloc(sublocId);
 
     let holdTl = [];
