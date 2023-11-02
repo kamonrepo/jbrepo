@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Grow } from '@material-ui/core';
 import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateBRCviaAlert } from '../../actions/billruncandidate';
+import { generateBRCviaAlert, getBRCByBRId } from '../../actions/billruncandidate';
 
 export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonthPeriodMOS, selectedMonthPeriodYEAR, brcData }) {
 
@@ -38,7 +38,7 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
         dispatch(generateBRCviaAlert({ host: bbr, monthPeriod: mp }));
 
          //after the dispatch execute another dispatch for generateBRCviaAlert
-         //invoke getBRCByBRId -> update handBRC -> data table
+         dispatch(getBRCByBRId(bbr));
     }
 
     console.log('[BRAlert] brcData.length: ', brcData.length);
