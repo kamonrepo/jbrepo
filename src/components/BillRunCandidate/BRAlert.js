@@ -4,7 +4,7 @@ import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateBRCviaAlert } from '../../actions/billruncandidate';
 
-export default function BRAlert({ bbr, findCurrentMOS, isBRCLoading, brcData }) {
+export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonthPeriodMOS, selectedMonthPeriodYEAR, brcData }) {
 
     const dispatch = useDispatch();
     const [alertGenVisible, setAlertGenVisible] = useState('visible');
@@ -30,7 +30,13 @@ export default function BRAlert({ bbr, findCurrentMOS, isBRCLoading, brcData }) 
     }, [brcData]);
     
     const generateBRC = () => {
-         dispatch(generateBRCviaAlert(bbr))
+
+        let findMOSID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
+        let mp = `${findMOSID.id}/01/${selectedMonthPeriodYEAR}`;
+
+        console.log('[COMPONENT-CHILD-BRAlert]-findCurrentMOS: ', findCurrentMOS);
+        dispatch(generateBRCviaAlert({ host: bbr, monthPeriod: mp }));
+
          //after the dispatch execute another dispatch for generateBRCviaAlert
          //invoke getBRCByBRId -> update handBRC -> data table
     }

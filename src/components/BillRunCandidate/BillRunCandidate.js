@@ -15,7 +15,8 @@ const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'NAME' },
   { id: 'plan', numeric: false, disablePadding: false, label: 'PLAN' },
   { id: 'monthlyFee', numeric: false, disablePadding: false, label: 'MONTHLY FEE' },
-  { id: 'dueDate', numeric: false, disablePadding: false, label: `${getMonthNameFromDate(new Date())}` },
+  // { id: 'dueDate', numeric: false, disablePadding: false, label: `${getMonthNameFromDate(new Date())}` },
+  { id: 'dueDate', numeric: false, disablePadding: false, label: '' },
   { id: 'status', numeric: true, disablePadding: false, label: 'STATUS' },
 ];
 
@@ -50,7 +51,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { filterHeadDate, selectedMonthPeriodMOS, selectedMonthPeriodYEAR, classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -68,7 +69,7 @@ function EnhancedTableHead(props) {
             {null}
           </TableCell>
 
-            {headCells.map((headCell) => (
+            {headCells.map((headCell, index) => (
               <TableCell
                 key={headCell.id}
                 padding={headCell.disablePadding ? 'none' : 'normal'}
@@ -79,13 +80,18 @@ function EnhancedTableHead(props) {
                   direction={orderBy === headCell.id ? order : 'asc'}
                   onClick={createSortHandler(headCell.id)}
                 >
-                  <span style={{ fontWeight: 'bold' }}>{headCell.label}</span>
 
+                  {index === 3 
+                  ? <span style={{ fontWeight: 'bold' }}>{filterHeadDate}</span> 
+                  : <span style={{ fontWeight: 'bold' }}>{headCell.label}</span> 
+                  }
+                  
                   {orderBy === headCell.id ? (
                      <span className={classes.visuallyHidden}>
                       {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                    </span>
+                     </span>
                   ) : null}
+
                 </TableSortLabel>
               </TableCell>
             ))}
@@ -192,6 +198,7 @@ export default function BillRunCandidate() {
   const [selectedBr, setSelectedBr] = useState('');
   const [selectedGroupname, setSelectedGroupname] = useState([]);
   const [bbr, setBbr] = useState('');
+  const [filterHeadDate, setFilterHeadDate] = useState('');
 
   useEffect(() => {
 
@@ -374,7 +381,7 @@ export default function BillRunCandidate() {
   }
 
   const monthPeriodMOSOnChange = data => {
-    setSelectedMonthPeriodMOS(data)
+    setSelectedMonthPeriodMOS(data);
   }
 
   const filterBRCbyMPBRID = () => {
@@ -389,16 +396,19 @@ export default function BillRunCandidate() {
 
     console.log('filterBRCbyMPBRID-RETURN::: ', payload);
     dispatch(getBRCByMonthPeriod(payload));
-
+    let dataHead = `${selectedMonthPeriodMOS} ${selectedMonthPeriodYEAR}`
+    setFilterHeadDate(dataHead);
     }
   }
 
   return (
-
     <div className={classes.root}>
       {!isBRCLoading && data && data.length === 0 && bbr.length !== 0 
         ? <BRAlert 
             bbr={bbr}
+            marvs12MOS={marvs12MOS}
+            selectedMonthPeriodMOS={selectedMonthPeriodMOS}
+            selectedMonthPeriodYEAR={selectedMonthPeriodYEAR}
             findCurrentMOS={findCurrentMOS}
             isBRCLoading={isBRCLoading} 
             brcData={data} 
@@ -475,7 +485,16 @@ export default function BillRunCandidate() {
       <Paper style={{visibility: tableBodyVisible}} className={classes.paperTableBody}>
         <TableContainer>
             <Table className={classes.table} aria-labelledby="tableTitle" size={'medium'} aria-label="enhanced table">
-              <EnhancedTableHead classes={classes} numSelected={selected.length} order={order} orderBy={orderBy} onSelectAllClick={handleSelectAllClick} onRequestSort={handleRequestSort} rowCount={handBRC.length}/>
+              <EnhancedTableHead classes={classes} 
+                                 filterHeadDate={filterHeadDate}
+                                 numSelected={selected.length} 
+                                 order={order} 
+                                 orderBy={orderBy} 
+                                 onSelectAllClick={handleSelectAllClick} 
+                                 onRequestSort={handleRequestSort} 
+                                 selectedMonthPeriodMOS={selectedMonthPeriodMOS}
+                                 selectedMonthPeriodYEAR={selectedMonthPeriodYEAR}
+                                 rowCount={handBRC.length}/>
                  
                 <TableBody>
                   { stableSort(handleDataTable(handBRC), getComparator(order, orderBy))
