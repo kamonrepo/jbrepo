@@ -29,16 +29,13 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
                 
     }, [brcData]);
     
-    const generateBRC = () => {
+    const generateBRC = async () => {
 
         let findMOSID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
         let mp = `${findMOSID.id}/01/${selectedMonthPeriodYEAR}`;
 
-        console.log('[COMPONENT-CHILD-BRAlert]-findCurrentMOS: ', findCurrentMOS);
-        dispatch(generateBRCviaAlert({ host: bbr, monthPeriod: mp }));
-
-         //after the dispatch execute another dispatch for generateBRCviaAlert
-         dispatch(getBRCByBRId(bbr));
+        await dispatch(generateBRCviaAlert({ host: bbr, monthPeriod: mp }));
+        await dispatch(getBRCByBRId(bbr));
     }
 
     console.log('[BRAlert] brcData.length: ', brcData.length);

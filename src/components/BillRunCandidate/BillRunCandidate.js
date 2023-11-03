@@ -562,11 +562,9 @@ const EnhancedTableToolbar = props => {
   const brc = useSelector(state => state.billruncandidates);
   const [ggroup, setGgroup] = useState('');
   const [ssubloc, setSsubloc] = useState('');
-  // const [bbr, setBbr] = useState('');
   const [sublocData, setSublocData] = useState({ name: '', groupId: '' });
   const [sublocDataByGroupId, setSublocDataByGroupId] = useState([]);
   const [brDataBySublocId, setBRDataBySublocId] = useState([]);
-  const { data, isBRCLoading } = useSelector((state) => state.latestbrc);
 
   const user = JSON.parse(localStorage.getItem('profile'));
 
