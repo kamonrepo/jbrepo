@@ -720,9 +720,18 @@ const EnhancedTableToolbar = props => {
       setSelectedMonthPeriodYEAR(marvsCurrentYear);
       setSelectedMonthPeriodMOS(findCurrentMOS.code);
 
-      let mp = `${marvsCurrentMonth.toString()}/01/${marvsCurrentYear}`;
-      let buildReq = { host: brid, monthPeriod: mp };
+      let holdTargetlocID = null;
 
+      Object.keys(billruns).forEach(k => {
+        if(billruns[k]._id == brid) {
+          holdTargetlocID = billruns[k].targetlocId;
+        }
+      });
+
+      let mp = `${marvsCurrentMonth.toString()}/01/${marvsCurrentYear}`;
+      let buildReq = { host: holdTargetlocID, monthPeriod: mp };
+
+      console.log("---BrOnChange-buildReq-check::: ", buildReq);
       dispatch(checkLatestBRC(buildReq));
   };
 
