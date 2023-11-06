@@ -20,6 +20,7 @@ export const checkLatestBRC = (req) => async dispatch => {
   try {
 
     dispatch({ type: START_LOADING_CLBRC });
+    console.log('backend-api-request-checkLatestBRC::: ', req);
     const { data } = await api.checkLatestBRC(req);
 
     dispatch({ type: FETCH_CHECK_LATEST_BRC, payload: data});

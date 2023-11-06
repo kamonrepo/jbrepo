@@ -405,6 +405,8 @@ export default function BillRunCandidate() {
     <div className={classes.root}>
       {!isBRCLoading && data && data.length === 0 && bbr.length !== 0 
         ? <BRAlert 
+            marvsCurrentMonth={marvsCurrentMonth}
+            marvsCurrentYear={marvsCurrentYear}
             bbr={bbr}
             marvs12MOS={marvs12MOS}
             selectedMonthPeriodMOS={selectedMonthPeriodMOS}
@@ -624,11 +626,8 @@ const EnhancedTableToolbar = props => {
 
   const filterBRCbyMonthPeriod =  brc => {
 
-    console.log('[1]---[COMPONENT-CHILD] [filterBRCbyMonthPeriod] brc-raw: ', brc);
 
     let overDueClient = overdueFilter(brc);
-    console.log('[1]---[COMPONENT-CHILD] [filterBRCbyMonthPeriod] overDueClient:: ',  overDueClient);
-    
     let payload = [];
 
     let withOverdue = null;
@@ -646,12 +645,8 @@ const EnhancedTableToolbar = props => {
     } else {
 
       //if NOT current monthPeriod/present month
-      console.log('selectedMonthPeriodMOS ', selectedMonthPeriodMOS);
       let findCurrentMOS_ID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
-      console.log('heyya ', findCurrentMOS_ID);
       let buildMPData = `${findCurrentMOS_ID.id}/01/${selectedMonthPeriodYEAR}`;
-      console.log('heyya????????????');
-      console.log('[COMPONENT-CHILD] [NOT-PRESENT-MONTH] buildData: ', buildMPData);
 
       Object.keys(brc).forEach(index => {
         if(brc[index].monthPeriod == buildMPData) {
@@ -669,7 +664,6 @@ const EnhancedTableToolbar = props => {
    // console.log('payload-return-temp::: ', JSON.stringify(temp));
    // console.log('payload-return-temp::: ', JSON.stringify(temp));
 
-    console.log('[1]---[COMPONENT-CHILD] [filterBRCbyMonthPeriod] return-payload-TableBoy: ', payload);
     return payload;
   }
 
@@ -681,11 +675,10 @@ const EnhancedTableToolbar = props => {
   
       setHandBRC(filterBRCbyMonthPeriod(brc)); 
 
-      console.log('[2][COMPONENT-CHILD]EnhancedTableToolbar bottom useEffect: ');
+      console.log('[TOOLBAR]');
     }
 
     return () => {
-      console.log('[COMPONENT-CHILD]EnhancedTableToolbar UNMOUNT !!!!');
       isCanceled = true;
     }
 
@@ -706,7 +699,6 @@ const EnhancedTableToolbar = props => {
   }
 
   const BrOnChange = async brid => {
-      console.log("---BrOnChange");
       
       setBbr(brid);
       setQuery('');
@@ -720,18 +712,16 @@ const EnhancedTableToolbar = props => {
       setSelectedMonthPeriodYEAR(marvsCurrentYear);
       setSelectedMonthPeriodMOS(findCurrentMOS.code);
 
-      let holdTargetlocID = null;
-
-      Object.keys(billruns).forEach(k => {
-        if(billruns[k]._id == brid) {
-          holdTargetlocID = billruns[k].targetlocId;
-        }
-      });
+      // let holdTargetlocID = null;
+      // Object.keys(billruns).forEach(k => {
+      //   if(billruns[k]._id == brid) {
+      //     holdTargetlocID = billruns[k].targetlocId;
+      //   }
+      // });
 
       let mp = `${marvsCurrentMonth.toString()}/01/${marvsCurrentYear}`;
-      let buildReq = { host: holdTargetlocID, monthPeriod: mp };
+      let buildReq = { host: brid, monthPeriod: mp };
 
-      console.log("---BrOnChange-buildReq-check::: ", buildReq);
       dispatch(checkLatestBRC(buildReq));
   };
 

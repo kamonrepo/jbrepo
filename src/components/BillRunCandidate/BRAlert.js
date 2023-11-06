@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button, Grow } from '@material-ui/core';
 import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateBRCviaAlert, getBRCByBRId } from '../../actions/billruncandidate';
+import { generateBRCviaAlert, getBRCByBRId, checkLatestBRC } from '../../actions/billruncandidate';
 
-export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonthPeriodMOS, selectedMonthPeriodYEAR, brcData }) {
+export default function BRAlert({ marvsCurrentMonth, marvsCurrentYear, bbr, marvs12MOS, findCurrentMOS, selectedMonthPeriodMOS, selectedMonthPeriodYEAR, brcData }) {
 
     const dispatch = useDispatch();
     const brs = useSelector((state) => state.billruns);
@@ -16,7 +16,7 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
         let isCanceled = false;
     
         if(!isCanceled) {
-            console.log('[COMPONENT-CHILD] MOUNT BRAlert useEffect- bbr ', bbr);
+            console.log('[BRAlert]');
 
             if(brcData.length !== 0) {
                 setAlertGenVisible('hidden');
@@ -24,7 +24,6 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
         }
     
         return () => {
-            console.log('[COMPONENT-CHILD] UNMOUNT!!! BRAlert useEffect');
             isCanceled = true;
         }      
                 
@@ -46,9 +45,13 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
 
         dispatch(generateBRCviaAlert({ brid: bbr, targetlocId: holdTargetlocId, monthPeriod: mp }));
         dispatch(getBRCByBRId(bbr));
-    }
 
-    console.log('[BRAlert] brcData.length: ', brcData.length);
+        let mpTwo = `${marvsCurrentMonth.toString()}/01/${marvsCurrentYear}`;
+        let buildReq = { host: bbr, monthPeriod: mpTwo };
+  
+        console.log("---generateBRC-checkLatestBRC-check::: ", buildReq);
+        dispatch(checkLatestBRC(buildReq));
+    }
 
     return (
         <Grow in>
@@ -56,7 +59,6 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
                 <Button style={{ visibility: alertGenVisible, display: 'flex', marginBottom: '9px' }} fullWidth onClick={generateBRC} variant="text">
                     <Alert style={{ display: 'flex', marginBottom: '3px' }} severity="warning">         
                         {`GENERATE ${findCurrentMOS.code}`}
-
                     </Alert>
                 </Button>            
             </div>
