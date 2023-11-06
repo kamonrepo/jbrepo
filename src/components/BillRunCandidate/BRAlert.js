@@ -7,6 +7,8 @@ import { generateBRCviaAlert, getBRCByBRId } from '../../actions/billruncandidat
 export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonthPeriodMOS, selectedMonthPeriodYEAR, brcData }) {
 
     const dispatch = useDispatch();
+    const brs = useSelector((state) => state.billruns);
+
     const [alertGenVisible, setAlertGenVisible] = useState('visible');
 
     useEffect(() => {
@@ -14,7 +16,7 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
         let isCanceled = false;
     
         if(!isCanceled) {
-            console.log('[COMPONENT-CHILD] MOUNT BRAlert useEffect');
+            console.log('[COMPONENT-CHILD] MOUNT BRAlert useEffect- billruns ');
 
             if(brcData.length !== 0) {
                 setAlertGenVisible('hidden');
@@ -22,7 +24,6 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
         }
     
         return () => {
-
             console.log('[COMPONENT-CHILD] UNMOUNT!!! BRAlert useEffect');
             isCanceled = true;
         }      
@@ -33,9 +34,18 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
 
         let findMOSID = marvs12MOS.find((mos) => mos.code === selectedMonthPeriodMOS);
         let mp = `${findMOSID.id}/01/${selectedMonthPeriodYEAR}`;
+        let holdTargetlocId = null;
 
-        await dispatch(generateBRCviaAlert({ host: bbr, monthPeriod: mp }));
-        await dispatch(getBRCByBRId(bbr));
+        if(brs.length !== 0) {
+            Object.keys(brs).forEach(index => {
+                if(brs[index]._id == bbr) {
+                    holdTargetlocId = brs[index].targetlocId
+                }
+            });
+        }
+
+        dispatch(generateBRCviaAlert({ host: holdTargetlocId, monthPeriod: mp }));
+        dispatch(getBRCByBRId(bbr));
     }
 
     console.log('[BRAlert] brcData.length: ', brcData.length);

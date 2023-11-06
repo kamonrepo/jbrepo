@@ -417,7 +417,7 @@ export default function BillRunCandidate() {
         : null 
       }
     
-      <EnhancedTableToolbar 
+      <EnhancedTableToolbar       
         bbr={bbr}
         setBbr={setBbr}
         setTableBodyVisible={setTableBodyVisible}
@@ -555,10 +555,10 @@ const EnhancedTableToolbar = props => {
   const { numSelected,  setHandBRC, selectedIDs, setSelectedIDs, selectedMFs, selectedBRCClient, setSelectedBRCClient, setSelectedMFs, selectedBr, setSelectedBr, statusPlaceHolder, setStatusPlaceHolder,
           bbr, setBbr, setTableBodyVisible, setSelectedMonthPeriodYEAR, setSelectedMonthPeriodMOS, setMpDataVisible, setSelected, setSelectedGroupname, marvs12MOS, findCurrentMOS, selectedMonthPeriodYEAR, selectedMonthPeriodMOS, marvsCurrentYear, marvsCurrentMonth, setQuery } = props;
 
-  const billruns = useSelector(state => state.billruns);
   const groups = useSelector(state => state.groups);
   const sublocations = useSelector(state => state.sublocations);
   const targetlocations = useSelector(state => state.targetlocations);
+  const billruns = useSelector(state => state.billruns);
   const brc = useSelector(state => state.billruncandidates);
   const [ggroup, setGgroup] = useState('');
   const [ssubloc, setSsubloc] = useState('');
