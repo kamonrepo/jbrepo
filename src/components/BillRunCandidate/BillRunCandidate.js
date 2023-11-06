@@ -734,7 +734,7 @@ const EnhancedTableToolbar = props => {
 
      console.log('---------updatePayment::: ', {userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient})
     
-    // await dispatch(updatePayment({userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
+    dispatch(updatePayment({userFullname, selectedIDs, isPaid, selectedMFs, selectedBr, selectedBRCClient}));
     // await dispatch(getBRCByBRId(selectedBr));
     // // await setHandBRC(filterBRCbyMonthPeriod(brc));
 
