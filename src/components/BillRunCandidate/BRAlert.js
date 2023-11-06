@@ -16,7 +16,7 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
         let isCanceled = false;
     
         if(!isCanceled) {
-            console.log('[COMPONENT-CHILD] MOUNT BRAlert useEffect- billruns ');
+            console.log('[COMPONENT-CHILD] MOUNT BRAlert useEffect- bbr ', bbr);
 
             if(brcData.length !== 0) {
                 setAlertGenVisible('hidden');
@@ -44,7 +44,7 @@ export default function BRAlert({ bbr, marvs12MOS, findCurrentMOS, selectedMonth
             });
         }
 
-        dispatch(generateBRCviaAlert({ host: holdTargetlocId, monthPeriod: mp }));
+        dispatch(generateBRCviaAlert({ brid: bbr, targetlocId: holdTargetlocId, monthPeriod: mp }));
         dispatch(getBRCByBRId(bbr));
     }
 
